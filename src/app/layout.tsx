@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
+import "../theme/globals.css";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ConfigProvider } from "antd";
+import antdTheme from "@/theme/antdTheme";
+import { Tajawal } from "next/font/google";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const tajawal = Tajawal({
+  weight: ["300", "400", "500", "700"],
+  style: ["normal"],
+  subsets: ["arabic"],
+  display: "swap",
+  variable: "--font-tajawal",
 });
 
 export const metadata: Metadata = {
@@ -23,12 +23,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = "en";
+  const direction = locale === "en" ? "en" : "ar";
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang={locale} dir={direction} className="dark">
+      <body className={`${tajawal.variable} antialiased font-sans`}>
+        <AntdRegistry>
+          <ConfigProvider theme={antdTheme}>{children}</ConfigProvider>
+        </AntdRegistry>
       </body>
     </html>
   );
