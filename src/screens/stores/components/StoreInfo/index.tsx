@@ -27,12 +27,12 @@ function StoreInfo({
   const [messageApi, contextHolder] = message.useMessage();
   const { t } = useTranslation();
   // Use react-query to fetch data
-  const { data, isFetching, isError } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ["store", config.storeId],
     queryFn: ({ queryKey }) => fetchStore(queryKey[1]!),
     enabled: Boolean(config.storeId),
   });
-
+  console.log("store data", data);
   const createStoreMutation = useMutation({
     mutationFn: (data: TCreateStore) => postStore(data),
     onSuccess: (data, variables) => {

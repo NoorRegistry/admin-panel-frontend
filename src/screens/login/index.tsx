@@ -20,7 +20,7 @@ const LoginScreen: React.FC = () => {
       signin();
       router.replace("/");
     },
-    onError: (error) => {},
+    onError: () => {},
   });
 
   const onFinish = (values: ILoginPayload) => {

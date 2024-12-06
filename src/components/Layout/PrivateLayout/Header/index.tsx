@@ -11,7 +11,7 @@ const { Header } = Layout;
 
 function PrivateHeader() {
   const {
-    token: { colorBgContainer, borderRadiusLG },
+    token: { colorBgContainer },
   } = theme.useToken();
 
   return (

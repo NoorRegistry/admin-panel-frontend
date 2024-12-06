@@ -23,7 +23,7 @@ function PrivateLayout({
     } else {
       setloading(false);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, router]);
 
   return (
     <>

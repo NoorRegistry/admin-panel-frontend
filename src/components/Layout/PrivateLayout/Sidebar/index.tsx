@@ -44,7 +44,7 @@ function Sidebar() {
 
   const onClick: MenuProps["onClick"] = (e) => {
     const item = menuItems.find((item) => item.key === e.key);
-    item && router.replace(item.href);
+    if (item) router.replace(item.href);
   };
 
   return (

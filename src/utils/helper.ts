@@ -40,7 +40,7 @@ export const getUserName = () => {
   let name = "";
   const token = getStorageItem(constants.ACCESS_TOKEN);
   if (token) {
-    const jwtPayload = jwtDecode<any>(token);
+    // const jwtPayload = jwtDecode<any>(token);
     // TODO: Uncomment this when name thing works
     // name = jwtPayload.user.name;
     name = "Ashfaq Patwari";

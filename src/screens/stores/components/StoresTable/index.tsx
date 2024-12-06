@@ -10,7 +10,7 @@ function StoresTable() {
   const { tableRef, scroll } = useTableScroll();
 
   // Use react-query to fetch data
-  const { data, isFetching, isError } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ["stores"],
     queryFn: fetchStores,
     placeholderData: keepPreviousData,
@@ -42,7 +42,7 @@ function StoresTable() {
       title: t("stores.contact"),
       dataIndex: "contactNumber",
       key: "contactNumber",
-      render: (value, record, index) => (
+      render: (_, record) => (
         <span>
           {record.countryCode} {record.mobileNumber}
         </span>
