@@ -1,9 +1,30 @@
+import constants from "@/constants";
+import { useGlobalStore } from "@/store";
+import { setStorageItem } from "@/utils/storage";
+import { useMutation } from "@tanstack/react-query";
+import { Button, Card, Col, Form, Input, Row } from "antd";
+import { useRouter } from "next/navigation";
 import React from "react";
-import { Card, Form, Input, Button, Row, Col } from "antd";
+import { useTranslation } from "react-i18next";
+import { ILoginPayload, login } from "./services/login.service";
 
-const LoginForm: React.FC = () => {
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
+const LoginScreen: React.FC = () => {
+  const { t } = useTranslation();
+  const signin = useGlobalStore.use.signIn();
+  const router = useRouter();
+
+  const handleLoginMutation = useMutation({
+    mutationFn: (data: ILoginPayload) => login(data),
+    onSuccess: (response) => {
+      setStorageItem(constants.ACCESS_TOKEN, JSON.stringify(response));
+      signin();
+      router.replace("/");
+    },
+    onError: (error) => {},
+  });
+
+  const onFinish = (values: ILoginPayload) => {
+    handleLoginMutation.mutate(values);
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -18,36 +39,43 @@ const LoginForm: React.FC = () => {
     >
       <Col>
         <Card
-          title="Login"
-          style={{ width: 300, textAlign: "center", borderRadius: 8 }}
+          title={t("login.loginToAccount")}
+          style={{ width: 300, borderRadius: 8 }}
         >
           <Form
             name="login"
-            initialValues={{ remember: true }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
+            layout="vertical"
+            size="large"
           >
             <Form.Item
               name="email"
+              label={t("common.email")}
               rules={[
-                { required: true, message: "Please input your username!" },
+                { required: true, message: t("login.enterEmail") },
+                { type: "email", message: t("login.enterValidEmail") },
               ]}
             >
-              <Input placeholder="Username" />
+              <Input />
             </Form.Item>
 
             <Form.Item
               name="password"
-              rules={[
-                { required: true, message: "Please input your password!" },
-              ]}
+              label={t("login.password")}
+              rules={[{ required: true, message: t("login.enterPassword") }]}
             >
-              <Input.Password placeholder="Password" />
+              <Input.Password />
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" block>
-                Login
+              <Button
+                type="primary"
+                htmlType="submit"
+                block
+                loading={handleLoginMutation.isPending}
+              >
+                {t("login.login")}
               </Button>
             </Form.Item>
           </Form>
@@ -57,4 +85,4 @@ const LoginForm: React.FC = () => {
   );
 };
 
-export default LoginForm;
+export default LoginScreen;

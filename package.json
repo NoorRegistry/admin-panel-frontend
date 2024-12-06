@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -25,11 +25,13 @@
     "react": "^18",
     "react-dom": "^18",
     "react-i18next": "^15.1.2",
+    "use-debounce": "^10.0.4",
     "zustand": "^5.0.1"
   },
   "devDependencies": {
-    "@tanstack/eslint-plugin-query": "^5.61.3",
+    "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.0.0-beta.2",
+    "@tanstack/eslint-plugin-query": "^5.61.3",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

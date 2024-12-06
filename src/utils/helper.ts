@@ -41,7 +41,9 @@ export const getUserName = () => {
   const token = getStorageItem(constants.ACCESS_TOKEN);
   if (token) {
     const jwtPayload = jwtDecode<any>(token);
-    name = jwtPayload.user.fullName;
+    // TODO: Uncomment this when name thing works
+    // name = jwtPayload.user.name;
+    name = "Ashfaq Patwari";
   }
   return name;
 };

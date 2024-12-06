@@ -1,0 +1,26 @@
+.header {
+  --shadow: hsla(0 0% 0% / 0.1) 0 0.5rem 1rem;
+  position: sticky;
+  top: 0;
+  /* Fall back to persistent shadow */
+  box-shadow: var(--shadow);
+}
+
+/* Fade in shadow on scroll when supported */
+@supports (animation-timeline: scroll()) {
+  .header {
+    animation: scroll-shadow linear both;
+    animation-timeline: scroll();
+    animation-range: 0ex 5ex;
+  }
+
+  @keyframes scroll-shadow {
+    from {
+      box-shadow: none;
+    }
+
+    to {
+      box-shadow: var(--shadow);
+    }
+  }
+}

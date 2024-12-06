@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import PrivateLayoutContainer from "@/components/Layout/PrivateLayout";
+import { useGlobalStore } from "@/store";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Flex, Spin } from "antd";
-import { useGlobalStore } from "@/store";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 function PrivateLayout({
   children,
@@ -22,21 +23,17 @@ function PrivateLayout({
     } else {
       setloading(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <>
       {loading ? (
-        <Flex align="center" gap="middle">
-          <Spin indicator={<LoadingOutlined spin />} size="small" />
-          <Spin indicator={<LoadingOutlined spin />} />
+        <Flex align="center" justify="center" gap="middle" className="h-screen">
           <Spin indicator={<LoadingOutlined spin />} size="large" />
-          <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
         </Flex>
       ) : (
-        children
+        <PrivateLayoutContainer>{children}</PrivateLayoutContainer>
       )}
-      <div></div>
     </>
   );
 }
