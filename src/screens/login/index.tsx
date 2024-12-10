@@ -48,6 +48,7 @@ const LoginScreen: React.FC = () => {
             onFinishFailed={onFinishFailed}
             layout="vertical"
             size="large"
+            clearOnDestroy
           >
             <Form.Item
               name="email"

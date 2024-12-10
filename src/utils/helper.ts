@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 
 import { queryClient } from "@/api/queryClient";
 import constants from "@/constants";
-import { IAccessToken } from "@/types";
+import { IAccessToken, IPaginatedResponse, TTokenInfo } from "@/types";
 import { getStorageItem, setStorageItem } from "@/utils/storage";
 
 export const isAuthenticated = (): boolean => {
@@ -14,6 +14,11 @@ export const isAuthenticated = (): boolean => {
     isValidToken = Boolean(token && !isTokenExpired(parsedToken.accessToken));
   }
   return Boolean(isValidToken);
+};
+
+export const getAccessToken = (): string => {
+  const token = getStorageItem(constants.ACCESS_TOKEN);
+  return token ? (JSON.parse(token) as IAccessToken).accessToken : "";
 };
 
 export const getTokenExpireDate = (token: string) =>
@@ -40,10 +45,8 @@ export const getUserName = () => {
   let name = "";
   const token = getStorageItem(constants.ACCESS_TOKEN);
   if (token) {
-    // const jwtPayload = jwtDecode<any>(token);
-    // TODO: Uncomment this when name thing works
-    // name = jwtPayload.user.name;
-    name = "Ashfaq Patwari";
+    const jwtPayload = jwtDecode<TTokenInfo>(token);
+    name = jwtPayload.user.firstName + " " + jwtPayload.user.lastName;
   }
   return name;
 };
@@ -60,4 +63,51 @@ export const getUserNameInitials = () => {
   const lastNameInitial = restNames?.pop()![0];
 
   return `${firstNameInitial}${lastNameInitial}`;
+};
+
+export const updatePaginatedData = <T>(
+  data: T,
+  old?: IPaginatedResponse<T>,
+  id?: string,
+): IPaginatedResponse<T> => {
+  if (!old) {
+    // If no old data exists, initialize the response with the new data
+    return {
+      data: [data], // Add the new data as the only entry
+      limit: null, // Set pagination values as appropriate
+      page: null,
+      total: 1,
+      totalPages: null,
+    };
+  }
+
+  if (id) {
+    // Edit scenario: Update the object with the matching id
+    return {
+      ...old,
+      data: old.data.map(
+        (item) =>
+          (item as any).id === id
+            ? { ...item, ...data } // Merge the existing data with updated data
+            : item, // Keep other objects unchanged
+      ),
+    };
+  }
+
+  // If old data exists, update the response
+  return {
+    ...old, // Preserve pagination metadata
+    data: [data, ...old.data], // Add the new store to the beginning of the data array
+    total: old.total + 1, // Update the total count
+  };
+};
+
+/**
+ * Function used for normalize file list on formItem for uplaod
+ */
+export const normalizeFile = (e: any) => {
+  if (Array.isArray(e)) {
+    return e;
+  }
+  return e?.fileList;
 };

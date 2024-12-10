@@ -15,7 +15,6 @@ function PrivateLayout({
   const [loading, setloading] = useState(true);
   const router = useRouter();
   const isAuthenticated = useGlobalStore.use.isAuthenticated();
-  console.log("isauthenticated :>> ", isAuthenticated);
 
   useEffect(() => {
     if (!isAuthenticated) {

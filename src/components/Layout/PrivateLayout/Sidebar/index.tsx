@@ -1,7 +1,12 @@
-import { HomeOutlined, ShopOutlined } from "@ant-design/icons";
+import {
+  ApartmentOutlined,
+  HomeOutlined,
+  OrderedListOutlined,
+  ProductOutlined,
+  ShopOutlined,
+} from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout, Menu } from "antd";
-import { MenuItemType } from "antd/es/menu/interface";
 import { useRouter, useSelectedLayoutSegment } from "next/navigation";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -19,13 +24,41 @@ const siderStyle: React.CSSProperties = {
   scrollbarGutter: "stable",
 };
 
-type TMenuItems = MenuItemType & { href: string };
+type MenuItem = Required<MenuProps>["items"][number];
+type TMenuItems = MenuItem & { href?: string } & {
+  children?: TMenuItems[]; // Recursive definition to allow children to have the same structure
+};
+
+const findHrefByKey = (items: TMenuItems[], key: string): string | undefined =>
+  items.reduce<string | undefined>(
+    (href, item) =>
+      href ??
+      (item.key === key
+        ? item.href
+        : item.children && findHrefByKey(item.children, key)),
+    undefined,
+  );
+
+const filterMenuItemsByKey = (items: TMenuItems[], key: string): TMenuItems[] =>
+  items.flatMap((item) =>
+    item.key === key
+      ? [item]
+      : item.children
+      ? [
+          {
+            ...item,
+            children: filterMenuItemsByKey(item.children, key),
+          },
+        ].filter((child) => child.children?.length)
+      : [],
+  );
 
 function Sidebar() {
   const { t } = useTranslation();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const activeSegment = useSelectedLayoutSegment();
+  console.log("🚀 ~ Sidebar ~ activeSegment:", activeSegment);
 
   const menuItems: TMenuItems[] = [
     {
@@ -40,11 +73,30 @@ function Sidebar() {
       label: t("stores.stores"),
       href: "/stores",
     },
+    {
+      key: "productsparent",
+      icon: <ProductOutlined />,
+      label: t("products.products"),
+      children: [
+        {
+          key: "products",
+          icon: <OrderedListOutlined />,
+          label: t("products.list"),
+          href: "/products",
+        },
+        {
+          key: "productCategories",
+          icon: <ApartmentOutlined />,
+          label: t("products.categories"),
+          href: "/products/categories",
+        },
+      ],
+    },
   ];
 
   const onClick: MenuProps["onClick"] = (e) => {
-    const item = menuItems.find((item) => item.key === e.key);
-    if (item) router.replace(item.href);
+    const href = findHrefByKey(menuItems, e.key);
+    if (href) router.replace(href);
   };
 
   return (
@@ -60,13 +112,10 @@ function Sidebar() {
         onClick={onClick}
         theme="dark"
         mode="inline"
-        selectedKeys={menuItems
-          .filter((item) =>
-            activeSegment
-              ? item.key === activeSegment
-              : item.key === "dashboard",
-          )
-          .map((item) => item.key as string)}
+        defaultSelectedKeys={filterMenuItemsByKey(
+          menuItems,
+          activeSegment ?? "dashboard",
+        ).map((item) => item.key as string)}
         items={menuItems}
       />
     </Sider>

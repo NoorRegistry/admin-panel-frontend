@@ -1,6 +1,7 @@
 import { IApiError } from "@/api/http";
 import { queryClient } from "@/api/queryClient";
-import { IStore, TCreateStore } from "@/types";
+import { IPaginatedResponse, IStore, TCreateStore } from "@/types";
+import { updatePaginatedData } from "@/utils/helper";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
@@ -13,8 +14,13 @@ import {
   message,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { fetchStore, postStore } from "../../services/stores.service";
+import {
+  fetchStore,
+  patchStore,
+  postStore,
+} from "../../services/stores.service";
 import { IShowStoreInfoDrawerConfig } from "../../stores.types";
 
 function StoreInfo({
@@ -26,24 +32,38 @@ function StoreInfo({
 }) {
   const [messageApi, contextHolder] = message.useMessage();
   const { t } = useTranslation();
-  // Use react-query to fetch data
+  const [form] = Form.useForm();
+
   const { data, isFetching } = useQuery({
     queryKey: ["store", config.storeId],
     queryFn: ({ queryKey }) => fetchStore(queryKey[1]!),
     enabled: Boolean(config.storeId),
   });
-  console.log("store data", data);
+
   const createStoreMutation = useMutation({
-    mutationFn: (data: TCreateStore) => postStore(data),
+    mutationFn: (data: TCreateStore) => {
+      return config.storeId
+        ? patchStore(config.storeId, data)
+        : postStore(data);
+    },
     onSuccess: (data, variables) => {
-      console.log("store created", variables);
       messageApi.success({
-        content: t("stores.storeCreated", { name: variables.nameEn }),
+        content: t(
+          config.storeId ? "stores.storeEdited" : "stores.storeCreated",
+          { name: variables.nameEn },
+        ),
       });
-      queryClient.setQueryData<IStore[]>(["stores"], (old = []) => [
-        data,
-        ...old,
-      ]);
+      try {
+        queryClient.setQueryData<IPaginatedResponse<IStore>>(
+          ["stores"],
+          (old) => {
+            return updatePaginatedData(data, old, config.storeId);
+          },
+        );
+      } catch (error) {
+        console.error(error);
+      }
+
       onClose();
     },
     onError: (err: IApiError) => {
@@ -56,6 +76,12 @@ function StoreInfo({
   const handleCreateStore = (store: TCreateStore) => {
     createStoreMutation.mutate(store);
   };
+
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue(data);
+    }
+  }, [data, form]);
 
   return (
     <div>
@@ -70,14 +96,14 @@ function StoreInfo({
         open={config.open}
         footer={
           <Flex align="end" justify="end" gap={16}>
-            <Button onClick={onClose}>Cancel</Button>
+            <Button onClick={onClose}>{t("common.cancel")}</Button>
             <Button
               type="primary"
               htmlType="submit"
               form="createStore"
               loading={createStoreMutation.isPending}
             >
-              {t("common.submit")}
+              {t(config.storeId ? "common.update" : "common.submit")}
             </Button>
           </Flex>
         }
@@ -89,6 +115,8 @@ function StoreInfo({
           onFinish={handleCreateStore}
           autoComplete="off"
           layout="vertical"
+          form={form}
+          clearOnDestroy
         >
           <div className="grid grid-cols-2 gap-x-6 gap-y-2">
             <Form.Item<TCreateStore>

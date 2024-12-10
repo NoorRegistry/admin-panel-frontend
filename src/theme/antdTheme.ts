@@ -84,6 +84,7 @@ const antdTheme: ThemeConfig = {
       hoverBorderColor: "var(--color-primary-400)",
       boxShadow: "0px 1px 2px 0px rgba(16, 24, 40, 0.05)",
       activeShadow: "0px 0px 0px 3px rgba(120, 138, 173, 0.27)",
+      errorActiveShadow: "0px 0px 0px 3px rgba(225, 29, 72, .27)",
     },
     InputNumber: {
       colorError: "var(--color-danger-500)",
@@ -92,6 +93,7 @@ const antdTheme: ThemeConfig = {
       hoverBorderColor: "var(--color-primary-400)",
       boxShadow: "0px 1px 2px 0px rgba(16, 24, 40, 0.05)",
       activeShadow: "0px 0px 0px 3px rgba(120, 138, 173, 0.27)",
+      errorActiveShadow: "0px 0px 0px 3px rgba(225, 29, 72, .27)",
     },
     Checkbox: {
       colorPrimary: "var(--color-secondary-500)",
@@ -149,8 +151,8 @@ const antdTheme: ThemeConfig = {
       headerSplitColor: "var(--color-neutral-200)",
     },
     Modal: {
-      titleFontSize: 24,
-      titleColor: "var(--color-neutral-500)",
+      titleFontSize: 18,
+      titleColor: "var(--color-neutral-700)",
     },
     Tabs: {
       itemColor: "var(--color-neutral-500)",
