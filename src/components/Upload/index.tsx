@@ -34,7 +34,6 @@ const UploadComponent = ({
   const [imagesList, setImagesList] = useState<UploadFile[]>([]);
 
   useEffect(() => {
-    console.log("files", files);
     const transformedFiles = files.map((file) => ({
       uid: file.id ?? file.uid,
       name: file.path ?? file.name,
@@ -58,7 +57,6 @@ const UploadComponent = ({
   const handleChange: UploadProps["onChange"] = ({
     fileList: updatedFileList,
     file,
-    event,
   }) => {
     const isUploading = updatedFileList.some(
       (file: any) => file.status === "uploading",

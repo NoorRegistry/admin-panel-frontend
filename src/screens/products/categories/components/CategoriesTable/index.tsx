@@ -80,7 +80,7 @@ function CategoriesTable() {
           virtual
           onRow={(record) => {
             return {
-              onClick: (event) => {
+              onClick: () => {
                 setOpenCategoryInfo({ open: true, categoryId: record.id });
               },
             };

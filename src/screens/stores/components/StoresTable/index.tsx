@@ -133,7 +133,7 @@ function StoresTable() {
           pagination={false}
           onRow={(record) => {
             return {
-              onClick: (event) => {
+              onClick: () => {
                 setOpenStoreInfo({ open: true, storeId: record.id });
               },
             };
