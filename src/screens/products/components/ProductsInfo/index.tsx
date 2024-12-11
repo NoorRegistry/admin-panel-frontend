@@ -6,8 +6,8 @@ import {
   fetchProductCategories,
   patchProduct,
   postProduct,
-} from "@/screens/products/services/product.service";
-import { fetchStores } from "@/screens/stores/services/stores.service";
+} from "@/services/product.service";
+import { fetchStores } from "@/services/stores.service";
 import { IPaginatedResponse, IProduct, TCreateProduct } from "@/types";
 import { normalizeFile, updatePaginatedData } from "@/utils/helper";
 import { useMutation, useQuery } from "@tanstack/react-query";

@@ -1,4 +1,5 @@
 import constants from "@/constants";
+import { ILoginPayload, login } from "@/services/login.service";
 import { useGlobalStore } from "@/store";
 import { setStorageItem } from "@/utils/storage";
 import { useMutation } from "@tanstack/react-query";
@@ -6,7 +7,6 @@ import { Button, Card, Col, Form, Input, Row } from "antd";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { ILoginPayload, login } from "./services/login.service";
 
 const LoginScreen: React.FC = () => {
   const { t } = useTranslation();

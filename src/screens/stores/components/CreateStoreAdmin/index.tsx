@@ -1,9 +1,9 @@
 import { IApiError } from "@/api/http";
+import { postStoreAdmin } from "@/services/stores.service";
 import { TCreateStoreAdmin } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Flex, Form, Input, Modal, message } from "antd";
 import { useTranslation } from "react-i18next";
-import { postStoreAdmin } from "../../services/stores.service";
 import { ICreateStoreAdminConfig } from "../../stores.types";
 
 function CreateStoreAdmin({

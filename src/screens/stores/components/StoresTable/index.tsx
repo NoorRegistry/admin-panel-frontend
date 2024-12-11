@@ -1,11 +1,11 @@
 import { useTableScroll } from "@/hooks/useTableScroll";
+import { fetchStores } from "@/services/stores.service";
 import { ColumnsType, IStore } from "@/types";
 import { PlusOutlined, UserAddOutlined } from "@ant-design/icons";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Button, Flex, Table, Tooltip, Typography } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { fetchStores } from "../../services/stores.service";
 import {
   ICreateStoreAdminConfig,
   IShowStoreInfoDrawerConfig,

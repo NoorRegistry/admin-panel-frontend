@@ -1,4 +1,5 @@
 import { useTableScroll } from "@/hooks/useTableScroll";
+import { fetchProducts } from "@/services/product.service";
 import { ColumnsType, IProduct } from "@/types";
 import { PlusOutlined } from "@ant-design/icons";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
@@ -6,7 +7,6 @@ import { Button, Table, Typography } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IShowProductInfoDrawerConfig } from "../../products.types";
-import { fetchProducts } from "../../services/product.service";
 import ProductsInfo from "../ProductsInfo";
 
 function ProductsTable() {

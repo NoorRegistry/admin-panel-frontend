@@ -3,7 +3,7 @@ import { queryClient } from "@/api/queryClient";
 import {
   fetchProductCategory,
   postProductCategory,
-} from "@/screens/products/services/product.service";
+} from "@/services/product.service";
 import { IProductCategory, TCreateProductCategory } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Drawer, Flex, Form, Input, message } from "antd";

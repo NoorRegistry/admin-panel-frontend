@@ -1,5 +1,6 @@
 import { IApiError } from "@/api/http";
 import { queryClient } from "@/api/queryClient";
+import { fetchStore, patchStore, postStore } from "@/services/stores.service";
 import { IPaginatedResponse, IStore, TCreateStore } from "@/types";
 import { updatePaginatedData } from "@/utils/helper";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -16,11 +17,6 @@ import {
 import TextArea from "antd/es/input/TextArea";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  fetchStore,
-  patchStore,
-  postStore,
-} from "../../services/stores.service";
 import { IShowStoreInfoDrawerConfig } from "../../stores.types";
 
 function StoreInfo({

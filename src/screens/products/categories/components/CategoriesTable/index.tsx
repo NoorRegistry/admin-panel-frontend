@@ -1,6 +1,6 @@
 import { useTableScroll } from "@/hooks/useTableScroll";
 import { IShowCategoryInfoDrawerConfig } from "@/screens/products/products.types";
-import { fetchProductCategories } from "@/screens/products/services/product.service";
+import { fetchProductCategories } from "@/services/product.service";
 import { ColumnsType, IProductCategory } from "@/types";
 import { PlusOutlined } from "@ant-design/icons";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
