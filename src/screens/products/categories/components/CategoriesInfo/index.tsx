@@ -2,9 +2,11 @@ import { IApiError } from "@/api/http";
 import { queryClient } from "@/api/queryClient";
 import {
   fetchProductCategory,
+  patchProductCategory,
   postProductCategory,
 } from "@/services/product.service";
-import { IProductCategory, TCreateProductCategory } from "@/types";
+import { EAdminRole, IProductCategory, TCreateProductCategory } from "@/types";
+import { getAdminRole } from "@/utils/helper";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Drawer, Flex, Form, Input, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
@@ -23,25 +25,48 @@ function CategoriesInfo({
   const { t } = useTranslation();
   const [form] = Form.useForm();
 
+  const isInternalAdmin = getAdminRole() === EAdminRole.INTERNAL_ADMIN;
+
   const { data, isFetching } = useQuery({
     queryKey: ["categories", config.categoryId],
     queryFn: ({ queryKey }) => fetchProductCategory(queryKey[1]!),
     enabled: Boolean(config.categoryId),
   });
 
-  console.log("category data", data);
-
   const createCategoryMutation = useMutation({
-    mutationFn: (data: TCreateProductCategory) => postProductCategory(data),
+    mutationFn: (data: TCreateProductCategory) => {
+      return config.categoryId
+        ? patchProductCategory(config.categoryId, data)
+        : postProductCategory(data);
+    },
     onSuccess: (data, variables) => {
       console.log("product category created", variables);
       messageApi.success({
-        content: t("products.categoryCreated", { name: variables.nameEn }),
+        content: t(
+          config.categoryId
+            ? "products.categoryEdited"
+            : "products.categoryCreated",
+          { name: variables.nameEn },
+        ),
       });
-      queryClient.setQueryData<IProductCategory[]>(
-        ["categories"],
-        (old = []) => [data, ...old],
-      );
+      try {
+        queryClient.setQueryData<IProductCategory | undefined>(
+          ["categories", config.categoryId],
+          (old: any) => {
+            return { ...old, ...data };
+          },
+        );
+        queryClient.invalidateQueries({
+          queryKey: ["categories", isInternalAdmin],
+        });
+        /* queryClient.setQueryData<IPaginatedResponse<IProductCategory>>(
+          ["categories", isInternalAdmin],
+          (old) => updatePaginatedData(data, old, config.categoryId),
+        ); */
+      } catch (error) {
+        console.error("error in product category create", error);
+      }
+
       onClose();
     },
     onError: (err: IApiError) => {
@@ -57,7 +82,9 @@ function CategoriesInfo({
 
   useEffect(() => {
     if (data) {
-      form.setFieldsValue(data);
+      setTimeout(() => {
+        form.setFieldsValue(data);
+      });
     }
   }, [data, form]);
 
@@ -98,7 +125,7 @@ function CategoriesInfo({
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
             <Form.Item<TCreateProductCategory>
-              label={t("stores.nameEn")}
+              label={t("common.nameEn")}
               name="nameEn"
               rules={[{ required: true, message: t("common.required") }]}
             >
@@ -106,7 +133,7 @@ function CategoriesInfo({
             </Form.Item>
 
             <Form.Item<TCreateProductCategory>
-              label={t("stores.nameAr")}
+              label={t("common.nameAr")}
               name="nameAr"
               rules={[{ required: true, message: t("common.required") }]}
             >
@@ -114,7 +141,7 @@ function CategoriesInfo({
             </Form.Item>
 
             <Form.Item<TCreateProductCategory>
-              label={t("stores.descriptionEn")}
+              label={t("common.descriptionEn")}
               name="descriptionEn"
               rules={[{ required: true, message: t("common.required") }]}
             >
@@ -122,7 +149,7 @@ function CategoriesInfo({
             </Form.Item>
 
             <Form.Item<TCreateProductCategory>
-              label={t("stores.descriptionAr")}
+              label={t("common.descriptionAr")}
               name="descriptionAr"
               rules={[{ required: true, message: t("common.required") }]}
             >

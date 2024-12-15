@@ -1,7 +1,11 @@
 import { useTableScroll } from "@/hooks/useTableScroll";
 import { IShowCategoryInfoDrawerConfig } from "@/screens/products/products.types";
-import { fetchProductCategories } from "@/services/product.service";
-import { ColumnsType, IProductCategory } from "@/types";
+import {
+  fetchProductCategories,
+  fetchProductCategoriesForStore,
+} from "@/services/product.service";
+import { ColumnsType, EAdminRole, IProductCategory } from "@/types";
+import { getAdminRole, getAdminStoreId } from "@/utils/helper";
 import { PlusOutlined } from "@ant-design/icons";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Button, Table, Typography } from "antd";
@@ -17,9 +21,17 @@ function CategoriesTable() {
       open: false,
     });
 
+  const isInternalAdmin = getAdminRole() === EAdminRole.INTERNAL_ADMIN;
+
   const { data, isFetching } = useQuery({
-    queryKey: ["categories"],
-    queryFn: fetchProductCategories,
+    queryKey: ["categories", isInternalAdmin],
+    queryFn: () => {
+      if (isInternalAdmin) {
+        return fetchProductCategories(); // fetch all categories for internal admin
+      }
+      const storeId = getAdminStoreId(); // Pass your parameter here
+      return fetchProductCategoriesForStore(storeId!); // Fetch store specific categories for store admin
+    },
     placeholderData: keepPreviousData,
   });
 
@@ -57,15 +69,17 @@ function CategoriesTable() {
             {t("products.categories")}
           </Typography.Title>
         </div>
-        <div>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={showCategoryInfo}
-          >
-            {t("products.createCategory")}
-          </Button>
-        </div>
+        {isInternalAdmin && (
+          <div>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={showCategoryInfo}
+            >
+              {t("products.createCategory")}
+            </Button>
+          </div>
+        )}
       </div>
       <div className="my-6">
         <Table<IProductCategory>
@@ -76,8 +90,6 @@ function CategoriesTable() {
           sticky={{ offsetHeader: 88 }}
           scroll={scroll}
           rowKey={(row) => row.id}
-          pagination={false}
-          virtual
           onRow={(record) => {
             return {
               onClick: () => {

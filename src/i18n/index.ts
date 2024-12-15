@@ -23,7 +23,7 @@ const initI18n = () => {
   let selectedLanguage = getStorageItem(
     constants.USER_SELECTED_LANGUAGE_STORAGE_KEY,
   );
-  console.log("selected language", selectedLanguage);
+
   if (!selectedLanguage) {
     selectedLanguage = "en";
   }

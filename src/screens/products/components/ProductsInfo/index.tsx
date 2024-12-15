@@ -8,8 +8,17 @@ import {
   postProduct,
 } from "@/services/product.service";
 import { fetchStores } from "@/services/stores.service";
-import { IPaginatedResponse, IProduct, TCreateProduct } from "@/types";
-import { normalizeFile, updatePaginatedData } from "@/utils/helper";
+import {
+  EAdminRole,
+  IPaginatedResponse,
+  IProduct,
+  TCreateProduct,
+} from "@/types";
+import {
+  getAdminRole,
+  normalizeFile,
+  updatePaginatedData,
+} from "@/utils/helper";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
@@ -38,6 +47,8 @@ function ProductsInfo({
   const { t } = useTranslation();
   const [form] = Form.useForm();
 
+  const isInternalAdmin = getAdminRole() === EAdminRole.INTERNAL_ADMIN;
+
   const { data, isFetching } = useQuery({
     queryKey: ["products", config.productId],
     queryFn: ({ queryKey }) => fetchProduct(queryKey[1]!),
@@ -47,6 +58,7 @@ function ProductsInfo({
   const { data: stores, isFetching: isFetchingStores } = useQuery({
     queryKey: ["stores"],
     queryFn: fetchStores,
+    enabled: isInternalAdmin,
   });
 
   const { data: categories, isFetching: isFetchingCategories } = useQuery({
@@ -99,7 +111,7 @@ function ProductsInfo({
     if (data) {
       setTimeout(() => {
         form.setFieldsValue(data);
-      }, 0);
+      });
     }
   }, [data]);
 
@@ -194,6 +206,7 @@ function ProductsInfo({
               label={t("stores.store")}
               name="storeId"
               rules={[{ required: true, message: t("common.required") }]}
+              hidden={getAdminRole() === EAdminRole.STORE_ADMIN}
             >
               <Select
                 loading={isFetchingStores}
@@ -260,6 +273,7 @@ function ProductsInfo({
           >
             <UploadComponent
               type="product"
+              dbId={config.productId}
               onUploadStatusChange={setUploading}
             />
           </Form.Item>

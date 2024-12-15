@@ -121,3 +121,5 @@ export interface IStoreAdmin {
 }
 
 export type TCreateStoreAdmin = Omit<IStoreAdmin, "id" | "storeName" | "role">;
+
+export type TUploadType = "store" | "product";

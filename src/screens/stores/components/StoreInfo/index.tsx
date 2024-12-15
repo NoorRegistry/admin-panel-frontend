@@ -1,8 +1,14 @@
 import { IApiError } from "@/api/http";
 import { queryClient } from "@/api/queryClient";
+import UploadComponent from "@/components/Upload";
 import { fetchStore, patchStore, postStore } from "@/services/stores.service";
-import { IPaginatedResponse, IStore, TCreateStore } from "@/types";
-import { updatePaginatedData } from "@/utils/helper";
+import {
+  IPaginatedResponse,
+  IStore,
+  IStoreDetails,
+  TCreateStore,
+} from "@/types";
+import { normalizeFile, updatePaginatedData } from "@/utils/helper";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
@@ -15,7 +21,7 @@ import {
   message,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IShowStoreInfoDrawerConfig } from "../../stores.types";
 
@@ -26,12 +32,13 @@ function StoreInfo({
   config: IShowStoreInfoDrawerConfig;
   onClose: () => void;
 }) {
+  const [uploading, setUploading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const { t } = useTranslation();
   const [form] = Form.useForm();
 
   const { data, isFetching } = useQuery({
-    queryKey: ["store", config.storeId],
+    queryKey: ["stores", config.storeId],
     queryFn: ({ queryKey }) => fetchStore(queryKey[1]!),
     enabled: Boolean(config.storeId),
   });
@@ -50,6 +57,12 @@ function StoreInfo({
         ),
       });
       try {
+        queryClient.setQueryData<IStoreDetails | undefined>(
+          ["stores", config.storeId],
+          (old: any) => {
+            return { ...old, ...data };
+          },
+        );
         queryClient.setQueryData<IPaginatedResponse<IStore>>(
           ["stores"],
           (old) => {
@@ -70,12 +83,31 @@ function StoreInfo({
   });
 
   const handleCreateStore = (store: TCreateStore) => {
+    if (store.storeLogo && store.storeLogo.length > 0) {
+      // @ts-expect-error Name field exists
+      store.storeLogo = store.storeLogo[0].name;
+    } else {
+      store.storeLogo = "";
+    }
     createStoreMutation.mutate(store);
   };
 
   useEffect(() => {
     if (data) {
-      form.setFieldsValue(data);
+      const transformedData = {
+        ...data,
+        storeLogo: data.storeLogo
+          ? [
+              {
+                id: data.id,
+                path: data.storeLogo,
+              },
+            ]
+          : [],
+      };
+      setTimeout(() => {
+        form.setFieldsValue(transformedData);
+      });
     }
   }, [data, form]);
 
@@ -98,6 +130,7 @@ function StoreInfo({
               htmlType="submit"
               form="createStore"
               loading={createStoreMutation.isPending}
+              disabled={uploading}
             >
               {t(config.storeId ? "common.update" : "common.submit")}
             </Button>
@@ -107,7 +140,6 @@ function StoreInfo({
         <Form<TCreateStore>
           id="createStore"
           name="createStore"
-          initialValues={{ countryCode: "+965" }}
           onFinish={handleCreateStore}
           autoComplete="off"
           layout="vertical"
@@ -194,6 +226,19 @@ function StoreInfo({
               ]}
             >
               <Input />
+            </Form.Item>
+
+            <Form.Item<TCreateStore>
+              label={t("products.uploadProductImages")}
+              name="storeLogo"
+              valuePropName="fileList"
+              getValueFromEvent={normalizeFile}
+            >
+              <UploadComponent
+                type="store"
+                dbId={config.storeId}
+                onUploadStatusChange={setUploading}
+              />
             </Form.Item>
           </div>
         </Form>

@@ -1,9 +1,10 @@
 import { useTableScroll } from "@/hooks/useTableScroll";
 import { fetchStores } from "@/services/stores.service";
-import { ColumnsType, IStore } from "@/types";
+import { ColumnsType, EAdminRole, IStore } from "@/types";
+import { getAdminRole } from "@/utils/helper";
 import { PlusOutlined, UserAddOutlined } from "@ant-design/icons";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Button, Flex, Table, Tooltip, Typography } from "antd";
+import { Button, Flex, Image, Table, Tooltip, Typography } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -25,6 +26,8 @@ function StoresTable() {
       open: false,
     });
 
+  const isInternalAdmin = getAdminRole() === EAdminRole.INTERNAL_ADMIN;
+
   const { data, isFetching } = useQuery({
     queryKey: ["stores"],
     queryFn: fetchStores,
@@ -32,6 +35,33 @@ function StoresTable() {
   });
 
   const columns: ColumnsType<IStore> = [
+    {
+      title: "",
+      dataIndex: "storeLogo",
+      key: "images",
+      width: 82,
+      render: (value) => {
+        const logo = value ?? "/public/common/no-image.png";
+        return (
+          <div
+            onClick={(event) => {
+              event.stopPropagation(); // Prevent row click event when interacting with the group
+            }}
+          >
+            <Image
+              width={50}
+              height={50}
+              src={`${process.env.NEXT_PUBLIC_ASSET_URL}${logo}`}
+              preview={Boolean(value)}
+              onClick={(event) => {
+                event.stopPropagation(); // Prevent row click event
+              }}
+              alt=""
+            />
+          </div>
+        );
+      },
+    },
     {
       title: t("stores.nameEn"),
       dataIndex: "nameEn",
@@ -74,7 +104,7 @@ function StoresTable() {
       align: "start",
     },
     {
-      title: t("stores.email"),
+      title: "",
       dataIndex: "",
       key: "action",
       align: "start",
@@ -108,17 +138,19 @@ function StoresTable() {
             {t("stores.stores")}
           </Typography.Title>
         </div>
-        <div>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => {
-              setOpenStoreInfo({ open: true });
-            }}
-          >
-            {t("stores.createStore")}
-          </Button>
-        </div>
+        {isInternalAdmin && (
+          <div>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => {
+                setOpenStoreInfo({ open: true });
+              }}
+            >
+              {t("stores.createStore")}
+            </Button>
+          </div>
+        )}
       </div>
       <div className="my-6">
         <Table<IStore>
@@ -129,8 +161,6 @@ function StoresTable() {
           sticky={{ offsetHeader: 88 }}
           scroll={scroll}
           rowKey={(row) => row.id}
-          virtual
-          pagination={false}
           onRow={(record) => {
             return {
               onClick: () => {

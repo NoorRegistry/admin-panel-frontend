@@ -61,6 +61,8 @@ const translations = {
     lastName: "Last Name",
     update: "Update",
     upload: "Upload",
+    imageUploaded: "Image uploaded successfully",
+    imageDeleted: "Image deleted successfully",
   },
   products: {
     products: "Products",
@@ -73,6 +75,7 @@ const translations = {
     createProduct: "Create Product",
     totalProducts: "Total Products",
     categoryCreated: "Category {{name}} created successfully",
+    categoryEdited: "Category {{name}} created successfully",
     productCreated: "Product created successfully",
     productEdited: "Product edited successfully",
     selectStore: "Select Store",

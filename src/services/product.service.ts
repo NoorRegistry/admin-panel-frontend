@@ -34,6 +34,12 @@ export const fetchProductCategories = async () => {
   );
 };
 
+export const fetchProductCategoriesForStore = async (id: string) => {
+  return await http.get<IPaginatedResponse<IProductCategory>>(
+    `${endpoints.products.index}/categories/stores/${id}`,
+  );
+};
+
 export const fetchProductCategory = async (id: string) => {
   return await http.get<IProductCategory>(
     `${endpoints.products.index}/categories/${id}`,
@@ -43,6 +49,16 @@ export const fetchProductCategory = async (id: string) => {
 export const postProductCategory = async (payload: TCreateProductCategory) => {
   return await http.post<IProductCategory>(
     `${endpoints.products.index}/categories`,
+    payload,
+  );
+};
+
+export const patchProductCategory = async (
+  id: string,
+  payload: TCreateProductCategory,
+) => {
+  return await http.patch<IProductCategory>(
+    `${endpoints.products.index}/categories/${id}`,
     payload,
   );
 };

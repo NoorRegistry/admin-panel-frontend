@@ -3,7 +3,12 @@ import { jwtDecode } from "jwt-decode";
 
 import { queryClient } from "@/api/queryClient";
 import constants from "@/constants";
-import { IAccessToken, IPaginatedResponse, TTokenInfo } from "@/types";
+import {
+  EAdminRole,
+  IAccessToken,
+  IPaginatedResponse,
+  TTokenInfo,
+} from "@/types";
 import { getStorageItem, setStorageItem } from "@/utils/storage";
 
 export const isAuthenticated = (): boolean => {
@@ -110,4 +115,20 @@ export const normalizeFile = (e: any) => {
     return e;
   }
   return e?.fileList;
+};
+
+export const getAdminRole = () => {
+  const token = getStorageItem(constants.ACCESS_TOKEN);
+  if (token) {
+    const jwtPayload = jwtDecode<TTokenInfo>(token);
+    return jwtPayload.role;
+  }
+};
+
+export const getAdminStoreId = () => {
+  const token = getStorageItem(constants.ACCESS_TOKEN);
+  if (token) {
+    const jwtPayload = jwtDecode<TTokenInfo>(token);
+    return jwtPayload.role === EAdminRole.STORE_ADMIN ? jwtPayload.storeId : "";
+  }
 };

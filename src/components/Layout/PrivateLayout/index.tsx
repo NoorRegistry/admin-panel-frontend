@@ -10,7 +10,7 @@ function PrivateLayoutContainer({
   children: React.ReactNode;
 }>) {
   const {
-    token: { colorBgContainer, borderRadiusLG },
+    token: { colorBgContainer },
   } = theme.useToken();
   return (
     <Layout hasSider>
@@ -21,17 +21,15 @@ function PrivateLayoutContainer({
         <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
           <div
             style={{
-              padding: 24,
-              textAlign: "center",
               background: colorBgContainer,
-              borderRadius: borderRadiusLG,
             }}
+            className="p-6 text-center rounded-lg"
           >
             {children}
           </div>
         </Content>
-        <Footer style={{ textAlign: "center" }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        <Footer className="text-center">
+          ShiftGiftMe © {new Date().getFullYear()}
         </Footer>
       </Layout>
     </Layout>

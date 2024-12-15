@@ -1,9 +1,10 @@
 import { useTableScroll } from "@/hooks/useTableScroll";
 import { fetchProducts } from "@/services/product.service";
-import { ColumnsType, IProduct } from "@/types";
+import { ColumnsType, EAdminRole, IProduct } from "@/types";
+import { getAdminRole } from "@/utils/helper";
 import { PlusOutlined } from "@ant-design/icons";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Button, Table, Typography } from "antd";
+import { Button, Image, Table, Typography } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IShowProductInfoDrawerConfig } from "../../products.types";
@@ -15,11 +16,13 @@ function ProductsTable() {
     useState<IShowProductInfoDrawerConfig>({
       open: false,
     });
+  const { tableRef, scroll } = useTableScroll();
+
+  const isInternalAdmin = getAdminRole() === EAdminRole.INTERNAL_ADMIN;
 
   const showProductInfo = () => {
     setOpenProductInfo({ open: true });
   };
-  const { tableRef, scroll } = useTableScroll();
 
   const { data, isFetching } = useQuery({
     queryKey: ["products"],
@@ -28,6 +31,47 @@ function ProductsTable() {
   });
 
   const columns: ColumnsType<IProduct> = [
+    {
+      title: "",
+      dataIndex: "images",
+      key: "images",
+      render: (value) => {
+        return value && value.length ? (
+          <div
+            onClick={(event) => {
+              event.stopPropagation(); // Prevent row click event when interacting with the group
+            }}
+          >
+            <Image.PreviewGroup
+              items={
+                value.map(
+                  (image: { id: string; path: string }) =>
+                    `${process.env.NEXT_PUBLIC_ASSET_URL}${image.path!}`,
+                ) ?? []
+              }
+            >
+              <Image
+                width={100}
+                height={100}
+                src={`${process.env.NEXT_PUBLIC_ASSET_URL}${value[0].path!}`}
+                onClick={(event) => {
+                  event.stopPropagation(); // Prevent row click event
+                }}
+                alt=""
+              />
+            </Image.PreviewGroup>
+          </div>
+        ) : (
+          <Image
+            width={100}
+            height={100}
+            preview={false}
+            src={`${process.env.NEXT_PUBLIC_ASSET_URL}/public/common/no-image.png`}
+            alt=""
+          />
+        );
+      },
+    },
     {
       title: t("common.nameEn"),
       dataIndex: "nameEn",
@@ -52,6 +96,7 @@ function ProductsTable() {
       title: t("stores.store"),
       dataIndex: ["store", "name"],
       key: "store",
+      hidden: !isInternalAdmin,
     },
     {
       title: t("products.category"),
@@ -84,7 +129,7 @@ function ProductsTable() {
           dataSource={data?.data}
           columns={columns}
           loading={isFetching}
-          sticky={{ offsetHeader: 88 }}
+          sticky={{ offsetHeader: 10 }}
           scroll={scroll}
           rowKey={(row) => row.id}
           onRow={(record) => {

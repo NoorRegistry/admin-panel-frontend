@@ -20,7 +20,7 @@ function PrivateHeader() {
         padding: 0,
         background: colorBgContainer,
       }}
-      className={clsx(styles.header, "z-10")}
+      className={clsx(styles.header, "z-10 hidden")}
     >
       <div className="px-4 flex justify-between">
         <div></div>
