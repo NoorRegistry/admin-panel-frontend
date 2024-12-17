@@ -64,9 +64,11 @@ export interface IProductCategory {
   id: string;
   nameEn: string;
   nameAr: string;
+  parentId: string | null;
   _count: {
     products: number;
   };
+  children: IProductCategory[];
 }
 
 export interface IProductCategoryDetails extends IProductCategory {
@@ -76,7 +78,7 @@ export interface IProductCategoryDetails extends IProductCategory {
 
 export type TCreateProductCategory = Omit<
   IProductCategoryDetails,
-  "id" | "_count"
+  "id" | "_count" | "children"
 >;
 
 export type TTokenInfo =
@@ -123,3 +125,26 @@ export interface IStoreAdmin {
 export type TCreateStoreAdmin = Omit<IStoreAdmin, "id" | "storeName" | "role">;
 
 export type TUploadType = "store" | "product";
+
+export type TStatistics = {
+  products?: {
+    total: number;
+    approved: number;
+    pending: number;
+    rejected: number;
+  };
+  registries?: {
+    total: number;
+    totalQuantity: number;
+  };
+  stores?: {
+    active: number;
+    inactive: number;
+  };
+  users?: {
+    total: number;
+  };
+  storeAdmins?: {
+    total: number;
+  };
+};

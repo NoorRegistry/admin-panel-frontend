@@ -155,6 +155,7 @@ function Sidebar() {
             onClick={onClick}
             theme="dark"
             mode="inline"
+            defaultOpenKeys={["productsparent"]}
             defaultSelectedKeys={filterMenuItemsByKey(
               filteredMenuItems,
               activeSegment ?? "dashboard",

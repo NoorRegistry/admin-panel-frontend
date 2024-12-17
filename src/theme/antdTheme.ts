@@ -7,6 +7,8 @@ const antdTheme: ThemeConfig = {
   token: {
     fontFamily: "var(--font-primary), var(--font-secondary)",
     colorBorder: "var(--color-neutral-300)",
+    colorBorderSecondary: "var(--color-neutral-200)",
+    colorSplit: "var(--color-neutral-200)",
     colorPrimary: "var(--color-primary)",
     colorText: "var(--color-neutral-700)",
     colorTextDescription: "var(--color-neutral-500)",
@@ -114,6 +116,8 @@ const antdTheme: ThemeConfig = {
       colorError: "var(--color-danger-500)",
       colorWarning: "var(--color-warning-500)",
       colorTextDescription: "var(--color-neutral-500)",
+      titleMarginBottom: 0,
+      titleMarginTop: 0,
     },
     Menu: {
       // darkItemColor: "#fff",
@@ -243,6 +247,22 @@ const antdTheme: ThemeConfig = {
     },
     Layout: {
       headerHeight: 64,
+    },
+    Cascader: {
+      colorError: "var(--color-danger-500)",
+      colorErrorBorder: "var(--color-danger-500)",
+      boxShadow: "0px 1px 2px 0px rgba(16, 24, 40, 0.05)",
+      colorErrorOutline: "rgba(225, 29, 72, 0.27)",
+      colorPrimary: "var(--color-primary-300)",
+      colorPrimaryHover: "var(--color-primary-300)",
+      controlOutline: "rgba(120, 138, 173, 0.27)",
+      controlOutlineWidth: 3,
+      colorBgContainerDisabled: "var(--color-neutral-50)",
+      optionSelectedBg: "var(--color-neutral-100)",
+      optionSelectedFontWeight: 500,
+    },
+    Collapse: {
+      colorBorder: "var(--color-neutral-200)",
     },
   },
 };

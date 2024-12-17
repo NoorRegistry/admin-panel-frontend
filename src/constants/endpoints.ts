@@ -13,6 +13,9 @@ const endpoints = {
   upload: {
     index: "/v1/api/admin/upload",
   },
+  statistics: {
+    index: "/v1/api/admin/statistics",
+  },
 };
 
 export default endpoints;

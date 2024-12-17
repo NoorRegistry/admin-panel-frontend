@@ -87,12 +87,13 @@ function CategoriesTable() {
           dataSource={data?.data}
           columns={columns}
           loading={isFetching}
-          sticky={{ offsetHeader: 88 }}
+          sticky={{ offsetHeader: 10 }}
           scroll={scroll}
           rowKey={(row) => row.id}
           onRow={(record) => {
             return {
               onClick: () => {
+                if (!isInternalAdmin) return;
                 setOpenCategoryInfo({ open: true, categoryId: record.id });
               },
             };

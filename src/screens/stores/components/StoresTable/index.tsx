@@ -1,3 +1,4 @@
+import StoreInfo, { IShowStoreInfoDrawerConfig } from "@/components/StoreInfo";
 import { useTableScroll } from "@/hooks/useTableScroll";
 import { fetchStores } from "@/services/stores.service";
 import { ColumnsType, EAdminRole, IStore } from "@/types";
@@ -7,12 +8,8 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Button, Flex, Image, Table, Tooltip, Typography } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  ICreateStoreAdminConfig,
-  IShowStoreInfoDrawerConfig,
-} from "../../stores.types";
+import { ICreateStoreAdminConfig } from "../../stores.types";
 import CreateStoreAdmin from "../CreateStoreAdmin";
-import StoreInfo from "../StoreInfo";
 
 function StoresTable() {
   const { t } = useTranslation();
@@ -158,7 +155,7 @@ function StoresTable() {
           dataSource={data?.data}
           columns={columns}
           loading={isFetching}
-          sticky={{ offsetHeader: 88 }}
+          sticky={{ offsetHeader: 10 }}
           scroll={scroll}
           rowKey={(row) => row.id}
           onRow={(record) => {

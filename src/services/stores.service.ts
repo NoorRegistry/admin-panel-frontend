@@ -4,6 +4,7 @@ import {
   IPaginatedResponse,
   IStore,
   IStoreAdmin,
+  IStoreDetails,
   TCreateStore,
   TCreateStoreAdmin,
 } from "@/types";
@@ -13,7 +14,7 @@ export const fetchStores = async () => {
 };
 
 export const fetchStore = async (id: string) => {
-  return await http.get<IStore>(`${endpoints.stores.index}/${id}`);
+  return await http.get<IStoreDetails>(`${endpoints.stores.index}/${id}`);
 };
 
 export const postStore = async (payload: TCreateStore) => {

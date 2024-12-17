@@ -7,6 +7,7 @@ import {
   EAdminRole,
   IAccessToken,
   IPaginatedResponse,
+  IProductCategory,
   TTokenInfo,
 } from "@/types";
 import { getStorageItem, setStorageItem } from "@/utils/storage";
@@ -131,4 +132,27 @@ export const getAdminStoreId = () => {
     const jwtPayload = jwtDecode<TTokenInfo>(token);
     return jwtPayload.role === EAdminRole.STORE_ADMIN ? jwtPayload.storeId : "";
   }
+};
+
+export const formatNumber = (num: number): string => {
+  return num.toLocaleString(undefined, { minimumIntegerDigits: 2 });
+};
+
+export const findCategoryPath = (
+  categories: IProductCategory[],
+  targetId: string,
+): string[] => {
+  for (const category of categories) {
+    if (category.id === targetId) {
+      return [category.id]; // Base case: return the ID when found.
+    }
+
+    if (category.children && Array.isArray(category.children)) {
+      const path = findCategoryPath(category.children, targetId);
+      if (path.length) {
+        return [category.id, ...path]; // Append the current ID to the path.
+      }
+    }
+  }
+  return []; // Return an empty array if the ID is not found.
 };

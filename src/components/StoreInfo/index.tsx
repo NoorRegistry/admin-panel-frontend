@@ -23,7 +23,11 @@ import {
 import TextArea from "antd/es/input/TextArea";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { IShowStoreInfoDrawerConfig } from "../../stores.types";
+
+export interface IShowStoreInfoDrawerConfig {
+  storeId?: string;
+  open: boolean;
+}
 
 function StoreInfo({
   config,
@@ -229,7 +233,7 @@ function StoreInfo({
             </Form.Item>
 
             <Form.Item<TCreateStore>
-              label={t("products.uploadProductImages")}
+              label={t("stores.uploadStoreLogo")}
               name="storeLogo"
               valuePropName="fileList"
               getValueFromEvent={normalizeFile}

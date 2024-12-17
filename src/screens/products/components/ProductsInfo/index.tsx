@@ -15,13 +15,16 @@ import {
   TCreateProduct,
 } from "@/types";
 import {
+  findCategoryPath,
   getAdminRole,
+  getAdminStoreId,
   normalizeFile,
   updatePaginatedData,
 } from "@/utils/helper";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
+  Cascader,
   Drawer,
   Flex,
   Form,
@@ -93,6 +96,9 @@ function ProductsInfo({
           return updatePaginatedData(data, old, config.productId);
         },
       );
+      queryClient.invalidateQueries({
+        queryKey: ["categories", isInternalAdmin],
+      });
       onClose();
     },
     onError: (err: IApiError) => {
@@ -103,17 +109,23 @@ function ProductsInfo({
   });
 
   const handleCreateProduct = (product: TCreateProduct) => {
-    product.images = product.images.map((image) => image.name ?? image.path);
+    if (product.images && Array.isArray(product.images))
+      product.images = product.images.map((image) => image.name ?? image.path);
+    if (Array.isArray(product.categoryId)) {
+      product.categoryId = product.categoryId[product.categoryId.length - 1];
+    }
     createProductMutation.mutate(product);
   };
 
   useEffect(() => {
-    if (data) {
+    if (data && categories) {
       setTimeout(() => {
-        form.setFieldsValue(data);
+        // Use the saved last ID to reconstruct the full path
+        const fullPath = findCategoryPath(categories.data, data.categoryId);
+        form.setFieldsValue({ ...data, categoryId: fullPath });
       });
     }
-  }, [data]);
+  }, [data, categories]);
 
   return (
     <div>
@@ -121,7 +133,7 @@ function ProductsInfo({
       <Drawer
         title={config.productId ? data?.nameEn : t("products.createProduct")}
         placement="right"
-        loading={isFetching}
+        loading={isFetching || isFetchingCategories}
         size="large"
         destroyOnClose
         onClose={onClose}
@@ -207,6 +219,7 @@ function ProductsInfo({
               name="storeId"
               rules={[{ required: true, message: t("common.required") }]}
               hidden={getAdminRole() === EAdminRole.STORE_ADMIN}
+              initialValue={!isInternalAdmin ? getAdminStoreId() : ""}
             >
               <Select
                 loading={isFetchingStores}
@@ -238,30 +251,35 @@ function ProductsInfo({
               label={t("products.category")}
               name="categoryId"
               rules={[{ required: true, message: t("common.required") }]}
+              className="col-span-2"
             >
-              <Select
-                loading={isFetchingCategories}
-                showSearch
+              <Cascader
+                className="w-full"
+                placement="bottomRight"
+                fieldNames={{ label: "nameEn", value: "id" }}
+                options={categories?.data}
+                changeOnSelect
+                showSearch={{
+                  // Custom filter to match any part of the label
+                  filter: (inputValue, path) => {
+                    return path.some(
+                      (option) =>
+                        option.nameEn
+                          .toLowerCase()
+                          .includes(inputValue.toLowerCase()) ||
+                        option.nameAr
+                          .toLowerCase()
+                          .includes(inputValue.toLowerCase()),
+                    );
+                  },
+                  // Renders the search path in the dropdown
+                  render: (_, path) => {
+                    return path.map(({ nameEn }) => nameEn).join(" > ");
+                  },
+                  // Optional: limit the number of search results
+                  limit: 5,
+                }}
                 placeholder={t("products.selectCategory")}
-                filterOption={(input, option) =>
-                  (option?.label ?? "")
-                    .toLowerCase()
-                    .includes(input.toLowerCase()) ||
-                  (option?.name ?? "")
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-                options={
-                  categories
-                    ? categories?.data.map((category) => {
-                        return {
-                          value: category.id,
-                          label: category.nameEn,
-                          name: category.nameAr,
-                        };
-                      })
-                    : []
-                }
               />
             </Form.Item>
           </div>

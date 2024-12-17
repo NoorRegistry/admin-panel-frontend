@@ -155,6 +155,7 @@ const UploadComponent = ({
         onPreview={handlePreview}
         onChange={handleChange}
         onRemove={handleRemove}
+        accept="image/*"
       >
         {imagesList.length >= (type === "store" ? 1 : allowedProductImages)
           ? null
@@ -175,6 +176,7 @@ const UploadComponent = ({
               visible: previewOpen,
             }}
             src={previewImage}
+            alt=""
           />
         </Image.PreviewGroup>
       )}

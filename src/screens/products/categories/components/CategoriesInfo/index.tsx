@@ -1,14 +1,15 @@
 import { IApiError } from "@/api/http";
 import { queryClient } from "@/api/queryClient";
 import {
+  fetchProductCategories,
   fetchProductCategory,
   patchProductCategory,
   postProductCategory,
 } from "@/services/product.service";
-import { EAdminRole, IProductCategory, TCreateProductCategory } from "@/types";
-import { getAdminRole } from "@/utils/helper";
+import { IProductCategory, TCreateProductCategory } from "@/types";
+import { findCategoryPath } from "@/utils/helper";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Drawer, Flex, Form, Input, message } from "antd";
+import { Button, Cascader, Drawer, Flex, Form, Input, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -25,12 +26,15 @@ function CategoriesInfo({
   const { t } = useTranslation();
   const [form] = Form.useForm();
 
-  const isInternalAdmin = getAdminRole() === EAdminRole.INTERNAL_ADMIN;
-
   const { data, isFetching } = useQuery({
     queryKey: ["categories", config.categoryId],
     queryFn: ({ queryKey }) => fetchProductCategory(queryKey[1]!),
     enabled: Boolean(config.categoryId),
+  });
+
+  const { data: categories, isFetching: isFetchingCategories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchProductCategories,
   });
 
   const createCategoryMutation = useMutation({
@@ -57,12 +61,8 @@ function CategoriesInfo({
           },
         );
         queryClient.invalidateQueries({
-          queryKey: ["categories", isInternalAdmin],
+          queryKey: ["categories"],
         });
-        /* queryClient.setQueryData<IPaginatedResponse<IProductCategory>>(
-          ["categories", isInternalAdmin],
-          (old) => updatePaginatedData(data, old, config.categoryId),
-        ); */
       } catch (error) {
         console.error("error in product category create", error);
       }
@@ -76,17 +76,26 @@ function CategoriesInfo({
     },
   });
 
-  const handleCreateCategory = (store: TCreateProductCategory) => {
-    createCategoryMutation.mutate(store);
+  const handleCreateCategory = (category: TCreateProductCategory) => {
+    if (Array.isArray(category.parentId)) {
+      category.parentId = category.parentId[category.parentId.length - 1];
+    }
+    createCategoryMutation.mutate(category);
   };
 
   useEffect(() => {
-    if (data) {
+    if (data && categories) {
       setTimeout(() => {
-        form.setFieldsValue(data);
+        // Use the saved last ID to reconstruct the full path
+        if (data.parentId) {
+          const fullPath = findCategoryPath(categories.data, data.parentId);
+          form.setFieldsValue({ ...data, parentId: fullPath });
+        } else {
+          form.setFieldsValue(data);
+        }
       });
     }
-  }, [data, form]);
+  }, [data, form, categories]);
 
   return (
     <div>
@@ -94,7 +103,7 @@ function CategoriesInfo({
       <Drawer
         title={config.categoryId ? data?.nameEn : t("products.createCategory")}
         placement="right"
-        loading={isFetching}
+        loading={isFetching || isFetchingCategories}
         size="large"
         destroyOnClose
         onClose={onClose}
@@ -154,6 +163,41 @@ function CategoriesInfo({
               rules={[{ required: true, message: t("common.required") }]}
             >
               <TextArea autoSize />
+            </Form.Item>
+
+            <Form.Item<TCreateProductCategory>
+              label={t("products.selectParentCategory")}
+              name="parentId"
+              className="col-span-2"
+            >
+              <Cascader
+                className="w-full"
+                placement="bottomRight"
+                fieldNames={{ label: "nameEn", value: "id" }}
+                options={categories?.data}
+                changeOnSelect
+                showSearch={{
+                  // Custom filter to match any part of the label
+                  filter: (inputValue, path) => {
+                    return path.some(
+                      (option) =>
+                        option.nameEn
+                          .toLowerCase()
+                          .includes(inputValue.toLowerCase()) ||
+                        option.nameAr
+                          .toLowerCase()
+                          .includes(inputValue.toLowerCase()),
+                    );
+                  },
+                  // Renders the search path in the dropdown
+                  render: (_, path) => {
+                    return path.map(({ nameEn }) => nameEn).join(" > ");
+                  },
+                  // Optional: limit the number of search results
+                  limit: 5,
+                }}
+                placeholder={t("products.selectCategory")}
+              />
             </Form.Item>
           </div>
         </Form>
