@@ -20,8 +20,6 @@ export const resources = {
 export const supportedLocales = Object.keys(resources);
 
 const initI18n = () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const langParam = urlParams.get(constants.USER_SELECTED_LANGUAGE_STORAGE_KEY);
   let selectedLanguage = getStorageItem(
     constants.USER_SELECTED_LANGUAGE_STORAGE_KEY,
   );
@@ -37,7 +35,7 @@ const initI18n = () => {
     // for all options read: https://www.i18next.com/overview/configuration-options
     .init({
       fallbackLng: "en",
-      lng: langParam ?? selectedLanguage ?? "en",
+      lng: selectedLanguage ?? "en",
       debug: false,
       resources,
       lowerCaseLng: true,
