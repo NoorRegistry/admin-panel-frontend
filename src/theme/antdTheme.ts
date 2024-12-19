@@ -40,6 +40,8 @@ const antdTheme: ThemeConfig = {
     colorSuccessHover: "var(--color-success-600)",
     colorSuccessBorderHover: "var(--color-success-600)",
     colorSuccessActive: "var(--color-success-700)",
+    colorSuccessTextActive: "var(--color-success-500)",
+    colorSuccessTextHover: "var(--color-success-700)",
     borderRadius: 8,
     controlHeight: 36,
     controlHeightLG: 44,
@@ -120,6 +122,7 @@ const antdTheme: ThemeConfig = {
       titleMarginTop: 0,
     },
     Menu: {
+      colorError: "var(--color-danger-500)",
       // darkItemColor: "#fff",
       // darkItemBg: "var(--color-primary-700)",
       // darkItemHoverBg: "var(--color-primary-500)",
@@ -157,6 +160,9 @@ const antdTheme: ThemeConfig = {
     Modal: {
       titleFontSize: 18,
       titleColor: "var(--color-neutral-700)",
+      fontFamily: "var(--font-primary), var(--font-secondary)",
+      colorWarning: "var(--color-warning-500)",
+      colorError: "var(--color-danger-500)",
     },
     Tabs: {
       itemColor: "var(--color-neutral-500)",
@@ -263,6 +269,26 @@ const antdTheme: ThemeConfig = {
     },
     Collapse: {
       colorBorder: "var(--color-neutral-200)",
+    },
+    Badge: {
+      colorSuccess: "var(--color-success-500)",
+      colorError: "var(--color-danger-500)",
+    },
+    Dropdown: {
+      colorErrorBg: "var(--color-danger-500)",
+      colorErrorBgActive: "var(--color-danger-700)",
+      colorErrorActive: "var(--color-danger-500)",
+      colorError: "var(--color-danger-500)",
+      colorSuccess: "var(--color-success-500)",
+      controlItemBgActive: "var(--color-neutral-100)",
+    },
+    Switch: {
+      colorPrimary: "var(--color-success-500)",
+      colorPrimaryHover: "var(--color-success-700)",
+    },
+    Message: {
+      colorError: "var(--color-danger-500)",
+      colorSuccess: "var(--color-success-500)",
     },
   },
 };

@@ -25,6 +25,7 @@ export interface IStore {
   nameEn: string;
   nameAr: string;
   storeLogo: string;
+  isActive: boolean;
 }
 
 export interface IStoreDetails extends IStore {
@@ -45,6 +46,8 @@ export interface IProduct {
   images: any[];
   storeId: string;
   categoryId: string;
+  status: EProductStatus;
+  isActive: boolean;
   category: {
     name: string;
   };
@@ -148,3 +151,15 @@ export type TStatistics = {
     total: number;
   };
 };
+
+export enum EProductStatus {
+  PENDING = "Pending",
+  REJECTED = "Rejected",
+  APPROVED = "Approved",
+}
+
+export interface IQueryState {
+  current: number;
+  pageSize: number;
+  search: string;
+}

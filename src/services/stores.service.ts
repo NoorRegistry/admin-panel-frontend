@@ -21,7 +21,10 @@ export const postStore = async (payload: TCreateStore) => {
   return await http.post<IStore>(endpoints.stores.index, payload);
 };
 
-export const patchStore = async (id: string, payload: TCreateStore) => {
+export const patchStore = async (
+  id: string,
+  payload: Partial<TCreateStore>,
+) => {
   return await http.patch<IStore>(`${endpoints.stores.index}/${id}`, payload);
 };
 

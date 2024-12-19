@@ -40,6 +40,10 @@ const translations = {
     descriptionAr: "Description AR",
     uploadStoreLogo: "Upload Store Logo",
     storeInfo: "Your store information",
+    markActive: "Are you sure to mark the store as active?",
+    markInActuve: "Are you sure to mark the store as inactive?",
+    markedActive: "{{storename}} is marked as active",
+    markedInActive: "{{storename}} is marked as inactive",
   },
   common: {
     login: "Log in",
@@ -70,6 +74,10 @@ const translations = {
     pending: "Pending",
     rejected: "Rejected",
     approved: "Approved",
+    status: "Status",
+    confirm: "Confirm",
+    showTotal: "{{start}} - {{end}} of Total {{total}} items",
+    searchByName: "Search by Name",
   },
   products: {
     products: "Products",
@@ -85,10 +93,14 @@ const translations = {
     categoryEdited: "Category {{name}} created successfully",
     productCreated: "Product created successfully",
     productEdited: "Product edited successfully",
+    productUpdated: "Product updated successfully",
     selectStore: "Select Store",
     selectCategory: "Select Category",
     selectParentCategory: "Select Parent Category",
     uploadProductImages: "Upload Product Images",
+    productStatusChange: "Product {{status}} successfully",
+    confirmProductStatusUpdate:
+      "Are you sure to mark the product as {{status}}?",
   },
 } as const;
 

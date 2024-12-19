@@ -9,8 +9,14 @@ import {
   TCreateProductCategory,
 } from "@/types";
 
-export const fetchProducts = async () => {
-  return await http.get<IPaginatedResponse<IProduct>>(endpoints.products.index);
+export const fetchProducts = async (
+  page: number,
+  limit: number,
+  search: string,
+) => {
+  return await http.get<IPaginatedResponse<IProduct>>(
+    `${endpoints.products.index}?page=${page}&limit=${limit}&nameEn=${encodeURIComponent(search)}`,
+  );
 };
 
 export const fetchProduct = async (id: string) => {
@@ -21,7 +27,10 @@ export const postProduct = async (payload: TCreateProduct) => {
   return await http.post<IProduct>(endpoints.products.index, payload);
 };
 
-export const patchProduct = async (id: string, payload: TCreateProduct) => {
+export const patchProduct = async (
+  id: string,
+  payload: Partial<TCreateProduct>,
+) => {
   return await http.patch<IProduct>(
     `${endpoints.products.index}/${id}`,
     payload,

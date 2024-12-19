@@ -37,7 +37,9 @@ const StatisticsCards: React.FC = () => {
   const { data, isFetching } = useQuery({
     queryKey: ["statistics"],
     queryFn: fetchStatistics,
-    placeholderData: {},
+    refetchInterval: 120000, // 2 minutes in milliseconds
+    // Optional: only refetch if component is in view
+    refetchIntervalInBackground: false,
   });
 
   const getTooltipText = (

@@ -5,10 +5,10 @@ const endpoints = {
     refreshToken: "/v1/api/admin/auth/refresh",
   },
   stores: {
-    index: "/v1/api/stores",
+    index: "/v1/api/admin/stores",
   },
   products: {
-    index: "/v1/api/products",
+    index: "/v1/api/admin/products",
   },
   upload: {
     index: "/v1/api/admin/upload",

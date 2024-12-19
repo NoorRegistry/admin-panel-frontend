@@ -123,6 +123,7 @@ const UploadComponent = ({
       queryClient.invalidateQueries({ queryKey: ["stores"] });
     } else if (type === "product") {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["product"] });
     }
   };
 

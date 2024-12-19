@@ -12,6 +12,7 @@ import {
   EAdminRole,
   IPaginatedResponse,
   IProduct,
+  IQueryState,
   TCreateProduct,
 } from "@/types";
 import {
@@ -41,9 +42,11 @@ import { IShowProductInfoDrawerConfig } from "../../products.types";
 function ProductsInfo({
   config,
   onClose,
+  queryState,
 }: {
   config: IShowProductInfoDrawerConfig;
   onClose: () => void;
+  queryState: IQueryState;
 }) {
   const [uploading, setUploading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
@@ -53,7 +56,7 @@ function ProductsInfo({
   const isInternalAdmin = getAdminRole() === EAdminRole.INTERNAL_ADMIN;
 
   const { data, isFetching } = useQuery({
-    queryKey: ["products", config.productId],
+    queryKey: ["product", config.productId],
     queryFn: ({ queryKey }) => fetchProduct(queryKey[1]!),
     enabled: Boolean(config.productId),
   });
@@ -85,13 +88,13 @@ function ProductsInfo({
         ),
       });
       queryClient.setQueryData<IProduct | undefined>(
-        ["products", config.productId],
+        ["product", config.productId],
         (old: any) => {
           return { ...old, ...data };
         },
       );
       queryClient.setQueryData<IPaginatedResponse<IProduct>>(
-        ["products"],
+        ["products", queryState],
         (old) => {
           return updatePaginatedData(data, old, config.productId);
         },

@@ -89,6 +89,15 @@ function CategoriesTable() {
           loading={isFetching}
           sticky={{ offsetHeader: 10 }}
           scroll={scroll}
+          pagination={{
+            total: data?.total,
+            showTotal: (total, range) =>
+              t("common.showTotal", {
+                total: total,
+                start: range[0],
+                end: range[1],
+              }),
+          }}
           rowKey={(row) => row.id}
           onRow={(record) => {
             return {
