@@ -278,13 +278,21 @@ function ProductsTable() {
       title: t("common.nameEn"),
       dataIndex: "nameEn",
       key: "nameEn",
+      width: 250,
       ellipsis: true,
+      render: (text) => (
+        <div className="whitespace-normal break-words">{text}</div>
+      ),
     },
     {
       title: t("common.nameAr"),
       dataIndex: "nameAr",
       key: "nameAr",
+      width: 250,
       ellipsis: true,
+      render: (text) => (
+        <div className="whitespace-normal break-words">{text}</div>
+      ),
     },
     {
       title: t("products.price"),
@@ -292,18 +300,23 @@ function ProductsTable() {
       key: "price",
       width: 85,
       ellipsis: true,
+      align: "center",
+      render: (text, record) => `${record.currencyCode} ${text}`,
     },
     {
       title: t("products.qty"),
       dataIndex: "qty",
       key: "qty",
       width: 50,
+      align: "center",
     },
     {
       title: t("stores.store"),
       dataIndex: ["store", "name"],
       key: "store",
       hidden: !isInternalAdmin,
+      width: 150,
+      ellipsis: true,
     },
     {
       title: t("products.category"),
@@ -314,6 +327,8 @@ function ProductsTable() {
       title: t("common.status"),
       dataIndex: "status",
       key: "status",
+      width: 150,
+      fixed: "right",
       render: (value, record) => {
         return isInternalAdmin
           ? displayStatusDropdown(value, record)
@@ -324,6 +339,8 @@ function ProductsTable() {
       title: t("common.active"),
       dataIndex: "isActive",
       key: "isActive",
+      width: 60,
+      fixed: "right",
       render: (value, record) => {
         return isInternalAdmin ? (
           // update mutation function to accept both status and isActive values and use the record here to get the product id and call the mutation func

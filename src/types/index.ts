@@ -54,6 +54,7 @@ export interface IProduct {
   store: {
     name: string;
   };
+  currencyCode: string;
 }
 
 export interface IProductDetails extends IProduct {

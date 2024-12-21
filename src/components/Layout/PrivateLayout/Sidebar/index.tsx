@@ -11,8 +11,8 @@ import {
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout, Menu } from "antd";
-import { useRouter, useSelectedLayoutSegment } from "next/navigation";
-import React, { useCallback, useMemo, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import LogoutIcon from "/public/icons/common/logout.svg";
 
@@ -30,9 +30,11 @@ const siderStyle: React.CSSProperties = {
   scrollbarGutter: "stable",
 };
 
+type MenuKey = string;
 type MenuItem = Required<MenuProps>["items"][number];
 type TMenuItems = MenuItem & { href?: string } & {
   children?: TMenuItems[];
+  key: string;
 };
 
 const findHrefByKey = (items: TMenuItems[], key: string): string | undefined =>
@@ -45,28 +47,40 @@ const findHrefByKey = (items: TMenuItems[], key: string): string | undefined =>
     undefined,
   );
 
-const filterMenuItemsByKey = (items: TMenuItems[], key: string): TMenuItems[] =>
-  items.flatMap((item) =>
-    item.key === key
-      ? [item]
-      : item.children
-        ? [
-            {
-              ...item,
-              children: filterMenuItemsByKey(item.children, key),
-            },
-          ].filter((child) => child.children?.length)
-        : [],
-  );
+const getKeys = (
+  items: TMenuItems[],
+  pathname: string,
+): { selectedKeys: MenuKey[]; openKeys: MenuKey[] } => {
+  let selectedKeys: MenuKey[] = [];
+  let openKeys: MenuKey[] = [];
 
+  for (const item of items) {
+    // Direct match for selectedKeys
+    if (item.href === pathname) {
+      selectedKeys = [item.key];
+    }
+
+    // Check children for matches
+    if (item.children) {
+      const childResult = getKeys(item.children, pathname);
+      if (childResult.selectedKeys.length > 0) {
+        openKeys.push(item.key); // Include parent key for openKeys
+        selectedKeys = childResult.selectedKeys;
+        openKeys = [...openKeys, ...childResult.openKeys];
+      }
+    }
+  }
+
+  return { selectedKeys, openKeys };
+};
 function Sidebar() {
   const { t } = useTranslation();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const logout = useGlobalStore.use.signOut();
-  const activeSegment = useSelectedLayoutSegment();
-
+  const pathname = usePathname();
+  console.log("pathname: " + pathname);
   const menuItems: TMenuItems[] = [
     {
       key: "dashboard",
@@ -100,6 +114,25 @@ function Sidebar() {
       ],
     },
   ];
+  const { selectedKeys, openKeys: initialOpenKeys } = getKeys(
+    menuItems,
+    pathname,
+  );
+
+  // State for openKeys to allow user interaction
+  const [openKeys, setOpenKeys] = useState<MenuKey[]>(initialOpenKeys);
+
+  // Update openKeys if pathname changes
+  useEffect(() => {
+    const { openKeys: newOpenKeys } = getKeys(menuItems, pathname);
+    setOpenKeys(newOpenKeys);
+  }, [pathname]);
+
+  // Handler for submenu toggling
+  const onOpenChange = (keys: MenuKey[]) => {
+    console.log("onOpenChange", keys);
+    setOpenKeys(keys); // Update openKeys based on user interaction
+  };
 
   // Get the user type
   const userType = getAdminRole();
@@ -135,7 +168,7 @@ function Sidebar() {
     },
   ];
 
-  const onClick: MenuProps["onClick"] = (e) => {
+  const onClick: MenuProps["onClick"] = (e: TMenuItems) => {
     const href = findHrefByKey(menuItems, e.key);
     if (href) router.replace(href);
   };
@@ -155,11 +188,9 @@ function Sidebar() {
             onClick={onClick}
             theme="dark"
             mode="inline"
-            defaultOpenKeys={["productsparent"]}
-            defaultSelectedKeys={filterMenuItemsByKey(
-              filteredMenuItems,
-              activeSegment ?? "dashboard",
-            ).map((item) => item.key as string)}
+            selectedKeys={selectedKeys}
+            openKeys={openKeys}
+            onOpenChange={onOpenChange}
             items={filteredMenuItems}
           />
         </div>

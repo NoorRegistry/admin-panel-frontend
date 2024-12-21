@@ -151,30 +151,46 @@ function StoresTable() {
       dataIndex: "nameEn",
       key: "nameEn",
       align: "start",
+      width: 150,
+      ellipsis: true,
     },
     {
       title: t("stores.nameAr"),
       dataIndex: "nameAr",
       key: "nameAr",
       align: "start",
+      width: 150,
+      ellipsis: true,
     },
     {
       title: t("stores.locationEn"),
       dataIndex: "locationEn",
       key: "locationEn",
       align: "start",
+      ellipsis: true,
+      width: 200,
+      render: (text) => (
+        <div className="whitespace-normal break-words">{text}</div>
+      ),
     },
     {
       title: t("stores.locationAr"),
       dataIndex: "locationAr",
       key: "locationAr",
+      width: 200,
+      ellipsis: true,
       align: "start",
+      render: (text) => (
+        <div className="whitespace-normal break-words">{text}</div>
+      ),
     },
     {
       title: t("stores.contact"),
       dataIndex: "contactNumber",
       key: "contactNumber",
       align: "start",
+      width: 150,
+      ellipsis: true,
       render: (_, record) => (
         <span>
           {record.countryCode} {record.mobileNumber}
@@ -186,11 +202,14 @@ function StoresTable() {
       dataIndex: "email",
       key: "email",
       align: "start",
+      width: 100,
+      ellipsis: true,
     },
     {
       title: t("common.active"),
       dataIndex: "isActive",
       key: "isActive",
+      fixed: "right",
       render: (value, record) => {
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -211,6 +230,7 @@ function StoresTable() {
       dataIndex: "",
       key: "action",
       align: "start",
+      fixed: "right",
       render: (_, record) => (
         <Flex gap="small">
           <Tooltip title={t("stores.addStoreAdmin")}>
@@ -294,9 +314,10 @@ function StoresTable() {
           value={searchText}
           onChange={(e) => handleSearch(e.target.value)}
           className="max-w-80"
+          allowClear
         />
       </div>
-      <div className="my-6">
+      <div className="my-6 min-w-0">
         <Table<IStore>
           ref={tableRef}
           dataSource={paginatedData}

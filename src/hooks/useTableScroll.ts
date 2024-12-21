@@ -1,6 +1,6 @@
 import { TableProps } from "antd";
 import { TableRef } from "antd/es/table";
-import { RefObject, useLayoutEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 type UseTableScroll = {
@@ -20,8 +20,8 @@ const getPaginationHeight = (tableWrapper: HTMLDivElement) => {
 
   const { height } = paginationElement.getBoundingClientRect();
   const styles = window.getComputedStyle(paginationElement);
-  const marginTop = +styles.marginTop.replace("px", "");
-  const marginBottom = +styles.marginBottom.replace("px", "");
+  const marginTop = parseFloat(styles.marginTop) || 0;
+  const marginBottom = parseFloat(styles.marginBottom) || 0;
 
   calculatedHeight += height + marginTop + marginBottom;
 
@@ -29,7 +29,7 @@ const getPaginationHeight = (tableWrapper: HTMLDivElement) => {
 };
 
 export const useTableScroll = (
-  scrollX: ScrollX = true,
+  scrollX: ScrollX = "max-content",
   stretchByPage: boolean = true,
   delay: number = 50,
 ): UseTableScroll => {
@@ -37,32 +37,47 @@ export const useTableScroll = (
   const tableRef = useRef<TableRef>(null);
 
   const calcScrollY = () => {
-    const tableWrapper = tableRef.current?.nativeElement;
-    if (!tableWrapper) return;
+    requestAnimationFrame(() => {
+      const tableWrapper = tableRef.current?.nativeElement;
+      if (!tableWrapper) return;
 
-    const tBody = tableWrapper.getElementsByTagName("tbody")[0];
-    if (!tBody) return;
+      const tBody = tableWrapper.getElementsByTagName("tbody")[0];
+      if (!tBody) return;
 
-    const empty = tableWrapper.getElementsByClassName("ant-empty")[0];
-    if (empty) return setScrollY(undefined);
+      const empty = tableWrapper.getElementsByClassName("ant-empty")[0];
+      if (empty) return setScrollY(undefined);
 
-    const { y: tBodyY } = tBody.getBoundingClientRect();
-    const totalHeight =
-      window.innerHeight - tBodyY - getPaginationHeight(tableWrapper);
+      const { y: tBodyY } = tBody.getBoundingClientRect();
+      const totalHeight =
+        window.innerHeight - tBodyY - getPaginationHeight(tableWrapper);
 
-    setScrollY(totalHeight);
+      setScrollY(totalHeight);
+    });
   };
 
   const debounce = useDebouncedCallback(calcScrollY, delay);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     debounce();
-    window.addEventListener("resize", calcScrollY);
+    window.addEventListener("resize", debounce);
 
     return () => {
-      window.removeEventListener("resize", calcScrollY);
+      window.removeEventListener("resize", debounce);
     };
-  }, [tableRef.current?.nativeElement]);
+  }, [debounce]);
+
+  useLayoutEffect(() => {
+    const tableWrapper = tableRef.current?.nativeElement;
+    if (!tableWrapper) return;
+
+    const observer = new MutationObserver(debounce);
+    observer.observe(tableWrapper, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => observer.disconnect();
+  }, [debounce]);
 
   useLayoutEffect(() => {
     if (!stretchByPage) return;
@@ -76,7 +91,6 @@ export const useTableScroll = (
     if (!tableBody) return;
 
     tableBody.style.height = `${scrollY}px`;
-    // tableBody.style.overflow = tableBody.style.overflow.replace("scroll", "auto");
   }, [scrollY]);
 
   return { tableRef, scroll: { x: scrollX, y: scrollY } };
