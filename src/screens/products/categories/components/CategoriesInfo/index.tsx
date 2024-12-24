@@ -14,6 +14,7 @@ import TextArea from "antd/es/input/TextArea";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { IShowCategoryInfoDrawerConfig } from "../../../products.types";
+import formValidations from "@/constants/formValidations";
 
 function CategoriesInfo({
   config,
@@ -138,7 +139,7 @@ function CategoriesInfo({
               name="nameEn"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <Input />
+              <Input maxLength={formValidations?.productCategory?.nameEn} />
             </Form.Item>
 
             <Form.Item<TCreateProductCategory>
@@ -146,7 +147,7 @@ function CategoriesInfo({
               name="nameAr"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <Input />
+              <Input maxLength={formValidations?.productCategory?.nameAr} />
             </Form.Item>
 
             <Form.Item<TCreateProductCategory>
@@ -154,7 +155,7 @@ function CategoriesInfo({
               name="descriptionEn"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <TextArea autoSize />
+              <TextArea autoSize maxLength={formValidations?.productCategory?.descriptionEn} />
             </Form.Item>
 
             <Form.Item<TCreateProductCategory>
@@ -162,7 +163,7 @@ function CategoriesInfo({
               name="descriptionAr"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <TextArea autoSize />
+              <TextArea autoSize maxLength={formValidations?.productCategory?.descriptionAr} />
             </Form.Item>
 
             <Form.Item<TCreateProductCategory>
