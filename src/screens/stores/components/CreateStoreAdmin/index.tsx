@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Button, Flex, Form, Input, Modal, message } from "antd";
 import { useTranslation } from "react-i18next";
 import { ICreateStoreAdminConfig } from "../../stores.types";
+import formValidations from "@/constants/formValidations";
 
 function CreateStoreAdmin({
   config,
@@ -75,7 +76,7 @@ function CreateStoreAdmin({
             name="firstName"
             rules={[{ required: true, message: t("common.required") }]}
           >
-            <Input placeholder="Enter your first name" />
+            <Input placeholder="Enter your first name" maxLength={formValidations?.cmsAdmins?.firstName} />
           </Form.Item>
 
           <Form.Item<TCreateStoreAdmin>
@@ -83,7 +84,7 @@ function CreateStoreAdmin({
             name="lastName"
             rules={[{ required: true, message: t("common.required") }]}
           >
-            <Input placeholder="Enter your last name" />
+            <Input placeholder="Enter your last name" maxLength={formValidations?.cmsAdmins?.lastName} />
           </Form.Item>
 
           <Form.Item<TCreateStoreAdmin>
@@ -94,7 +95,7 @@ function CreateStoreAdmin({
               { type: "email", message: t("login.enterValidEmail") },
             ]}
           >
-            <Input placeholder="Enter your email" />
+            <Input placeholder="Enter your email" maxLength={formValidations?.cmsAdmins?.email} />
           </Form.Item>
 
           <Form.Item<TCreateStoreAdmin>
