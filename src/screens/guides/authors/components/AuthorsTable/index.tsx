@@ -9,7 +9,6 @@ import {
   Image,
   Input,
   message,
-  Modal,
   PaginationProps,
   Table,
   Typography,
@@ -17,6 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebounce } from "use-debounce";
+import AuthorsInfo from "../AuthorsInfo";
 
 function AuthorsTable() {
   const { t } = useTranslation();
@@ -102,7 +102,7 @@ function AuthorsTable() {
       },
     },
     {
-      title: t("guides.nameEn"),
+      title: t("common.nameEn"),
       dataIndex: "nameEn",
       key: "nameEn",
       align: "start",
@@ -110,7 +110,7 @@ function AuthorsTable() {
       ellipsis: true,
     },
     {
-      title: t("guides.nameAr"),
+      title: t("common.nameAr"),
       dataIndex: "nameAr",
       key: "nameAr",
       align: "start",
@@ -190,6 +190,10 @@ function AuthorsTable() {
           }}
         />
       </div>
+      <AuthorsInfo
+        config={openAuthorInfo}
+        onClose={() => setOpenAuthorInfo({ open: false })}
+      />
     </>
   );
 }

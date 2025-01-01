@@ -76,6 +76,8 @@ export interface IProductDetails extends IProduct {
 
 export type TCreateProduct = Omit<IProductDetails, "id" | "store" | "category">;
 
+export type TCreateAuthor = Omit<IAuthor, "id">;
+
 export interface IProductCategory {
   id: string;
   nameEn: string;
@@ -140,7 +142,7 @@ export interface IStoreAdmin {
 
 export type TCreateStoreAdmin = Omit<IStoreAdmin, "id" | "storeName" | "role">;
 
-export type TUploadType = "store" | "product";
+export type TUploadType = "store" | "product" | "author";
 
 export type TStatistics = {
   products?: {

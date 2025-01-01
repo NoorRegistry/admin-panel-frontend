@@ -108,10 +108,11 @@ const translations = {
     category: "Category",
     categories: "Categories",
     authors: "Authors",
-    createAuthor: "Create Author",
-    nameEn: "Name EN",
-    nameAr: "Name AR",
     totalGuides: "Total Guides",
+    createAuthor: "Create Author",
+    authorEdited: "Author edited successfully",
+    authorCreated: "AuthorProduct created successfully",
+    uploadAuthorImages: "Upload Author Images",
   },
 } as const;
 
