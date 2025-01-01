@@ -94,8 +94,14 @@ const translations = {
     list: "قائمة",
     category: "فئة",
     categories: "فئات",
-    authors: "مؤلفون",
-  },
+    authors: "المؤلفون",
+    totalGuides: "إجمالي الأدلة",
+    createAuthor: "إنشاء مؤلف",
+    authorEdited: "تم تعديل المؤلف بنجاح",
+    authorCreated: "تم إنشاء منتج المؤلف بنجاح",
+    uploadAuthorImage: "رفع صور المؤلف"
+  }
+  
 } as const;
 
 export default translations;

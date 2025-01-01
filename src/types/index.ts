@@ -28,6 +28,23 @@ export interface IStore {
   isActive: boolean;
 }
 
+export interface IAuthor {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+  image: string;
+  _count: {
+    guides: number;
+  };
+}
+
+export type TCreateAuthor = Omit<IAuthor, "id" | "_count">;
+
+export interface IShowAuthorInfoDrawerConfig {
+  authorId?: string;
+  open: boolean;
+}
+
 export interface IStoreDetails extends IStore {
   descriptionEn: string;
   descriptionAr: string;
@@ -128,7 +145,7 @@ export interface IStoreAdmin {
 
 export type TCreateStoreAdmin = Omit<IStoreAdmin, "id" | "storeName" | "role">;
 
-export type TUploadType = "store" | "product";
+export type TUploadType = "store" | "product" | "author";
 
 export type TStatistics = {
   products?: {

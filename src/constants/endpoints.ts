@@ -16,6 +16,9 @@ const endpoints = {
   statistics: {
     index: "/v1/api/admin/statistics",
   },
+  guides: {
+    index: "/v1/api/admin/guides",
+  },
 };
 
 export default endpoints;
