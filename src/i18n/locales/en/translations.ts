@@ -103,12 +103,13 @@ const translations = {
       "Are you sure to mark the product as {{status}}?",
   },
   guides: {
-    guides: 'Guides',
+    guides: "Guides",
     list: "List",
     category: "Category",
     categories: "Categories",
-    authors: 'Authors'
-  }
+    authors: "Authors",
+    createAuthor: "Create Author",
+  },
 } as const;
 
 export default translations;

@@ -28,6 +28,13 @@ export interface IStore {
   isActive: boolean;
 }
 
+export interface IAuthor {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+  image: string;
+}
+
 export interface IStoreDetails extends IStore {
   descriptionEn: string;
   descriptionAr: string;

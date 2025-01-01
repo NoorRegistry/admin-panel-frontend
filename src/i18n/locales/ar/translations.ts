@@ -90,11 +90,12 @@ const translations = {
     uploadProductImages: "تحميل صور المنتج",
   },
   guides: {
-    guides: "أدلة",
-    list: "قائمة",
-    category: "فئة",
-    categories: "فئات",
-    authors: "مؤلفون",
+    guides: "الدلائل",
+    list: "القائمة",
+    category: "الفئة",
+    categories: "الفئات",
+    authors: "المؤلفون",
+    createAuthor: "إنشاء مؤلف",
   },
 } as const;
 

@@ -1,8 +1,13 @@
+"use client";
+import AuthorsTable from "@/screens/guides/authors/components/AuthorsTable";
+
 function Authors() {
   return (
-    <div>
-      Authors
-    </div>
+    <>
+      <div>
+        <AuthorsTable />
+      </div>
+    </>
   );
 }
 
