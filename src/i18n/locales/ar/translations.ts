@@ -89,6 +89,13 @@ const translations = {
     selectCategory: "اختر الفئة",
     uploadProductImages: "تحميل صور المنتج",
   },
+  guides: {
+    guides: "أدلة",
+    list: "قائمة",
+    category: "فئة",
+    categories: "فئات",
+    authors: "مؤلفون",
+  },
 } as const;
 
 export default translations;

@@ -6,7 +6,9 @@ import {
   HomeOutlined,
   OrderedListOutlined,
   ProductOutlined,
+  ReadOutlined,
   ShopOutlined,
+  TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
@@ -110,6 +112,31 @@ function Sidebar() {
           icon: <ApartmentOutlined />,
           label: t("products.categories"),
           href: "/products/categories",
+        },
+      ],
+    },
+    {
+      key: "guidesparent",
+      icon: <ReadOutlined />,
+      label: t("guides.guides"),
+      children: [
+        {
+          key: "guides",
+          icon: <OrderedListOutlined />,
+          label: t("guides.list"),
+          href: "/guides",
+        },
+        {
+          key: "guidesCategories",
+          icon: <ApartmentOutlined />,
+          label: t("guides.categories"),
+          href: "/guides/categories",
+        },
+        {
+          key: "authors",
+          icon: <TeamOutlined />,
+          label: t("guides.authors"),
+          href: "/guides/authors",
         },
       ],
     },

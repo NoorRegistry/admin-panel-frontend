@@ -102,6 +102,13 @@ const translations = {
     confirmProductStatusUpdate:
       "Are you sure to mark the product as {{status}}?",
   },
+  guides: {
+    guides: 'Guides',
+    list: "List",
+    category: "Category",
+    categories: "Categories",
+    authors: 'Authors'
+  }
 } as const;
 
 export default translations;
