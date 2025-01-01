@@ -18,10 +18,8 @@ function CategoriesTable() {
       open: false,
     });
 
-  const isInternalAdmin = getAdminRole() === EAdminRole.INTERNAL_ADMIN;
-
   const { data, isFetching } = useQuery({
-    queryKey: ["categories", isInternalAdmin],
+    queryKey: ["categories"],
     queryFn: () => fetchGuideCategories(),
     placeholderData: keepPreviousData,
   });
@@ -60,17 +58,15 @@ function CategoriesTable() {
             {t("guides.categories")}
           </Typography.Title>
         </div>
-        {isInternalAdmin && (
-          <div>
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={showCategoryInfo}
-            >
-              {t("guides.createCategory")}
-            </Button>
-          </div>
-        )}
+        <div>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={showCategoryInfo}
+          >
+            {t("guides.createCategory")}
+          </Button>
+        </div>
       </div>
       <div className="my-6">
         <Table<IGuideCategory>
@@ -93,7 +89,6 @@ function CategoriesTable() {
           onRow={(record) => {
             return {
               onClick: () => {
-                if (!isInternalAdmin) return;
                 setOpenCategoryInfo({ open: true, categoryId: record.id });
               },
             };

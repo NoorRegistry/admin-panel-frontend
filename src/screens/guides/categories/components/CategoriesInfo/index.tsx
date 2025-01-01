@@ -53,12 +53,14 @@ function CategoriesInfo({
         ),
       });
       try {
-        queryClient.setQueryData<IGuideCategory | undefined>(
-          ["categories", config.categoryId],
-          (old: any) => {
-            return { ...old, ...data };
-          }
-        );
+        if(config.categoryId){
+          queryClient.setQueryData<IGuideCategory | undefined>(
+            ["categories", config.categoryId],
+            (old: any) => {
+              return { ...old, ...data };
+            }
+          );
+        }
         queryClient.invalidateQueries({
           queryKey: ["categories"],
         });

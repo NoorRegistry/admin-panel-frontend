@@ -100,7 +100,7 @@ export interface IGuideCategory {
   _count: {
     products: number;
   };
-  children: IProductCategory[];
+  children: IGuideCategory[];
 }
 
 export interface IProductCategoryDetails extends IProductCategory {
