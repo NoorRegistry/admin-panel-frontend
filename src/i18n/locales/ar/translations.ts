@@ -99,7 +99,7 @@ const translations = {
     createAuthor: "إنشاء مؤلف",
     authorEdited: "تم تعديل المؤلف بنجاح",
     authorCreated: "تم إنشاء منتج المؤلف بنجاح",
-    uploadAuthorImages: "رفع صور المؤلف"
+    uploadAuthorImage: "رفع صور المؤلف"
   }
   
 } as const;

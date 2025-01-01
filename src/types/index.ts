@@ -33,7 +33,12 @@ export interface IAuthor {
   nameEn: string;
   nameAr: string;
   image: string;
+  _count: {
+    guides: number;
+  };
 }
+
+export type TCreateAuthor = Omit<IAuthor, "id" | "_count">;
 
 export interface IShowAuthorInfoDrawerConfig {
   authorId?: string;
@@ -75,8 +80,6 @@ export interface IProductDetails extends IProduct {
 }
 
 export type TCreateProduct = Omit<IProductDetails, "id" | "store" | "category">;
-
-export type TCreateAuthor = Omit<IAuthor, "id">;
 
 export interface IProductCategory {
   id: string;

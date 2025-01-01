@@ -112,7 +112,7 @@ const translations = {
     createAuthor: "Create Author",
     authorEdited: "Author edited successfully",
     authorCreated: "AuthorProduct created successfully",
-    uploadAuthorImages: "Upload Author Images",
+    uploadAuthorImage: "Upload Author Images",
   },
 } as const;
 

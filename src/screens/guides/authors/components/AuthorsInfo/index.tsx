@@ -168,7 +168,7 @@ function AuthorsInfo({
             </Form.Item>
           </div>
           <Form.Item<TCreateAuthor>
-            label={t("guides.uploadAuthorImages")}
+            label={t("guides.uploadAuthorImage")}
             name="image"
             valuePropName="fileList"
             getValueFromEvent={normalizeFile}
