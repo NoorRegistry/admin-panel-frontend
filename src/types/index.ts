@@ -35,6 +35,11 @@ export interface IAuthor {
   image: string;
 }
 
+export interface IShowAuthorInfoDrawerConfig {
+  authorId?: string;
+  open: boolean;
+}
+
 export interface IStoreDetails extends IStore {
   descriptionEn: string;
   descriptionAr: string;

@@ -109,6 +109,9 @@ const translations = {
     categories: "Categories",
     authors: "Authors",
     createAuthor: "Create Author",
+    nameEn: "Name EN",
+    nameAr: "Name AR",
+    totalGuides: "Total Guides",
   },
 } as const;
 
