@@ -111,8 +111,13 @@ const translations = {
     totalGuides: "Total Guides",
     createAuthor: "Create Author",
     authorEdited: "Author edited successfully",
-    authorCreated: "AuthorProduct created successfully",
+    authorCreated: "Author created successfully",
     uploadAuthorImage: "Upload Author Images",
+    createCategory: "Create Category",
+    selectParentCategory: "Select Parent Category",
+    selectCategory: "Select Category",
+    categoryCreated: "Category {{name}} created successfully",
+    categoryEdited: "Category {{name}} created successfully",
   },
 } as const;
 

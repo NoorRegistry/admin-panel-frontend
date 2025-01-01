@@ -92,6 +92,17 @@ export interface IProductCategory {
   children: IProductCategory[];
 }
 
+export interface IGuideCategory {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+  parentId: string | null;
+  _count: {
+    products: number;
+  };
+  children: IProductCategory[];
+}
+
 export interface IProductCategoryDetails extends IProductCategory {
   descriptionEn: string;
   descriptionAr: string;
@@ -99,6 +110,16 @@ export interface IProductCategoryDetails extends IProductCategory {
 
 export type TCreateProductCategory = Omit<
   IProductCategoryDetails,
+  "id" | "_count" | "children"
+>;
+
+export interface IGuideCategoryDetails extends IGuideCategory {
+  descriptionEn: string;
+  descriptionAr: string;
+}
+
+export type TCreateGuideCategory = Omit<
+  IGuideCategoryDetails,
   "id" | "_count" | "children"
 >;
 

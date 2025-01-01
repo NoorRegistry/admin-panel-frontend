@@ -1,9 +1,11 @@
-function GuideCategories() {
+import CategoriesTable from "./components/CategoriesTable";
+
+function GuidesCategories() {
   return (
     <div>
-      Guide Categories
+      <CategoriesTable />
     </div>
   );
 }
 
-export default GuideCategories;
+export default GuidesCategories;

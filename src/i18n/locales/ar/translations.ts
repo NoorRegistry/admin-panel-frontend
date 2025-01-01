@@ -90,18 +90,22 @@ const translations = {
     uploadProductImages: "تحميل صور المنتج",
   },
   guides: {
-    guides: "أدلة",
+    guides: "الأدلة",
     list: "قائمة",
     category: "فئة",
-    categories: "فئات",
+    categories: "الفئات",
     authors: "المؤلفون",
     totalGuides: "إجمالي الأدلة",
     createAuthor: "إنشاء مؤلف",
     authorEdited: "تم تعديل المؤلف بنجاح",
-    authorCreated: "تم إنشاء منتج المؤلف بنجاح",
-    uploadAuthorImage: "رفع صور المؤلف"
-  }
-  
+    authorCreated: "تم إنشاء المؤلف بنجاح",
+    uploadAuthorImage: "تحميل صور المؤلف",
+    createCategory: "إنشاء فئة",
+    selectParentCategory: "اختر الفئة الرئيسية",
+    selectCategory: "اختر الفئة",
+    categoryCreated: "تم إنشاء الفئة {{name}} بنجاح",
+    categoryEdited: "تم تعديل الفئة {{name}} بنجاح",
+  },
 } as const;
 
 export default translations;
