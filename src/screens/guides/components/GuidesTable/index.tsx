@@ -56,8 +56,6 @@ function GuidesTable() {
 
   const { tableRef, scroll } = useTableScroll();
 
-  const isInternalAdmin = getAdminRole() === EAdminRole.INTERNAL_ADMIN;
-
   const showGuideInfo = () => {
     setOpenGuideInfo({ open: true });
   };
@@ -74,7 +72,7 @@ function GuidesTable() {
     mutationFn: (value: {
       status?: Partial<TCreateGuide>["status"];
       isActive?: Partial<TCreateGuide>["isActive"];
-      guideId: string;
+      id: string;
     }) => {
       const changes: Partial<TCreateGuide> = {};
       if (value.isActive !== null || value.isActive !== undefined) {
@@ -83,11 +81,11 @@ function GuidesTable() {
       if (value.status !== null || value.status !== undefined) {
         changes.status = value.status;
       }
-      return patchGuide(value.guideId, changes);
+      return patchGuide(value.id, changes);
     },
     onSuccess: (data) => {
       messageApi.success({
-        content: t("guides.guideUpdated"),
+        content: t("guides.guideEdited"),
       });
       queryClient.setQueryData<IGuide | undefined>(
         ["guides", data.id],
@@ -123,7 +121,7 @@ function GuidesTable() {
         onOk: () => {
           updateGuideStatusMutation.mutate({
             status: info.key as EGuideStatus,
-            guideId: guide.id,
+            id: guide.id,
           });
         },
         type: "error",
@@ -273,7 +271,6 @@ function GuidesTable() {
       width: 150,
       fixed: "right",
       render: (value, record) => {
-        console.log(value, record);        
         return displayStatusDropdown(value, record);
       },
     },
@@ -284,23 +281,20 @@ function GuidesTable() {
       width: 60,
       fixed: "right",
       render: (value, record) => {
-        return isInternalAdmin ? (
+        return (
           <div onClick={(e) => e.stopPropagation()}>
             <Switch
               loading={updateGuideStatusMutation.isPending}
               checked={value}
               onChange={(checked) => {
-                console.log("checked", checked);
                 updateGuideStatusMutation.mutate({
-                  guideId: record.id,
+                  id: record.id,
                   isActive: checked,
                 });
               }}
             />
           </div>
-        ) : (
-          <Switch checked={value} />
-        );
+        )
       },
     },
   ];
@@ -359,7 +353,6 @@ function GuidesTable() {
           onRow={(record) => {
             return {
               onClick: (event) => {
-                console.log("record :>> ", record, event);
                 setOpenGuideInfo({ open: true, guideId: record.id });
               },
             };
