@@ -2,9 +2,12 @@ import { http } from "@/api/http";
 import endpoints from "@/constants/endpoints";
 import {
   IAuthor,
+  IGuide,
   IGuideCategory,
+  IGuideDetails,
   IPaginatedResponse,
   TCreateAuthor,
+  TCreateGuide,
   TCreateGuideCategory,
 } from "@/types";
 
@@ -59,4 +62,31 @@ export const patchGuideCategory = async (
     `${endpoints.guides.index}/categories/${id}`,
     payload
   );
+};
+
+export const patchGuide = async (
+  id: string,
+  payload: Partial<TCreateGuide>
+) => {
+  return await http.patch<IGuide>(`${endpoints.guides.index}/${id}`, payload);
+};
+
+export const fetchGuides = async (
+  page: number,
+  limit: number,
+  search: string
+) => {
+  return await http.get<IPaginatedResponse<IGuide>>(
+    `${
+      endpoints.guides.index
+    }?page=${page}&limit=${limit}&nameEn=${encodeURIComponent(search)}`
+  );
+};
+
+export const postGuide = async (payload: TCreateGuide) => {
+  return await http.post<IGuide>(endpoints.guides.index, payload);
+};
+
+export const fetchGuide = async (id: string) => {
+  return await http.get<IGuideDetails>(`${endpoints.guides.index}/${id}`);
 };

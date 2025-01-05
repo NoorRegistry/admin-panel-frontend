@@ -6,6 +6,7 @@ import constants from "@/constants";
 import {
   EAdminRole,
   IAccessToken,
+  IGuideCategory,
   IPaginatedResponse,
   IProductCategory,
   TTokenInfo,
@@ -149,6 +150,25 @@ export const findCategoryPath = (
 
     if (category.children && Array.isArray(category.children)) {
       const path = findCategoryPath(category.children, targetId);
+      if (path.length) {
+        return [category.id, ...path]; // Append the current ID to the path.
+      }
+    }
+  }
+  return []; // Return an empty array if the ID is not found.
+};
+
+export const findGuideCategoryPath = (
+  categories: IGuideCategory[],
+  targetId: string,
+): string[] => {
+  for (const category of categories) {
+    if (category.id === targetId) {
+      return [category.id]; // Base case: return the ID when found.
+    }
+
+    if (category.children && Array.isArray(category.children)) {
+      const path = findGuideCategoryPath(category.children, targetId);
       if (path.length) {
         return [category.id, ...path]; // Append the current ID to the path.
       }

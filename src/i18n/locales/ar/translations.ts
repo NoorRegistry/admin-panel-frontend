@@ -70,6 +70,9 @@ const translations = {
     pending: "معلق",
     rejected: "مرفوض",
     approved: "معتمد",
+    published: "تم النشر",
+    draft: "مسودة",
+    submitted: "مُقدّم",
   },
   products: {
     products: "المنتجات",
@@ -88,6 +91,8 @@ const translations = {
     selectStore: "اختر المتجر",
     selectCategory: "اختر الفئة",
     uploadProductImages: "تحميل صور المنتج",
+    confirmProductStatusUpdate:
+      "هل أنت متأكد من أنك تريد تحديد المنتج كـ {{status}}؟",
   },
   guides: {
     guides: "الأدلة",
@@ -105,6 +110,15 @@ const translations = {
     selectCategory: "اختر الفئة",
     categoryCreated: "تم إنشاء الفئة {{name}} بنجاح",
     categoryEdited: "تم تعديل الفئة {{name}} بنجاح",
+    guideEdited: "تم تعديل الدليل بنجاح",
+    guideCreated: "تم إنشاء الدليل بنجاح",
+    createGuide: "إنشاء دليل",
+    author: "المؤلف",
+    guideUpdated: "تم تحديث الدليل بنجاح",
+    confirmGuideStatusUpdate:
+      "هل أنت متأكد من أنك تريد تحديد الدليل كـ {{status}}؟",
+    selectAuthor: "اختر المؤلف",
+    uploadGuideLogo: "رفع صورة الدليل",
   },
 } as const;
 

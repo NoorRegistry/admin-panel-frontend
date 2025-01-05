@@ -3,6 +3,11 @@ export interface IShowAuthorInfoDrawerConfig {
   open: boolean;
 }
 
+export interface IShowGuideInfoDrawerConfig {
+  guideId?: string;
+  open: boolean;
+}
+
 export interface IShowCategoryInfoDrawerConfig {
   categoryId?: string;
   open: boolean;
