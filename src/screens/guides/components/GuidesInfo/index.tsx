@@ -51,18 +51,15 @@ function GuidesInfo({
   const { t } = useTranslation();
   const [form] = Form.useForm();
 
-  const isInternalAdmin = getAdminRole() === EAdminRole.INTERNAL_ADMIN;
-
   const { data, isFetching } = useQuery({
     queryKey: ["guides", config.guideId],
     queryFn: ({ queryKey }) => fetchGuide(queryKey[1]!),
     enabled: Boolean(config.guideId),
   });
 
-  const { data: authors, isFetching: isFetchingStores } = useQuery({
+  const { data: authors, isFetching: isFetchingGuides } = useQuery({
     queryKey: ["authors"],
     queryFn: fetchAuthors,
-    enabled: isInternalAdmin,
   });
 
   const { data: categories, isFetching: isFetchingCategories } = useQuery({
@@ -98,7 +95,7 @@ function GuidesInfo({
         }
       );
       queryClient.invalidateQueries({
-        queryKey: ["categories", isInternalAdmin],
+        queryKey: ["categories"],
       });
       onClose();
     },
@@ -126,9 +123,7 @@ function GuidesInfo({
 
   useEffect(() => {
     if (data && categories ) {
-      console.log('fullPath',data.categoryId);      
       const fullPath = findGuideCategoryPath(categories?.data, data.categoryId);
-      console.log('fullPath', fullPath);
       const transformedData = {
         ...data,
         categoryId: fullPath,
@@ -165,7 +160,7 @@ function GuidesInfo({
             <Button
               type="primary"
               htmlType="submit"
-              form="createStore"
+              form="createGuide"
               loading={createGuideMutation.isPending}
               disabled={uploading}
             >
@@ -175,8 +170,8 @@ function GuidesInfo({
         }
       >
         <Form<TCreateGuide>
-          id="createStore"
-          name="createStore"
+          id="createGuide"
+          name="createGuide"
           clearOnDestroy
           onFinish={handleCreateGuide}
           onFinishFailed={(error) => {
@@ -225,7 +220,7 @@ function GuidesInfo({
               rules={[{ required: true, message: t("common.required") }]}
             >
               <Select
-                loading={isFetchingStores}
+                loading={isFetchingGuides}
                 showSearch
                 placeholder={t("guides.selectAuthor")}
                 filterOption={(input, option) =>
