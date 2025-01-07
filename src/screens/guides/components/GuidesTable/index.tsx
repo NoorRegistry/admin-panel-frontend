@@ -208,7 +208,7 @@ function GuidesTable() {
     {
       title: "",
       dataIndex: "bannerImage",
-      key: "images",
+      key: "bannerImage",
       width: 82,
       render: (value) => {
         const logo = value ?? "/public/common/no-image.png";
