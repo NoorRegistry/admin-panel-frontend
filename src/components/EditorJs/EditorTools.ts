@@ -5,13 +5,10 @@ import Warning from "@editorjs/warning";
 import Delimiter from "@editorjs/delimiter";
 import Title from "title-editorjs";
 import EditorjsList from "@editorjs/list";
-import ImageTool from "@editorjs/image";
 import Table from "@editorjs/table";
 import CodeTool from "@editorjs/code";
 import RawTool from "@editorjs/raw";
 import InlineCode from "@editorjs/inline-code";
-import { ProductPlugin } from "@/components/EditorJs/Plugins/ProductPlugin";
-import { StorePlugin } from "@/components/EditorJs/Plugins/StorePlugin";
 
 export const EDITOR_TOOLS: { [toolName: string]: any } = {
   paragraph: {
@@ -60,15 +57,6 @@ export const EDITOR_TOOLS: { [toolName: string]: any } = {
       defaultStyle: "unordered",
     },
   },
-  image: {
-    class: ImageTool,
-    config: {
-      endpoints: {
-        byFile: "http://localhost:8008/uploadFile",
-        byUrl: "http://localhost:8008/fetchUrl",
-      },
-    },
-  },
   table: {
     class: Table,
     inlineToolbar: true,
@@ -87,11 +75,5 @@ export const EDITOR_TOOLS: { [toolName: string]: any } = {
   },
   inlineCode: {
     class: InlineCode,
-  },
-  productPlugin: {
-    class: ProductPlugin,
-  },
-  StorePlugin: {
-    class: StorePlugin,
   },
 };

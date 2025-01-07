@@ -1,53 +1,31 @@
-interface Store {
-  id: number;
-  nameEn: string;
-  storeLogo: any;
-}
+import { fetchStores } from "@/services/stores.service";
+import { IPaginatedResponse, TEditorStore } from "@/types";
+import { ShopOutlined } from "@ant-design/icons";
+import ReactDOMServer from "react-dom/server";
+import { BlockToolConstructorOptions, BlockTool } from "@editorjs/editorjs";
 
-interface StoreToolData {
-  id?: number;
-  nameEn?: string;
-  storeLogo?: any;
-}
-
-interface ProductToolConstructorParams {
-  data: StoreToolData;
+export class StorePlugin implements BlockTool {
   api: any;
-}
-
-export class StorePlugin {
-  api: any;
-  data: StoreToolData;
+  data: TEditorStore;
+  config: any;
   wrapper: HTMLElement | undefined;
-  stores: Store[];
-  token: string;
+  stores: TEditorStore[] = [];
 
-  constructor({ data, api }: ProductToolConstructorParams) {
+  constructor({
+    data,
+    api,
+    config,
+  }: BlockToolConstructorOptions<TEditorStore>) {
     this.api = api;
     this.data = data || {};
+    this.config = config || {};
     this.wrapper = undefined;
-    this.stores = [];
-    this.token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0TmFtZSI6IkFzaGZhcSIsImxhc3ROYW1lIjoiUGF0d2FyaSIsImVtYWlsIjoiYXNoZmFxQGdtYWlsLmNvbSJ9LCJzdG9yZUlkIjpudWxsLCJyb2xlIjoiSU5URVJOQUxfQURNSU4iLCJwZXJtaXNzaW9ucyI6IltdIiwiaWF0IjoxNzM1MTQ1MDczLCJleHAiOjE3MzUyMzE0NzN9.WAK8os_8MG4k9ekMsCbNJtUPaP5VPgfvQtr37i2K9hw";
   }
 
   async fetchProducts(): Promise<void> {
     try {
-      const response = await fetch(
-        "https://nestjs-authentication-sigma.vercel.app/v1/api/admin/stores",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to fetch stores");
-
-      const result = await response.json();
-      this.stores = result.data;
+      const response: IPaginatedResponse<TEditorStore> = await fetchStores(true);
+      this.stores = response.data;
 
       this.populateDropdown();
 
@@ -63,7 +41,6 @@ export class StorePlugin {
   }
 
   render(): HTMLElement {
-
     this.wrapper = document.createElement("div");
     this.wrapper.classList.add(
       "p-4",
@@ -114,19 +91,19 @@ export class StorePlugin {
     this.stores.forEach((store) => {
       const option = document.createElement("option");
       option.value = store.id.toString();
-      option.text = store.nameEn;
+      option.text =
+        this.config.editorlang == "en" ? store.nameEn : store.nameAr;
       select.appendChild(option);
     });
   }
 
-  selectProduct(store: Store): void {
+  selectProduct(store: TEditorStore): void {
     this.data = store;
 
     const existingStoreCard = this.wrapper!.querySelector(".store-card");
     if (existingStoreCard) {
       existingStoreCard.remove();
     }
-  
 
     let storeCard = this.wrapper!.querySelector(".store-card");
     if (!storeCard) {
@@ -135,12 +112,25 @@ export class StorePlugin {
     }
 
     storeCard.innerHTML = `
-      <div class="store-card flex items-center gap-4 p-4 border rounded-lg bg-white shadow mt-4">
-        <img src="https://assets.shiftgiftme.com${store.storeLogo}" alt="${store.nameEn}" class="w-24 h-24 rounded-md object-cover" />
-        <div>
-          <h3 class="text-lg font-semibold">${store.nameEn}</h3>
-        </div>
-      </div>
+<div class="store-card flex items-center gap-4 p-4 border rounded-lg bg-white shadow mt-4">
+  <img 
+    src="https://assets.shiftgiftme.com${store.storeLogo}" 
+    alt="${this.config.editorlang == "en" ? store.nameEn : store.nameAr}" 
+    class="w-24 h-24 rounded-md object-cover" 
+  />
+  <div>
+    <h3 class="text-lg font-semibold">${
+      this.config.editorlang == "en" ? store.nameEn : store.nameAr
+    }</h3>
+    <p class="text-sm text-gray-500">
+      ${this.config.editorlang == "en" ? store.locationEn : store.locationAr}
+    </p>
+    <p class="text-sm text-gray-500">
+      ${store.countryCode} ${store.mobileNumber}
+    </p>
+  </div>
+</div>
+
     `;
   }
 
@@ -151,14 +141,16 @@ export class StorePlugin {
     this.wrapper!.appendChild(errorDiv);
   }
 
-  save(): StoreToolData {
+  save(): TEditorStore {
     return this.data;
   }
 
   static get toolbox() {
+    const iconHtml = ReactDOMServer.renderToString(<ShopOutlined />);
+
     return {
       title: "Store",
-      icon: "🏪",
+      icon: iconHtml,
     };
   }
 }

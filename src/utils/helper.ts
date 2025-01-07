@@ -176,3 +176,18 @@ export const findGuideCategoryPath = (
   }
   return []; // Return an empty array if the ID is not found.
 };
+
+export function formatPrice(price: number = 0, currencyCode?: string): string {
+  if (!currencyCode) currencyCode = "KWD";
+  try {
+    const formatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currencyCode,
+      minimumFractionDigits: 2,
+    });
+    return formatter.format(price);
+  } catch (error) {
+    console.error(`Error formatting price: ${error}`);
+    return `${currencyCode} ${price.toFixed(2)}`;
+  }
+}

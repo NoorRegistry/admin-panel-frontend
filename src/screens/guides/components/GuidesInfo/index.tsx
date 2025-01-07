@@ -2,7 +2,6 @@ import { IApiError } from "@/api/http";
 import { queryClient } from "@/api/queryClient";
 import UploadComponent from "@/components/Upload";
 import {
-  EAdminRole,
   IGuide,
   IPaginatedResponse,
   IQueryState,
@@ -10,7 +9,6 @@ import {
 } from "@/types";
 import {
   findGuideCategoryPath,
-  getAdminRole,
   normalizeFile,
   updatePaginatedData,
 } from "@/utils/helper";
@@ -36,6 +34,7 @@ import {
   patchGuide,
   postGuide,
 } from "@/services/guides.service";
+import dynamic from "next/dynamic";
 
 function GuidesInfo({
   config,
@@ -46,6 +45,10 @@ function GuidesInfo({
   onClose: () => void;
   queryState: IQueryState;
 }) {
+  const GuideEditor = dynamic(() => import("@/components/EditorJs"), {
+    ssr: false,
+  });
+
   const [uploading, setUploading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const { t } = useTranslation();
@@ -80,7 +83,7 @@ function GuidesInfo({
           { name: variables.nameEn }
         ),
       });
-      if(config.guideId){
+      if (config.guideId) {
         queryClient.setQueryData<IGuide | undefined>(
           ["guides", config.guideId],
           (old: any) => {
@@ -117,12 +120,12 @@ function GuidesInfo({
     if (Array.isArray(guide.categoryId)) {
       guide.categoryId = guide.categoryId[guide.categoryId.length - 1];
     }
-    
+
     createGuideMutation.mutate(guide);
   };
 
   useEffect(() => {
-    if (data && categories ) {
+    if (data && categories) {
       const fullPath = findGuideCategoryPath(categories?.data, data.categoryId);
       const transformedData = {
         ...data,
@@ -135,13 +138,12 @@ function GuidesInfo({
               },
             ]
           : [],
-      };        
+      };
       setTimeout(() => {
         form.setFieldsValue(transformedData);
       });
     }
   }, [data, categories]);
-
 
   return (
     <div>
@@ -291,6 +293,34 @@ function GuidesInfo({
               type="guide"
               dbId={config.guideId}
               onUploadStatusChange={setUploading}
+            />
+          </Form.Item>
+
+          <Form.Item<TCreateGuide>
+            label={t("guides.contentEn")}
+            name="contentEn"
+            className="col-span-2"
+          >
+            <GuideEditor
+              value={form.getFieldValue("contentEn")}
+              onChange={(value) => form.setFieldsValue({ contentEn: value })}
+              guideId={config.guideId ?? ""}
+              editorId="editor1"
+              editorlang="en"
+            />
+          </Form.Item>
+
+          <Form.Item<TCreateGuide>
+            label={t("guides.contentAr")}
+            name="contentAr"
+            className="col-span-2"
+          >
+            <GuideEditor
+              value={form.getFieldValue("contentAr")}
+              onChange={(value) => form.setFieldsValue({ contentEn: value })}
+              guideId={config.guideId ?? ""}
+              editorId="editor2"
+              editorlang="ar"
             />
           </Form.Item>
         </Form>

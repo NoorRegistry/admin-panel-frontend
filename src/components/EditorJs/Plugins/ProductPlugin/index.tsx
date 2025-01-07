@@ -1,61 +1,46 @@
-interface Product {
-  id: number;
-  nameEn: string;
-  images: any;
-  price: string;
-}
+import { fetchProducts } from "@/services/product.service";
+import { IPaginatedResponse, TEditorProduct } from "@/types";
+import { ShoppingCartOutlined } from "@ant-design/icons";
+import ReactDOMServer from "react-dom/server";
+import { BlockToolConstructorOptions, BlockTool } from "@editorjs/editorjs";
+import { formatPrice } from "@/utils/helper";
 
-interface ProductToolData {
-  id?: number;
-  name?: string;
-  image?: any;
-  price?: string;
-}
-
-interface ProductToolConstructorParams {
-  data: ProductToolData;
+export class ProductPlugin implements BlockTool {
   api: any;
-}
-
-export class ProductPlugin {
-  api: any;
-  data: ProductToolData;
+  data: TEditorProduct;
+  config: any;
   wrapper: HTMLElement | undefined;
-  products: Product[];
-  token: string;
+  products: TEditorProduct[] = [];
 
-  constructor({ data, api }: ProductToolConstructorParams) {
+  constructor({
+    data,
+    api,
+    config,
+  }: BlockToolConstructorOptions<TEditorProduct>) {
     this.api = api;
     this.data = data || {};
+    this.config = config || {};
     this.wrapper = undefined;
-    this.products = [];
-    this.token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0TmFtZSI6IkFzaGZhcSIsImxhc3ROYW1lIjoiUGF0d2FyaSIsImVtYWlsIjoiYXNoZmFxQGdtYWlsLmNvbSJ9LCJzdG9yZUlkIjpudWxsLCJyb2xlIjoiSU5URVJOQUxfQURNSU4iLCJwZXJtaXNzaW9ucyI6IltdIiwiaWF0IjoxNzM1MTQ1MDczLCJleHAiOjE3MzUyMzE0NzN9.WAK8os_8MG4k9ekMsCbNJtUPaP5VPgfvQtr37i2K9hw";
   }
 
   async fetchProducts(): Promise<void> {
     try {
-      const response = await fetch(
-        "https://nestjs-authentication-sigma.vercel.app/v1/api/admin/products",
+      const response: IPaginatedResponse<TEditorProduct> = await fetchProducts(
+        0,
+        0,
+        "",
         {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-            "Content-Type": "application/json",
-          },
+          isActive: 1,
+          status: "Approved",
         }
       );
 
-      if (!response.ok) throw new Error("Failed to fetch products");
-
-      const result = await response.json();
-      this.products = result.data;
-
+      this.products = response.data;
       this.populateDropdown();
 
       if (this.data.id) {
         const select = this.wrapper!.querySelector("select")!;
-        select.value = this.data.id.toString();
+        select.value = this.data.id;
         select.dispatchEvent(new Event("change"));
       }
     } catch (error) {
@@ -65,7 +50,6 @@ export class ProductPlugin {
   }
 
   render(): HTMLElement {
-
     this.wrapper = document.createElement("div");
     this.wrapper.classList.add(
       "p-4",
@@ -80,25 +64,29 @@ export class ProductPlugin {
     select.classList.add(
       "w-full",
       "p-3",
-      "border",
-      "rounded-lg",
-      "bg-gray-50",
-      "focus:ring-2",
-      "focus:ring-blue-400"
+      "control-outline",
+      "bg-multiple-item",
+      "option-active-bg",
+      "option-selected-bg",
+      "option-selected-color",
+      "option-selected-font-weight",
+      "appearance-none",
+      "overflow-hidden"
     );
+
+    // Apply custom styles
+    select.style.borderColor = "rgba(120, 138, 173, 0.27)";
+    select.style.backgroundColor = "var(--color-primary-50)";
 
     select.addEventListener("change", () => {
       const selectedId = select.value;
-      const selectedProduct = this.products.find(
-        (p) => p.id.toString() === selectedId
-      );
+      const selectedProduct = this.products.find((p) => p.id === selectedId);
       if (selectedProduct) {
         this.selectProduct(selectedProduct);
       }
     });
 
     this.wrapper.appendChild(select);
-
     this.fetchProducts();
 
     return this.wrapper;
@@ -115,36 +103,58 @@ export class ProductPlugin {
 
     this.products.forEach((product) => {
       const option = document.createElement("option");
-      option.value = product.id.toString();
-      option.text = product.nameEn;
+      option.value = product.id;
+      option.text =
+        this.config.editorlang == "en" ? product.nameEn : product.nameAr;
       select.appendChild(option);
     });
   }
 
-  selectProduct(product: Product): void {
-    this.data = product;
+  selectProduct(product: TEditorProduct): void {
+    this.data = {
+      id: product.id,
+      nameEn: product.nameEn,
+      nameAr: product.nameAr,
+      images: product.images[0]?.path || "",
+      price: product.price,
+      currencyCode: product.currencyCode,
+      qty: product.qty,
+    };
 
     const existingProductCard = this.wrapper!.querySelector(".product-card");
     if (existingProductCard) {
       existingProductCard.remove();
     }
-  
 
-    let productCard = this.wrapper!.querySelector(".product-card");
-    if (!productCard) {
-      productCard = document.createElement("div");
-      this.wrapper!.appendChild(productCard);
-    }
+    const productCard = document.createElement("div");
+    productCard.classList.add(
+      "product-card",
+      "flex",
+      "items-center",
+      "gap-4",
+      "p-4",
+      "border",
+      "rounded-lg",
+      "bg-white",
+      "shadow",
+      "mt-4"
+    );
 
     productCard.innerHTML = `
-      <div class="product-card flex items-center gap-4 p-4 border rounded-lg bg-white shadow mt-4">
-        <img src="https://assets.shiftgiftme.com${product.images[0].path}" alt="${product.nameEn}" class="w-24 h-24 rounded-md object-cover" />
-        <div>
-          <h3 class="text-lg font-semibold">${product.nameEn}</h3>
-          <p class="text-gray-500">KWD ${product.price}</p>
-        </div>
-      </div>
-    `;
+    <img src="https://assets.shiftgiftme.com${
+      product.images[0]?.path || ""
+    }" alt="${
+      this.config.editorlang == "en" ? product.nameEn : product.nameAr
+    }" class="w-24 h-24 rounded-md object-cover" />
+    <div>
+      <h3 class="text-lg font-semibold">${
+        this.config.editorlang == "en" ? product.nameEn : product.nameAr
+      }</h3>
+      <p class="text-gray-500">${formatPrice(product.price, product.currencyCode)}</p>
+      <p class="text-gray-500">Qty: ${product.qty}</p>
+    </div>
+  `;
+    this.wrapper!.appendChild(productCard);
   }
 
   showError(message: string): void {
@@ -154,14 +164,16 @@ export class ProductPlugin {
     this.wrapper!.appendChild(errorDiv);
   }
 
-  save(): ProductToolData {
+  save(): TEditorProduct {
     return this.data;
   }
 
   static get toolbox() {
+    const iconHtml = ReactDOMServer.renderToString(<ShoppingCartOutlined />);
+
     return {
       title: "Product",
-      icon: "🛒",
+      icon: iconHtml,
     };
   }
 }

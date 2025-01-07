@@ -126,7 +126,9 @@ const translations = {
     author: "Author",
     confirmGuideStatusUpdate: "Are you sure to mark the guide as {{status}}?",
     selectAuthor: "Select Author",
-    uploadGuideLogo: "Upload Guide Image",  
+    uploadGuideLogo: "Upload Guide Image",
+    contentEn: "Content in English",
+    contentAr: "Content in Arabic",
   },
 } as const;
 

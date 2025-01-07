@@ -119,6 +119,8 @@ const translations = {
       "هل أنت متأكد من أنك تريد تحديد الدليل كـ {{status}}؟",
     selectAuthor: "اختر المؤلف",
     uploadGuideLogo: "رفع صورة الدليل",
+    contentEn: "المحتوى باللغة الإنجليزية",
+    contentAr: "المحتوى باللغة العربية",
   },
 } as const;
 

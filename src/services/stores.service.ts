@@ -9,8 +9,8 @@ import {
   TCreateStoreAdmin,
 } from "@/types";
 
-export const fetchStores = async () => {
-  return await http.get<IPaginatedResponse<IStore>>(endpoints.stores.index);
+export const fetchStores = async (isActive: boolean = false) => {
+  return await http.get<IPaginatedResponse<IStore>>(`${endpoints.stores.index}?isActive=${isActive}`);
 };
 
 export const fetchStore = async (id: string) => {

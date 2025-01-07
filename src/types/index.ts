@@ -28,6 +28,12 @@ export interface IStore {
   isActive: boolean;
 }
 
+export type TEditorStore = Omit<
+  IStore,
+  | "email"
+  | "isActive"
+>;
+
 export interface IAuthor {
   id: string;
   nameEn: string;
@@ -74,6 +80,15 @@ export interface IProduct {
   currencyCode: string;
 }
 
+export type TEditorProduct = Omit<
+  IProduct,
+  | "storeId"
+  | "categoryId"
+  | "status"
+  | "isActive"
+  | "category"
+  | "store"
+>;
 export interface IGuide {
   id: string;
   nameEn: string;
@@ -85,6 +100,8 @@ export interface IGuide {
   categoryId: string;
   status: EGuideStatus;
   isActive: boolean;
+  contentEn?: string;
+  contentAr?: string;
   category: {
     id: string;
     name: string;
@@ -103,6 +120,8 @@ export interface IProductDetails extends IProduct {
 export interface IGuideDetails extends IGuide {
   descriptionEn: string;
   descriptionAr: string;
+  contentEn?: string;
+  contentAr?: string;
 }
 
 export type TCreateProduct = Omit<IProductDetails, "id" | "store" | "category">;
@@ -193,7 +212,12 @@ export interface IStoreAdmin {
 
 export type TCreateStoreAdmin = Omit<IStoreAdmin, "id" | "storeName" | "role">;
 
-export type TUploadType = "store" | "product" | "author" | "guide";
+export type TUploadType =
+  | "store"
+  | "product"
+  | "author"
+  | "guide"
+  | "guideContent";
 
 export type TStatistics = {
   products?: {
@@ -234,4 +258,11 @@ export interface IQueryState {
   current: number;
   pageSize: number;
   search: string;
+}
+
+export interface IUpload {
+  status: number;
+  message: string;
+  id: string;
+  path: string;
 }
