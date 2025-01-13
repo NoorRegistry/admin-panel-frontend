@@ -157,7 +157,7 @@ function StoreInfo({
               name="nameEn"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <Input maxLength={formValidations?.Stores?.nameEn} />
+              <Input maxLength={formValidations?.stores?.name} />
             </Form.Item>
 
             <Form.Item<TCreateStore>
@@ -165,7 +165,7 @@ function StoreInfo({
               name="nameAr"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <Input maxLength={formValidations?.Stores?.nameAr} />
+              <Input maxLength={formValidations?.stores?.name} />
             </Form.Item>
 
             <Form.Item<TCreateStore>
@@ -173,7 +173,7 @@ function StoreInfo({
               name="descriptionEn"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <TextArea autoSize maxLength={formValidations?.Stores?.descriptionEn} />
+              <TextArea autoSize maxLength={formValidations?.stores?.description} />
             </Form.Item>
 
             <Form.Item<TCreateStore>
@@ -181,7 +181,7 @@ function StoreInfo({
               name="descriptionAr"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <TextArea autoSize maxLength={formValidations?.Stores?.descriptionAr} />
+              <TextArea autoSize maxLength={formValidations?.stores?.description} />
             </Form.Item>
 
             <Form.Item<TCreateStore>
@@ -189,7 +189,7 @@ function StoreInfo({
               name="locationEn"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <TextArea autoSize maxLength={formValidations?.Stores?.locationEn} />
+              <TextArea autoSize maxLength={formValidations?.stores?.location} />
             </Form.Item>
 
             <Form.Item<TCreateStore>
@@ -197,7 +197,7 @@ function StoreInfo({
               name="locationAr"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <TextArea autoSize maxLength={formValidations?.Stores?.locationAr} />
+              <TextArea autoSize maxLength={formValidations?.stores?.location} />
             </Form.Item>
 
             <Form.Item<TCreateStore>
@@ -230,7 +230,7 @@ function StoreInfo({
                 { type: "email", message: t("login.enterValidEmail") },
               ]}
             >
-              <Input maxLength={formValidations?.Stores?.email} />
+              <Input maxLength={formValidations?.generic?.email} />
             </Form.Item>
 
             <Form.Item<TCreateStore>

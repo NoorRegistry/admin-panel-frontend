@@ -175,7 +175,7 @@ function ProductsInfo({
               name="nameEn"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <Input maxLength={formValidations?.products?.nameEn} />
+              <Input maxLength={formValidations?.products?.name} />
             </Form.Item>
 
             <Form.Item<TCreateProduct>
@@ -183,7 +183,7 @@ function ProductsInfo({
               name="nameAr"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <Input maxLength={formValidations?.products?.nameAr} />
+              <Input maxLength={formValidations?.products?.name} />
             </Form.Item>
 
             <Form.Item<TCreateProduct>
@@ -191,7 +191,7 @@ function ProductsInfo({
               name="descriptionEn"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <TextArea autoSize maxLength={formValidations?.products?.descriptionEn} />
+              <TextArea autoSize maxLength={formValidations?.products?.description} />
             </Form.Item>
 
             <Form.Item<TCreateProduct>
@@ -199,7 +199,7 @@ function ProductsInfo({
               name="descriptionAr"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <TextArea autoSize maxLength={formValidations?.products?.descriptionAr} />
+              <TextArea autoSize maxLength={formValidations?.products?.description} />
             </Form.Item>
 
             <Form.Item<TCreateProduct>

@@ -76,7 +76,7 @@ function CreateStoreAdmin({
             name="firstName"
             rules={[{ required: true, message: t("common.required") }]}
           >
-            <Input placeholder="Enter your first name" maxLength={formValidations?.cmsAdmins?.firstName} />
+            <Input placeholder="Enter your first name" maxLength={formValidations?.generic?.firstName} />
           </Form.Item>
 
           <Form.Item<TCreateStoreAdmin>
@@ -84,7 +84,7 @@ function CreateStoreAdmin({
             name="lastName"
             rules={[{ required: true, message: t("common.required") }]}
           >
-            <Input placeholder="Enter your last name" maxLength={formValidations?.cmsAdmins?.lastName} />
+            <Input placeholder="Enter your last name" maxLength={formValidations?.generic?.lastName} />
           </Form.Item>
 
           <Form.Item<TCreateStoreAdmin>
@@ -95,7 +95,7 @@ function CreateStoreAdmin({
               { type: "email", message: t("login.enterValidEmail") },
             ]}
           >
-            <Input placeholder="Enter your email" maxLength={formValidations?.cmsAdmins?.email} />
+            <Input placeholder="Enter your email" maxLength={formValidations?.generic?.email} />
           </Form.Item>
 
           <Form.Item<TCreateStoreAdmin>

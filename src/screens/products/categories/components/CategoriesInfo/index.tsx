@@ -139,7 +139,7 @@ function CategoriesInfo({
               name="nameEn"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <Input maxLength={formValidations?.productCategory?.nameEn} />
+              <Input maxLength={formValidations?.productCategory?.name} />
             </Form.Item>
 
             <Form.Item<TCreateProductCategory>
@@ -147,7 +147,7 @@ function CategoriesInfo({
               name="nameAr"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <Input maxLength={formValidations?.productCategory?.nameAr} />
+              <Input maxLength={formValidations?.productCategory?.name} />
             </Form.Item>
 
             <Form.Item<TCreateProductCategory>
@@ -155,7 +155,7 @@ function CategoriesInfo({
               name="descriptionEn"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <TextArea autoSize maxLength={formValidations?.productCategory?.descriptionEn} />
+              <TextArea autoSize maxLength={formValidations?.productCategory?.description} />
             </Form.Item>
 
             <Form.Item<TCreateProductCategory>
@@ -163,7 +163,7 @@ function CategoriesInfo({
               name="descriptionAr"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <TextArea autoSize maxLength={formValidations?.productCategory?.descriptionAr} />
+              <TextArea autoSize maxLength={formValidations?.productCategory?.description} />
             </Form.Item>
 
             <Form.Item<TCreateProductCategory>
