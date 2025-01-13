@@ -60,7 +60,7 @@ function GuidesInfo({
     enabled: Boolean(config.guideId),
   });
 
-  const { data: authors, isFetching: isFetchingGuides } = useQuery({
+  const { data: authors, isFetching: isFetchingAuthors } = useQuery({
     queryKey: ["authors"],
     queryFn: fetchAuthors,
   });
@@ -222,7 +222,7 @@ function GuidesInfo({
               rules={[{ required: true, message: t("common.required") }]}
             >
               <Select
-                loading={isFetchingGuides}
+                loading={isFetchingAuthors}
                 showSearch
                 placeholder={t("guides.selectAuthor")}
                 filterOption={(input, option) =>
