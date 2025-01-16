@@ -75,7 +75,7 @@ export const getUserNameInitials = () => {
 export const updatePaginatedData = <T>(
   data: T,
   old?: IPaginatedResponse<T>,
-  id?: string,
+  id?: string
 ): IPaginatedResponse<T> => {
   if (!old) {
     // If no old data exists, initialize the response with the new data
@@ -96,7 +96,7 @@ export const updatePaginatedData = <T>(
         (item) =>
           (item as any).id === id
             ? { ...item, ...data } // Merge the existing data with updated data
-            : item, // Keep other objects unchanged
+            : item // Keep other objects unchanged
       ),
     };
   }
@@ -139,42 +139,25 @@ export const formatNumber = (num: number): string => {
   return num.toLocaleString(undefined, { minimumIntegerDigits: 2 });
 };
 
-export const findCategoryPath = (
-  categories: IProductCategory[],
-  targetId: string,
+export const findCategoryPath = <
+  T extends { id: string; children?: T[] } = IProductCategory
+>(
+  categories: T[],
+  targetId: string
 ): string[] => {
   for (const category of categories) {
     if (category.id === targetId) {
-      return [category.id]; // Base case: return the ID when found.
+      return [category.id];
     }
 
     if (category.children && Array.isArray(category.children)) {
       const path = findCategoryPath(category.children, targetId);
       if (path.length) {
-        return [category.id, ...path]; // Append the current ID to the path.
+        return [category.id, ...path];
       }
     }
   }
-  return []; // Return an empty array if the ID is not found.
-};
-
-export const findGuideCategoryPath = (
-  categories: IGuideCategory[],
-  targetId: string,
-): string[] => {
-  for (const category of categories) {
-    if (category.id === targetId) {
-      return [category.id]; // Base case: return the ID when found.
-    }
-
-    if (category.children && Array.isArray(category.children)) {
-      const path = findGuideCategoryPath(category.children, targetId);
-      if (path.length) {
-        return [category.id, ...path]; // Append the current ID to the path.
-      }
-    }
-  }
-  return []; // Return an empty array if the ID is not found.
+  return [];
 };
 
 export function formatPrice(price: number = 0, currencyCode?: string): string {

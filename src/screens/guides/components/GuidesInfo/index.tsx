@@ -3,12 +3,13 @@ import { queryClient } from "@/api/queryClient";
 import UploadComponent from "@/components/Upload";
 import {
   IGuide,
+  IGuideCategory,
   IPaginatedResponse,
   IQueryState,
   TCreateGuide,
 } from "@/types";
 import {
-  findGuideCategoryPath,
+  findCategoryPath,
   normalizeFile,
   updatePaginatedData,
 } from "@/utils/helper";
@@ -65,8 +66,8 @@ function GuidesInfo({
     queryFn: fetchAuthors,
   });
 
-  const { data: categories, isFetching: isFetchingCategories } = useQuery({
-    queryKey: ["categories"],
+  const { data: guideCategories, isFetching: isFetchingGuideCategories } = useQuery({
+    queryKey: ["guideCategories"],
     queryFn: fetchGuideCategories,
   });
 
@@ -98,7 +99,7 @@ function GuidesInfo({
         }
       );
       queryClient.invalidateQueries({
-        queryKey: ["categories"],
+        queryKey: ["guideCategories"],
       });
       onClose();
     },
@@ -125,8 +126,8 @@ function GuidesInfo({
   };
 
   useEffect(() => {
-    if (data && categories) {
-      const fullPath = findGuideCategoryPath(categories?.data, data.categoryId);
+    if (data && guideCategories) {
+      const fullPath = findCategoryPath<IGuideCategory>(guideCategories?.data, data.categoryId);
       const transformedData = {
         ...data,
         categoryId: fullPath,
@@ -143,7 +144,7 @@ function GuidesInfo({
         form.setFieldsValue(transformedData);
       });
     }
-  }, [data, categories]);
+  }, [data, guideCategories]);
 
   return (
     <div>
@@ -151,7 +152,7 @@ function GuidesInfo({
       <Drawer
         title={config.guideId ? data?.nameEn : t("guides.createGuide")}
         placement="right"
-        loading={isFetching || isFetchingCategories}
+        loading={isFetching || isFetchingGuideCategories}
         size="large"
         destroyOnClose
         onClose={onClose}
@@ -257,7 +258,7 @@ function GuidesInfo({
                 className="w-full"
                 placement="bottomRight"
                 fieldNames={{ label: "nameEn", value: "id" }}
-                options={categories?.data}
+                options={guideCategories?.data}
                 changeOnSelect
                 showSearch={{
                   // Custom filter to match any part of the label
