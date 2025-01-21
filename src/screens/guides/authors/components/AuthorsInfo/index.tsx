@@ -12,19 +12,9 @@ import {
   IShowAuthorInfoDrawerConfig,
   TCreateAuthor,
 } from "@/types";
-import {
-  normalizeFile,
-  updatePaginatedData,
-} from "@/utils/helper";
+import { normalizeFile, updatePaginatedData } from "@/utils/helper";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  Button,
-  Drawer,
-  Flex,
-  Form,
-  Input,
-  message,
-} from "antd";
+import { Button, Drawer, Flex, Form, Input, message } from "antd";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -56,7 +46,7 @@ function AuthorsInfo({
       messageApi.success({
         content: t(
           config.authorId ? "guides.authorEdited" : "guides.authorCreated",
-          { name: variables.nameEn }
+          { name: variables.nameEn },
         ),
       });
 
@@ -65,14 +55,14 @@ function AuthorsInfo({
           ["authors", config.authorId],
           (old: any) => {
             return { ...old, ...data };
-          }
+          },
         );
       }
       queryClient.setQueryData<IPaginatedResponse<IAuthor>>(
         ["authors"],
         (old) => {
           return updatePaginatedData(data, old, config.authorId);
-        }
+        },
       );
       onClose();
     },

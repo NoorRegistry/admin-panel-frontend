@@ -1,18 +1,19 @@
 "use client";
-import React, { useEffect, useRef } from "react";
-import EditorJS from "@editorjs/editorjs";
 import { EDITOR_TOOLS } from "@/components/EditorJs/EditorTools";
-import { uploadGuideImage } from "@/services/upload.service";
-import ImageTool from "@editorjs/image";
 import { ProductPlugin } from "@/components/EditorJs/Plugins/ProductPlugin";
 import { StorePlugin } from "@/components/EditorJs/Plugins/StorePlugin";
+import { uploadGuideImage } from "@/services/upload.service";
+
+import EditorJS from "@editorjs/editorjs";
+import ImageTool from "@editorjs/image";
+import { useEffect, useRef } from "react";
 
 const GuideEditor = ({
   value,
   onChange,
   guideId,
   editorId,
-  editorlang
+  editorlang,
 }: {
   value: string;
   onChange?: (value: string) => void;
@@ -47,7 +48,7 @@ const GuideEditor = ({
                     const response = await uploadGuideImage(
                       guideId,
                       type,
-                      payload
+                      payload,
                     );
 
                     if (response.status === 200) {

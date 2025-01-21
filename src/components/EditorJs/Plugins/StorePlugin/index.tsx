@@ -1,8 +1,8 @@
-import { fetchStores } from "@/services/stores.service";
+import { fetchActiveStores } from "@/services/stores.service";
 import { IPaginatedResponse, TEditorStore } from "@/types";
 import { ShopOutlined } from "@ant-design/icons";
+import { BlockTool, BlockToolConstructorOptions } from "@editorjs/editorjs";
 import ReactDOMServer from "react-dom/server";
-import { BlockToolConstructorOptions, BlockTool } from "@editorjs/editorjs";
 
 export class StorePlugin implements BlockTool {
   api: any;
@@ -24,7 +24,8 @@ export class StorePlugin implements BlockTool {
 
   async fetchProducts(): Promise<void> {
     try {
-      const response: IPaginatedResponse<TEditorStore> = await fetchStores(true);
+      const response: IPaginatedResponse<TEditorStore> =
+        await fetchActiveStores(true);
       this.stores = response.data;
 
       this.populateDropdown();
@@ -48,7 +49,7 @@ export class StorePlugin implements BlockTool {
       "rounded-lg",
       "bg-white",
       "shadow-sm",
-      "space-y-4"
+      "space-y-4",
     );
 
     const select = document.createElement("select");
@@ -59,13 +60,13 @@ export class StorePlugin implements BlockTool {
       "rounded-lg",
       "bg-gray-50",
       "focus:ring-2",
-      "focus:ring-blue-400"
+      "focus:ring-blue-400",
     );
 
     select.addEventListener("change", () => {
       const selectedId = select.value;
       const selectedProduct = this.stores.find(
-        (p) => p.id.toString() === selectedId
+        (p) => p.id.toString() === selectedId,
       );
       if (selectedProduct) {
         this.selectProduct(selectedProduct);

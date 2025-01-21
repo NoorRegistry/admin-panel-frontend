@@ -49,16 +49,16 @@ function CategoriesInfo({
           config.categoryId
             ? "guides.categoryEdited"
             : "guides.categoryCreated",
-          { name: variables.nameEn }
+          { name: variables.nameEn },
         ),
       });
       try {
-        if(config.categoryId){
+        if (config.categoryId) {
           queryClient.setQueryData<IGuideCategory | undefined>(
             ["categories", config.categoryId],
             (old: any) => {
               return { ...old, ...data };
-            }
+            },
           );
         }
         queryClient.invalidateQueries({
@@ -186,7 +186,7 @@ function CategoriesInfo({
                           .includes(inputValue.toLowerCase()) ||
                         option.nameAr
                           .toLowerCase()
-                          .includes(inputValue.toLowerCase())
+                          .includes(inputValue.toLowerCase()),
                     );
                   },
                   // Renders the search path in the dropdown

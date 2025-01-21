@@ -13,16 +13,16 @@ export const fetchProducts = async (
   page: number,
   limit: number,
   search: string,
-  filters: any = {}
+  filters: any = {},
 ) => {
   const response = await http.get<IPaginatedResponse<IProduct>>(
     `${
       endpoints.products.index
     }?page=${page}&limit=${limit}&nameEn=${encodeURIComponent(search)}${
-      filters?.isActive ? `&isActive=${filters.isActive}` : ''
-    }${filters?.status ? `&status=${filters.status}` : ''}`
+      filters?.isActive ? `&isActive=${filters.isActive}` : ""
+    }${filters?.status ? `&status=${filters.status}` : ""}`,
   );
-  return response
+  return response;
 };
 
 export const fetchProduct = async (id: string) => {
@@ -35,45 +35,45 @@ export const postProduct = async (payload: TCreateProduct) => {
 
 export const patchProduct = async (
   id: string,
-  payload: Partial<TCreateProduct>
+  payload: Partial<TCreateProduct>,
 ) => {
   return await http.patch<IProduct>(
     `${endpoints.products.index}/${id}`,
-    payload
+    payload,
   );
 };
 
 export const fetchProductCategories = async () => {
   return await http.get<IPaginatedResponse<IProductCategory>>(
-    `${endpoints.products.index}/categories`
+    `${endpoints.products.index}/categories`,
   );
 };
 
 export const fetchProductCategoriesForStore = async (id: string) => {
   return await http.get<IPaginatedResponse<IProductCategory>>(
-    `${endpoints.products.index}/categories/stores/${id}`
+    `${endpoints.products.index}/categories/stores/${id}`,
   );
 };
 
 export const fetchProductCategory = async (id: string) => {
   return await http.get<IProductCategory>(
-    `${endpoints.products.index}/categories/${id}`
+    `${endpoints.products.index}/categories/${id}`,
   );
 };
 
 export const postProductCategory = async (payload: TCreateProductCategory) => {
   return await http.post<IProductCategory>(
     `${endpoints.products.index}/categories`,
-    payload
+    payload,
   );
 };
 
 export const patchProductCategory = async (
   id: string,
-  payload: TCreateProductCategory
+  payload: TCreateProductCategory,
 ) => {
   return await http.patch<IProductCategory>(
     `${endpoints.products.index}/categories/${id}`,
-    payload
+    payload,
   );
 };

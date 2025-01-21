@@ -6,25 +6,25 @@ import { AxiosRequestConfig } from "axios";
 export const deleteUploadedImage = async (payload: { url: string }) => {
   return await http.post<{ success: 200 }>(
     `${endpoints.upload.index}/delete`,
-    payload
+    payload,
   );
 };
 
 export const deleteUploadedImageWithDatabaseEntry = async (
   id: string,
   type: TUploadType,
-  payload: { url: string }
+  payload: { url: string },
 ) => {
   return await http.delete<{ success: 200 }>(
     `${endpoints.upload.index}/${id}?type=${type}`,
-    { data: payload }
+    { data: payload },
   );
 };
 
 export const uploadGuideImage = async (
   id: string,
   type: TUploadType,
-  payload: { file: File }
+  payload: { file: File },
 ) => {
   const config: AxiosRequestConfig = {
     headers: {
@@ -35,6 +35,6 @@ export const uploadGuideImage = async (
   return await http.post<IUpload>(
     `${endpoints.upload.index}?id=${id}&type=${type}`,
     payload,
-    config
+    config,
   );
 };

@@ -66,10 +66,11 @@ function GuidesInfo({
     queryFn: fetchAuthors,
   });
 
-  const { data: guideCategories, isFetching: isFetchingGuideCategories } = useQuery({
-    queryKey: ["guideCategories"],
-    queryFn: fetchGuideCategories,
-  });
+  const { data: guideCategories, isFetching: isFetchingGuideCategories } =
+    useQuery({
+      queryKey: ["guideCategories"],
+      queryFn: fetchGuideCategories,
+    });
 
   const createGuideMutation = useMutation({
     mutationFn: (data: TCreateGuide) => {
@@ -81,7 +82,7 @@ function GuidesInfo({
       messageApi.success({
         content: t(
           config.guideId ? "guides.guideEdited" : "guides.guideCreated",
-          { name: variables.nameEn }
+          { name: variables.nameEn },
         ),
       });
       if (config.guideId) {
@@ -89,14 +90,14 @@ function GuidesInfo({
           ["guides", config.guideId],
           (old: any) => {
             return { ...old, ...data };
-          }
+          },
         );
       }
       queryClient.setQueryData<IPaginatedResponse<IGuide>>(
         ["guides", queryState],
         (old) => {
           return updatePaginatedData(data, old, config.guideId);
-        }
+        },
       );
       queryClient.invalidateQueries({
         queryKey: ["guideCategories"],
@@ -127,7 +128,10 @@ function GuidesInfo({
 
   useEffect(() => {
     if (data && guideCategories) {
-      const fullPath = findCategoryPath<IGuideCategory>(guideCategories?.data, data.categoryId);
+      const fullPath = findCategoryPath<IGuideCategory>(
+        guideCategories?.data,
+        data.categoryId,
+      );
       const transformedData = {
         ...data,
         categoryId: fullPath,
@@ -270,7 +274,7 @@ function GuidesInfo({
                           .includes(inputValue.toLowerCase()) ||
                         option.nameAr
                           .toLowerCase()
-                          .includes(inputValue.toLowerCase())
+                          .includes(inputValue.toLowerCase()),
                     );
                   },
                   // Renders the search path in the dropdown

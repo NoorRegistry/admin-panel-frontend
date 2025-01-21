@@ -102,7 +102,8 @@ const translations = {
     selectParentCategory: "Select Parent Category",
     uploadProductImages: "Upload Product Images",
     productStatusChange: "Product {{status}} successfully",
-    confirmProductStatusUpdate: "Are you sure to mark the product as {{status}}?",
+    confirmProductStatusUpdate:
+      "Are you sure to mark the product as {{status}}?",
   },
   guides: {
     guides: "Guides",

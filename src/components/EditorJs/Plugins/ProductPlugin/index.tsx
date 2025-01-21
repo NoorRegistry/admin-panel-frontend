@@ -32,7 +32,7 @@ export class ProductPlugin implements BlockTool {
         {
           isActive: 1,
           status: "Approved",
-        }
+        },
       );
 
       this.products = response.data;
@@ -57,7 +57,7 @@ export class ProductPlugin implements BlockTool {
       "rounded-lg",
       "bg-white",
       "shadow-sm",
-      "space-y-4"
+      "space-y-4",
     );
 
     const select = document.createElement("select");
@@ -71,7 +71,7 @@ export class ProductPlugin implements BlockTool {
       "option-selected-color",
       "option-selected-font-weight",
       "appearance-none",
-      "overflow-hidden"
+      "overflow-hidden",
     );
 
     // Apply custom styles
@@ -137,7 +137,7 @@ export class ProductPlugin implements BlockTool {
       "rounded-lg",
       "bg-white",
       "shadow",
-      "mt-4"
+      "mt-4",
     );
 
     productCard.innerHTML = `

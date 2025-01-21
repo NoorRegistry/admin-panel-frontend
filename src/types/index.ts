@@ -28,11 +28,7 @@ export interface IStore {
   isActive: boolean;
 }
 
-export type TEditorStore = Omit<
-  IStore,
-  | "email"
-  | "isActive"
->;
+export type TEditorStore = Omit<IStore, "email" | "isActive">;
 
 export interface IAuthor {
   id: string;
@@ -82,12 +78,7 @@ export interface IProduct {
 
 export type TEditorProduct = Omit<
   IProduct,
-  | "storeId"
-  | "categoryId"
-  | "status"
-  | "isActive"
-  | "category"
-  | "store"
+  "storeId" | "categoryId" | "status" | "isActive" | "category" | "store"
 >;
 export interface IGuide {
   id: string;

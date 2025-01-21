@@ -13,7 +13,7 @@ import {
 
 export const fetchAuthors = async () => {
   return await http.get<IPaginatedResponse<IAuthor>>(
-    `${endpoints.guides.index}/authors`
+    `${endpoints.guides.index}/authors`,
   );
 };
 
@@ -23,11 +23,11 @@ export const fetchAuthor = async (id: string) => {
 
 export const patchAuthor = async (
   id: string,
-  payload: Partial<TCreateAuthor>
+  payload: Partial<TCreateAuthor>,
 ) => {
   return await http.patch<IAuthor>(
     `${endpoints.guides.index}/authors/${id}`,
-    payload
+    payload,
   );
 };
 
@@ -37,36 +37,36 @@ export const postAuthor = async (payload: TCreateAuthor) => {
 
 export const fetchGuideCategories = async () => {
   return await http.get<IPaginatedResponse<IGuideCategory>>(
-    `${endpoints.guides.index}/categories`
+    `${endpoints.guides.index}/categories`,
   );
 };
 
 export const fetchGuideCategory = async (id: string) => {
   return await http.get<IGuideCategory>(
-    `${endpoints.guides.index}/categories/${id}`
+    `${endpoints.guides.index}/categories/${id}`,
   );
 };
 
 export const postGuideCategory = async (payload: TCreateGuideCategory) => {
   return await http.post<IGuideCategory>(
     `${endpoints.guides.index}/categories`,
-    payload
+    payload,
   );
 };
 
 export const patchGuideCategory = async (
   id: string,
-  payload: TCreateGuideCategory
+  payload: TCreateGuideCategory,
 ) => {
   return await http.patch<IGuideCategory>(
     `${endpoints.guides.index}/categories/${id}`,
-    payload
+    payload,
   );
 };
 
 export const patchGuide = async (
   id: string,
-  payload: Partial<TCreateGuide>
+  payload: Partial<TCreateGuide>,
 ) => {
   return await http.patch<IGuide>(`${endpoints.guides.index}/${id}`, payload);
 };
@@ -74,12 +74,12 @@ export const patchGuide = async (
 export const fetchGuides = async (
   page: number,
   limit: number,
-  search: string
+  search: string,
 ) => {
   return await http.get<IPaginatedResponse<IGuide>>(
     `${
       endpoints.guides.index
-    }?page=${page}&limit=${limit}&nameEn=${encodeURIComponent(search)}`
+    }?page=${page}&limit=${limit}&nameEn=${encodeURIComponent(search)}`,
   );
 };
 
