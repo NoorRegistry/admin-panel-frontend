@@ -1,18 +1,9 @@
-import { IShowAuthorInfoDrawerConfig } from "@/types";
 import { useTableScroll } from "@/hooks/useTableScroll";
 import { fetchAuthors } from "@/services/guides.service";
-import { ColumnsType, IAuthor } from "@/types";
+import { ColumnsType, IAuthor, IShowAuthorInfoDrawerConfig } from "@/types";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import {
-  Button,
-  Image,
-  Input,
-  message,
-  PaginationProps,
-  Table,
-  Typography,
-} from "antd";
+import { Button, Image, Input, PaginationProps, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebounce } from "use-debounce";
@@ -21,7 +12,6 @@ import AuthorsInfo from "../AuthorsInfo";
 function AuthorsTable() {
   const { t } = useTranslation();
   const { tableRef, scroll } = useTableScroll();
-  const [messageApi, messageContextHolder] = message.useMessage();
   const [searchText, setSearchText] = useState("");
   const [openAuthorInfo, setOpenAuthorInfo] =
     useState<IShowAuthorInfoDrawerConfig>({
@@ -54,7 +44,7 @@ function AuthorsTable() {
             .includes(debouncedSearchText.toLowerCase()) ||
           author.nameAr
             ?.toLowerCase()
-            .includes(debouncedSearchText.toLowerCase())
+            .includes(debouncedSearchText.toLowerCase()),
       );
       setFilteredData(filtered);
       setPagination((prev) => ({
@@ -67,7 +57,7 @@ function AuthorsTable() {
 
   const paginatedData = filteredData.slice(
     (pagination.current! - 1) * pagination.pageSize!,
-    pagination.current! * pagination.pageSize!
+    pagination.current! * pagination.pageSize!,
   );
 
   const columns: ColumnsType<IAuthor> = [

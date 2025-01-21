@@ -1,14 +1,13 @@
 import { useTableScroll } from "@/hooks/useTableScroll";
 import { IShowCategoryInfoDrawerConfig } from "@/screens/guides/guides.types";
-import { ColumnsType, EAdminRole, IGuideCategory } from "@/types";
-import { getAdminRole } from "@/utils/helper";
+import { fetchGuideCategories } from "@/services/guides.service";
+import { ColumnsType, IGuideCategory } from "@/types";
 import { PlusOutlined } from "@ant-design/icons";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Button, Table, Typography } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import CategoriesInfo from "../CategoriesInfo";
-import { fetchGuideCategories } from "@/services/guides.service";
 
 function CategoriesTable() {
   const { t } = useTranslation();

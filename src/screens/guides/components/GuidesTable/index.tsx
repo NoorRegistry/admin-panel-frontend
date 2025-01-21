@@ -1,21 +1,17 @@
 import { IApiError } from "@/api/http";
 import { queryClient } from "@/api/queryClient";
 import { useTableScroll } from "@/hooks/useTableScroll";
+import { fetchGuides, patchGuide } from "@/services/guides.service";
 import {
   ColumnsType,
-  EAdminRole,
   EGuideStatus,
   IGuide,
   IPaginatedResponse,
   IQueryState,
   TCreateGuide,
 } from "@/types";
-import { getAdminRole, updatePaginatedData } from "@/utils/helper";
-import {
-  DownOutlined,
-  PlusOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { updatePaginatedData } from "@/utils/helper";
+import { DownOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import type { MenuProps, TablePaginationConfig } from "antd";
 import {
@@ -35,7 +31,6 @@ import { useTranslation } from "react-i18next";
 import { useDebounce } from "use-debounce";
 import { IShowGuideInfoDrawerConfig } from "../../guides.types";
 import GuidesInfo from "../GuidesInfo";
-import { fetchGuides, patchGuide } from "@/services/guides.service";
 
 function GuidesTable() {
   const { t } = useTranslation();
@@ -64,8 +59,8 @@ function GuidesTable() {
     return status === EGuideStatus.PUBLISHED
       ? t("common.published")
       : status === EGuideStatus.DRAFT
-      ? t("common.draft")
-      : t("common.submitted");
+        ? t("common.draft")
+        : t("common.submitted");
   };
 
   const updateGuideStatusMutation = useMutation({
@@ -91,13 +86,13 @@ function GuidesTable() {
         ["guides", data.id],
         (old: any) => {
           return { ...old, ...data };
-        }
+        },
       );
       queryClient.setQueryData<IPaginatedResponse<IGuide>>(
         ["guides", queryState],
         (old) => {
           return updatePaginatedData(data, old, data.id);
-        }
+        },
       );
     },
     onError: (err: IApiError) => {
@@ -294,7 +289,7 @@ function GuidesTable() {
               }}
             />
           </div>
-        )
+        );
       },
     },
   ];
@@ -352,7 +347,7 @@ function GuidesTable() {
           rowKey={(row) => row.id}
           onRow={(record) => {
             return {
-              onClick: (event) => {
+              onClick: () => {
                 setOpenGuideInfo({ open: true, guideId: record.id });
               },
             };
