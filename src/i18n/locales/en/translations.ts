@@ -78,6 +78,9 @@ const translations = {
     confirm: "Confirm",
     showTotal: "{{start}} - {{end}} of Total {{total}} items",
     searchByName: "Search by Name",
+    published: "Published",
+    draft: "Draft",
+    submitted: "Submitted",
   },
   products: {
     products: "Products",
@@ -99,8 +102,7 @@ const translations = {
     selectParentCategory: "Select Parent Category",
     uploadProductImages: "Upload Product Images",
     productStatusChange: "Product {{status}} successfully",
-    confirmProductStatusUpdate:
-      "Are you sure to mark the product as {{status}}?",
+    confirmProductStatusUpdate: "Are you sure to mark the product as {{status}}?",
   },
   guides: {
     guides: "Guides",
@@ -112,12 +114,21 @@ const translations = {
     createAuthor: "Create Author",
     authorEdited: "Author edited successfully",
     authorCreated: "Author created successfully",
+    guideEdited: "Guide edited successfully",
+    guideCreated: "Guide created successfully",
     uploadAuthorImage: "Upload Author Images",
     createCategory: "Create Category",
     selectParentCategory: "Select Parent Category",
     selectCategory: "Select Category",
     categoryCreated: "Category {{name}} created successfully",
     categoryEdited: "Category {{name}} created successfully",
+    createGuide: "Create Guide",
+    author: "Author",
+    confirmGuideStatusUpdate: "Are you sure to mark the guide as {{status}}?",
+    selectAuthor: "Select Author",
+    uploadGuideLogo: "Upload Guide Image",
+    contentEn: "Content in English",
+    contentAr: "Content in Arabic",
   },
 } as const;
 

@@ -28,6 +28,12 @@ export interface IStore {
   isActive: boolean;
 }
 
+export type TEditorStore = Omit<
+  IStore,
+  | "email"
+  | "isActive"
+>;
+
 export interface IAuthor {
   id: string;
   nameEn: string;
@@ -74,12 +80,52 @@ export interface IProduct {
   currencyCode: string;
 }
 
+export type TEditorProduct = Omit<
+  IProduct,
+  | "storeId"
+  | "categoryId"
+  | "status"
+  | "isActive"
+  | "category"
+  | "store"
+>;
+export interface IGuide {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+  descriptionEn: string;
+  descriptionAr: string;
+  bannerImage: string;
+  authorId: string;
+  categoryId: string;
+  status: EGuideStatus;
+  isActive: boolean;
+  contentEn?: string;
+  contentAr?: string;
+  category: {
+    id: string;
+    name: string;
+  };
+  author: {
+    id: string;
+    name: string;
+  };
+}
+
 export interface IProductDetails extends IProduct {
   descriptionEn: string;
   descriptionAr: string;
 }
 
+export interface IGuideDetails extends IGuide {
+  descriptionEn: string;
+  descriptionAr: string;
+  contentEn?: string;
+  contentAr?: string;
+}
+
 export type TCreateProduct = Omit<IProductDetails, "id" | "store" | "category">;
+export type TCreateGuide = Omit<IGuideDetails, "id" | "author" | "category">;
 
 export interface IProductCategory {
   id: string;
@@ -98,7 +144,7 @@ export interface IGuideCategory {
   nameAr: string;
   parentId: string | null;
   _count: {
-    products: number;
+    guides: number;
   };
   children: IGuideCategory[];
 }
@@ -166,7 +212,12 @@ export interface IStoreAdmin {
 
 export type TCreateStoreAdmin = Omit<IStoreAdmin, "id" | "storeName" | "role">;
 
-export type TUploadType = "store" | "product" | "author";
+export type TUploadType =
+  | "store"
+  | "product"
+  | "author"
+  | "guide"
+  | "guideContent";
 
 export type TStatistics = {
   products?: {
@@ -197,8 +248,21 @@ export enum EProductStatus {
   APPROVED = "Approved",
 }
 
+export enum EGuideStatus {
+  DRAFT = "Draft",
+  SUBMITTED = "Submitted",
+  PUBLISHED = "Published",
+}
+
 export interface IQueryState {
   current: number;
   pageSize: number;
   search: string;
+}
+
+export interface IUpload {
+  status: number;
+  message: string;
+  id: string;
+  path: string;
 }

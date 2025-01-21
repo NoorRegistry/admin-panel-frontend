@@ -1,7 +1,9 @@
+import GuidesTable from "./components/GuidesTable";
+
 function Guides() {
   return (
     <div>
-      Guides
+      <GuidesTable />
     </div>
   );
 }
