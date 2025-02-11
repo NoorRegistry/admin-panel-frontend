@@ -11,6 +11,10 @@ export const login = async (payload: ILoginPayload): Promise<IAccessToken> => {
   return await http.post<IAccessToken>(endpoints.authentication.login, payload);
 };
 
+export const googleLogin = async (token: string) => {
+  return await http.post(endpoints.authentication.googleLogin, { token });
+};
+
 export const refreshToken = async (): Promise<IAccessToken> => {
   return await http.get<IAccessToken>(endpoints.authentication.refreshToken);
 };

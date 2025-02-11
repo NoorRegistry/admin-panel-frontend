@@ -8,6 +8,7 @@ import { ConfigProvider } from "antd";
 import i18next from "i18next";
 import { Poppins, Tajawal } from "next/font/google";
 import "../theme/globals.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const secondaryFont = Tajawal({
   weight: ["300", "400", "500", "700"],
@@ -41,7 +42,12 @@ export default function RootLayout({
         <AntdRegistry>
           <ConfigProvider direction={direction} theme={antdTheme}>
             <QueryClientProvider client={queryClient}>
-              {children}
+              <GoogleOAuthProvider
+                /* @ts-expect-error clientId field exists */
+                clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+              >
+                {children}
+              </GoogleOAuthProvider>
             </QueryClientProvider>
           </ConfigProvider>
         </AntdRegistry>

@@ -3,6 +3,7 @@ const endpoints = {
     login: "/v1/api/admin/auth/login",
     register: "/v1/api/admin/auth/register",
     refreshToken: "/v1/api/admin/auth/refresh",
+    googleLogin: "/v1/api/admin/auth/google",
   },
   stores: {
     index: "/v1/api/admin/stores",
