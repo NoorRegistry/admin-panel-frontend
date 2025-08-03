@@ -42,7 +42,6 @@ function CreateStoreAdmin({
       {contextHolder}
       <Modal
         centered
-        onClose={onClose}
         onCancel={onClose}
         title={t("stores.createAdmin", { name: config.storeName })}
         open={config.open}
