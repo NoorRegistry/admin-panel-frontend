@@ -4,7 +4,7 @@ import {
   deleteUploadedImage,
   deleteUploadedImageWithDatabaseEntry,
 } from "@/services/upload.service";
-import { TUploadType } from "@/types";
+import { EQueryKeys, TUploadType } from "@/types";
 import { getAccessToken } from "@/utils/helper";
 import { PlusOutlined } from "@ant-design/icons";
 import type { GetProp, UploadFile, UploadProps } from "antd";
@@ -120,10 +120,10 @@ const UploadComponent = ({
   const handleInvalidateCache = () => {
     if (!dbId) return;
     if (type === "store") {
-      queryClient.invalidateQueries({ queryKey: ["stores"] });
+      queryClient.invalidateQueries({ queryKey: [EQueryKeys.STORES] });
     } else if (type === "product") {
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-      queryClient.invalidateQueries({ queryKey: ["product"] });
+      queryClient.invalidateQueries({ queryKey: [EQueryKeys.PRODUCTS] });
+      queryClient.invalidateQueries({ queryKey: [EQueryKeys.PRODUCT] });
     }
   };
 

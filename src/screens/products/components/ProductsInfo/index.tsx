@@ -10,6 +10,7 @@ import {
 import { fetchStores } from "@/services/stores.service";
 import {
   EAdminRole,
+  EQueryKeys,
   IPaginatedResponse,
   IProduct,
   IQueryState,
@@ -62,13 +63,13 @@ function ProductsInfo({
   });
 
   const { data: stores, isFetching: isFetchingStores } = useQuery({
-    queryKey: ["stores"],
+    queryKey: [EQueryKeys.STORES],
     queryFn: fetchStores,
     enabled: isInternalAdmin,
   });
 
   const { data: categories, isFetching: isFetchingCategories } = useQuery({
-    queryKey: ["categories"],
+    queryKey: [EQueryKeys.CATEGORIES],
     queryFn: fetchProductCategories,
   });
 
@@ -88,19 +89,19 @@ function ProductsInfo({
         ),
       });
       queryClient.setQueryData<IProduct | undefined>(
-        ["product", config.productId],
+        [EQueryKeys.PRODUCT, config.productId],
         (old: any) => {
           return { ...old, ...data };
         },
       );
       queryClient.setQueryData<IPaginatedResponse<IProduct>>(
-        ["products", queryState],
+        [EQueryKeys.PRODUCTS, queryState],
         (old) => {
           return updatePaginatedData(data, old, config.productId);
         },
       );
       queryClient.invalidateQueries({
-        queryKey: ["categories", isInternalAdmin],
+        queryKey: [EQueryKeys.CATEGORIES, isInternalAdmin],
       });
       onClose();
     },

@@ -7,6 +7,7 @@ import {
   postAuthor,
 } from "@/services/guides.service";
 import {
+  EQueryKeys,
   IAuthor,
   IPaginatedResponse,
   IShowAuthorInfoDrawerConfig,
@@ -31,7 +32,7 @@ function AuthorsInfo({
   const [form] = Form.useForm();
 
   const { data, isFetching } = useQuery({
-    queryKey: ["authors", config.authorId],
+    queryKey: [EQueryKeys.AUTHORS, config.authorId],
     queryFn: ({ queryKey }) => fetchAuthor(queryKey[1]!),
     enabled: Boolean(config.authorId),
   });

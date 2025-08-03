@@ -1,6 +1,12 @@
 import { IApiError } from "@/api/http";
 import { queryClient } from "@/api/queryClient";
-import { IGuideCategory, TCreateGuideCategory } from "@/types";
+import {
+  fetchGuideCategories,
+  fetchGuideCategory,
+  patchGuideCategory,
+  postGuideCategory,
+} from "@/services/guides.service";
+import { EQueryKeys, IGuideCategory, TCreateGuideCategory } from "@/types";
 import { findCategoryPath } from "@/utils/helper";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Cascader, Drawer, Flex, Form, Input, message } from "antd";
@@ -8,12 +14,6 @@ import TextArea from "antd/es/input/TextArea";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { IShowCategoryInfoDrawerConfig } from "../../../guides.types";
-import {
-  fetchGuideCategories,
-  fetchGuideCategory,
-  patchGuideCategory,
-  postGuideCategory,
-} from "@/services/guides.service";
 
 function CategoriesInfo({
   config,
@@ -27,13 +27,13 @@ function CategoriesInfo({
   const [form] = Form.useForm();
 
   const { data, isFetching } = useQuery({
-    queryKey: ["categories", config.categoryId],
+    queryKey: [EQueryKeys.GUIDE_CATEGORIES, config.categoryId],
     queryFn: ({ queryKey }) => fetchGuideCategory(queryKey[1]!),
     enabled: Boolean(config.categoryId),
   });
 
   const { data: categories, isFetching: isFetchingCategories } = useQuery({
-    queryKey: ["categories"],
+    queryKey: [EQueryKeys.GUIDE_CATEGORIES],
     queryFn: fetchGuideCategories,
   });
 
@@ -55,14 +55,14 @@ function CategoriesInfo({
       try {
         if (config.categoryId) {
           queryClient.setQueryData<IGuideCategory | undefined>(
-            ["categories", config.categoryId],
+            [EQueryKeys.GUIDE_CATEGORIES, config.categoryId],
             (old: any) => {
               return { ...old, ...data };
             },
           );
         }
         queryClient.invalidateQueries({
-          queryKey: ["categories"],
+          queryKey: [EQueryKeys.GUIDE_CATEGORIES],
         });
       } catch (error) {
         console.error("error in guide category create", error);

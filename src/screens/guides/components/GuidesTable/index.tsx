@@ -5,6 +5,7 @@ import { fetchGuides, patchGuide } from "@/services/guides.service";
 import {
   ColumnsType,
   EGuideStatus,
+  EQueryKeys,
   IGuide,
   IPaginatedResponse,
   IQueryState,
@@ -177,7 +178,7 @@ function GuidesTable() {
   };
 
   const { data, isFetching } = useQuery({
-    queryKey: ["guides", queryState],
+    queryKey: [EQueryKeys.GUIDES, queryState],
     queryFn: () =>
       fetchGuides(queryState.current, queryState.pageSize, queryState.search),
     placeholderData: keepPreviousData,

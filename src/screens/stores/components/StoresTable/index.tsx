@@ -5,6 +5,7 @@ import { useTableScroll } from "@/hooks/useTableScroll";
 import { fetchStores, patchStore } from "@/services/stores.service";
 import {
   ColumnsType,
+  EQueryKeys,
   IPaginatedResponse,
   IStore,
   IStoreDetails,
@@ -59,7 +60,7 @@ function StoresTable() {
   });
 
   const { data, isFetching } = useQuery({
-    queryKey: ["stores"],
+    queryKey: [EQueryKeys.STORES],
     queryFn: fetchStores,
     placeholderData: keepPreviousData,
   });

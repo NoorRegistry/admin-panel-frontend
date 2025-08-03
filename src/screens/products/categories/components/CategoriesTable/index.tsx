@@ -4,7 +4,7 @@ import {
   fetchProductCategories,
   fetchProductCategoriesForStore,
 } from "@/services/product.service";
-import { ColumnsType, EAdminRole, IProductCategory } from "@/types";
+import { ColumnsType, EAdminRole, EQueryKeys, IProductCategory } from "@/types";
 import { getAdminRole, getAdminStoreId } from "@/utils/helper";
 import { PlusOutlined } from "@ant-design/icons";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
@@ -24,7 +24,7 @@ function CategoriesTable() {
   const isInternalAdmin = getAdminRole() === EAdminRole.INTERNAL_ADMIN;
 
   const { data, isFetching } = useQuery({
-    queryKey: ["categories", isInternalAdmin],
+    queryKey: [EQueryKeys.CATEGORIES, isInternalAdmin],
     queryFn: () => {
       if (isInternalAdmin) {
         return fetchProductCategories(); // fetch all categories for internal admin

@@ -1,4 +1,5 @@
 import { fetchStatistics } from "@/services/statistics.service";
+import { EQueryKeys } from "@/types";
 import { formatNumber } from "@/utils/helper";
 import {
   GiftOutlined,
@@ -35,7 +36,7 @@ const icons: IconsMap = {
 const StatisticsCards: React.FC = () => {
   const { t } = useTranslation();
   const { data, isFetching } = useQuery({
-    queryKey: ["statistics"],
+    queryKey: [EQueryKeys.STATISTICS],
     queryFn: fetchStatistics,
     refetchInterval: 120000, // 2 minutes in milliseconds
     // Optional: only refetch if component is in view

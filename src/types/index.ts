@@ -257,3 +257,16 @@ export interface IUpload {
   id: string;
   path: string;
 }
+
+export enum EQueryKeys {
+  PRODUCT = "product",
+  PRODUCTS = "products",
+  GUIDE = "guide",
+  GUIDES = "guides",
+  CATEGORIES = "categories",
+  STORES = "stores",
+  RELATED_PRODUCTS = "related_products",
+  AUTHORS = "authors",
+  STATISTICS = "statistics",
+  GUIDE_CATEGORIES = "guide_categories",
+}

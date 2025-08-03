@@ -1,5 +1,6 @@
 import { useTableScroll } from "@/hooks/useTableScroll";
 import { fetchAuthors } from "@/services/guides.service";
+import { EQueryKeys } from "@/types";
 import { ColumnsType, IAuthor, IShowAuthorInfoDrawerConfig } from "@/types";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
@@ -30,7 +31,7 @@ function AuthorsTable() {
   };
 
   const { data, isFetching } = useQuery({
-    queryKey: ["authors"],
+    queryKey: [EQueryKeys.AUTHORS],
     queryFn: fetchAuthors,
     placeholderData: keepPreviousData,
   });

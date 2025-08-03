@@ -16,6 +16,7 @@ function PrivateLayout({
   const router = useRouter();
   const isAuthenticated = useGlobalStore.use.isAuthenticated();
 
+  // TODO: Handle token refresh
   useEffect(() => {
     if (!isAuthenticated) {
       router.replace("/login");

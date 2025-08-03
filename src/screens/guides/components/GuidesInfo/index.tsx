@@ -2,6 +2,14 @@ import { IApiError } from "@/api/http";
 import { queryClient } from "@/api/queryClient";
 import UploadComponent from "@/components/Upload";
 import {
+  fetchAuthors,
+  fetchGuide,
+  fetchGuideCategories,
+  patchGuide,
+  postGuide,
+} from "@/services/guides.service";
+import {
+  EQueryKeys,
   IGuide,
   IGuideCategory,
   IPaginatedResponse,
@@ -25,17 +33,10 @@ import {
   message,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IShowGuideInfoDrawerConfig } from "../../guides.types";
-import {
-  fetchAuthors,
-  fetchGuide,
-  fetchGuideCategories,
-  patchGuide,
-  postGuide,
-} from "@/services/guides.service";
-import dynamic from "next/dynamic";
 
 function GuidesInfo({
   config,
@@ -56,19 +57,19 @@ function GuidesInfo({
   const [form] = Form.useForm();
 
   const { data, isFetching } = useQuery({
-    queryKey: ["guides", config.guideId],
+    queryKey: [EQueryKeys.GUIDES, config.guideId],
     queryFn: ({ queryKey }) => fetchGuide(queryKey[1]!),
     enabled: Boolean(config.guideId),
   });
 
   const { data: authors, isFetching: isFetchingAuthors } = useQuery({
-    queryKey: ["authors"],
+    queryKey: [EQueryKeys.AUTHORS],
     queryFn: fetchAuthors,
   });
 
   const { data: guideCategories, isFetching: isFetchingGuideCategories } =
     useQuery({
-      queryKey: ["guideCategories"],
+      queryKey: [EQueryKeys.GUIDE_CATEGORIES],
       queryFn: fetchGuideCategories,
     });
 
@@ -100,7 +101,7 @@ function GuidesInfo({
         },
       );
       queryClient.invalidateQueries({
-        queryKey: ["guideCategories"],
+        queryKey: [EQueryKeys.GUIDE_CATEGORIES],
       });
       onClose();
     },

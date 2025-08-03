@@ -6,6 +6,7 @@ import {
   ColumnsType,
   EAdminRole,
   EProductStatus,
+  EQueryKeys,
   IPaginatedResponse,
   IProduct,
   IQueryState,
@@ -208,7 +209,7 @@ function ProductsTable() {
   };
 
   const { data, isFetching } = useQuery({
-    queryKey: ["products", queryState],
+    queryKey: [EQueryKeys.PRODUCTS, queryState],
     queryFn: () =>
       fetchProducts(queryState.current, queryState.pageSize, queryState.search),
     placeholderData: keepPreviousData,

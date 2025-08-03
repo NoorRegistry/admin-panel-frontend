@@ -1,0 +1,56 @@
+<svg
+    width="20"
+    height="20"
+    viewBox="0 0 28 28"
+    xmlns="http://www.w3.org/2000/svg"
+>
+    <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <!-- Main product box -->
+        <rect
+            x="4"
+            y="4"
+            width="8"
+            height="8"
+            rx="2"
+            ry="2"
+        />
+
+        <!-- Related product boxes -->
+        <rect
+            x="16"
+            y="4"
+            width="8"
+            height="8"
+            rx="2"
+            ry="2"
+        />
+
+        <rect
+            x="4"
+            y="16"
+            width="8"
+            height="8"
+            rx="2"
+            ry="2"
+        />
+
+        <rect
+            x="16"
+            y="16"
+            width="8"
+            height="8"
+            rx="2"
+            ry="2"
+        />
+
+        <!-- Connection lines showing relationships -->
+        <line x1="12" y1="8" x2="16" y2="8" stroke-dasharray="3,2" />
+        <line x1="8" y1="12" x2="8" y2="16" stroke-dasharray="3,2" />
+        <line x1="12" y1="20" x2="16" y2="20" stroke-dasharray="3,2" />
+        <line x1="20" y1="12" x2="20" y2="16" stroke-dasharray="3,2" />
+
+        <!-- Central connection point -->
+        <circle cx="14" cy="14" r="1.5" fill="currentColor" />
+    </g>
+</svg>

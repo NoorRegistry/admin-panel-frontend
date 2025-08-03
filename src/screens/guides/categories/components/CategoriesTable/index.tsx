@@ -1,7 +1,7 @@
 import { useTableScroll } from "@/hooks/useTableScroll";
 import { IShowCategoryInfoDrawerConfig } from "@/screens/guides/guides.types";
 import { fetchGuideCategories } from "@/services/guides.service";
-import { ColumnsType, IGuideCategory } from "@/types";
+import { ColumnsType, EQueryKeys, IGuideCategory } from "@/types";
 import { PlusOutlined } from "@ant-design/icons";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Button, Table, Typography } from "antd";
@@ -18,7 +18,7 @@ function CategoriesTable() {
     });
 
   const { data, isFetching } = useQuery({
-    queryKey: ["categories"],
+    queryKey: [EQueryKeys.GUIDE_CATEGORIES],
     queryFn: () => fetchGuideCategories(),
     placeholderData: keepPreviousData,
   });

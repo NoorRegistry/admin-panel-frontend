@@ -3,6 +3,7 @@ import { queryClient } from "@/api/queryClient";
 import UploadComponent from "@/components/Upload";
 import { fetchStore, patchStore, postStore } from "@/services/stores.service";
 import {
+  EQueryKeys,
   IPaginatedResponse,
   IStore,
   IStoreDetails,
@@ -42,7 +43,7 @@ function StoreInfo({
   const [form] = Form.useForm();
 
   const { data, isFetching } = useQuery({
-    queryKey: ["stores", config.storeId],
+    queryKey: [EQueryKeys.STORES, config.storeId],
     queryFn: ({ queryKey }) => fetchStore(queryKey[1]!),
     enabled: Boolean(config.storeId),
   });

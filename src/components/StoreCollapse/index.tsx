@@ -1,4 +1,5 @@
 import { fetchStore } from "@/services/stores.service";
+import { EQueryKeys } from "@/types";
 import { getAdminStoreId } from "@/utils/helper";
 import { EditOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
@@ -16,7 +17,7 @@ const StoreDetailsCollapse = () => {
     });
 
   const { data: store, isFetching } = useQuery({
-    queryKey: ["stores", storeId],
+    queryKey: [EQueryKeys.STORES, storeId],
     queryFn: ({ queryKey }) => fetchStore(queryKey[1]!),
   });
 

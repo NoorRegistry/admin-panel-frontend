@@ -6,7 +6,7 @@ import {
   patchProductCategory,
   postProductCategory,
 } from "@/services/product.service";
-import { IProductCategory, TCreateProductCategory } from "@/types";
+import { EQueryKeys, IProductCategory, TCreateProductCategory } from "@/types";
 import { findCategoryPath } from "@/utils/helper";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Cascader, Drawer, Flex, Form, Input, message } from "antd";
@@ -27,13 +27,13 @@ function CategoriesInfo({
   const [form] = Form.useForm();
 
   const { data, isFetching } = useQuery({
-    queryKey: ["categories", config.categoryId],
+    queryKey: [EQueryKeys.CATEGORIES, config.categoryId],
     queryFn: ({ queryKey }) => fetchProductCategory(queryKey[1]!),
     enabled: Boolean(config.categoryId),
   });
 
   const { data: categories, isFetching: isFetchingCategories } = useQuery({
-    queryKey: ["categories"],
+    queryKey: [EQueryKeys.CATEGORIES],
     queryFn: fetchProductCategories,
   });
 
@@ -61,7 +61,7 @@ function CategoriesInfo({
           },
         );
         queryClient.invalidateQueries({
-          queryKey: ["categories"],
+          queryKey: [EQueryKeys.CATEGORIES],
         });
       } catch (error) {
         console.error("error in product category create", error);

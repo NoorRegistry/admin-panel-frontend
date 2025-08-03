@@ -77,3 +77,22 @@ export const patchProductCategory = async (
     payload,
   );
 };
+
+export const fetchRelatedProducts = async (id: string) => {
+  return await http.get<IProduct[]>(
+    `${endpoints.products.index}/${id}/related`,
+  );
+};
+
+export const postRelatedProducts = async (id: string, productId: string[]) => {
+  return await http.post<IProduct>(
+    `${endpoints.products.index}/${id}/related`,
+    { productId },
+  );
+};
+
+export const deleteRelatedProduct = async (id: string, productId: string) => {
+  return await http.delete<IProduct>(
+    `${endpoints.products.index}/${id}/related/${productId}`,
+  );
+};
