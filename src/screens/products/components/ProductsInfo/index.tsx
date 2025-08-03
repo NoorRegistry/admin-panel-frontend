@@ -38,6 +38,7 @@ import TextArea from "antd/es/input/TextArea";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IShowProductInfoDrawerConfig } from "../../products.types";
+import formValidations from "@/constants/formValidations";
 
 function ProductsInfo({
   config,
@@ -174,7 +175,7 @@ function ProductsInfo({
               name="nameEn"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <Input />
+              <Input maxLength={formValidations?.products?.name} />
             </Form.Item>
 
             <Form.Item<TCreateProduct>
@@ -182,7 +183,7 @@ function ProductsInfo({
               name="nameAr"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <Input />
+              <Input maxLength={formValidations?.products?.name} />
             </Form.Item>
 
             <Form.Item<TCreateProduct>
@@ -190,7 +191,7 @@ function ProductsInfo({
               name="descriptionEn"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <TextArea autoSize />
+              <TextArea autoSize maxLength={formValidations?.products?.description} />
             </Form.Item>
 
             <Form.Item<TCreateProduct>
@@ -198,7 +199,7 @@ function ProductsInfo({
               name="descriptionAr"
               rules={[{ required: true, message: t("common.required") }]}
             >
-              <TextArea autoSize />
+              <TextArea autoSize maxLength={formValidations?.products?.description} />
             </Form.Item>
 
             <Form.Item<TCreateProduct>
