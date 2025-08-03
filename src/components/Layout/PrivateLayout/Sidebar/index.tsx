@@ -83,64 +83,67 @@ function Sidebar() {
   const logout = useGlobalStore.use.signOut();
   const pathname = usePathname();
   console.log("pathname: " + pathname);
-  const menuItems: TMenuItems[] = [
-    {
-      key: "dashboard",
-      icon: <HomeOutlined />,
-      label: t("common.dashboard"),
-      href: "/",
-    },
-    {
-      key: "stores",
-      icon: <ShopOutlined />,
-      label: t("stores.stores"),
-      href: "/stores",
-    },
-    {
-      key: "productsparent",
-      icon: <ProductOutlined />,
-      label: t("products.products"),
-      children: [
-        {
-          key: "products",
-          icon: <OrderedListOutlined />,
-          label: t("products.list"),
-          href: "/products",
-        },
-        {
-          key: "productCategories",
-          icon: <ApartmentOutlined />,
-          label: t("products.categories"),
-          href: "/products/categories",
-        },
-      ],
-    },
-    {
-      key: "guidesparent",
-      icon: <ReadOutlined />,
-      label: t("guides.guides"),
-      children: [
-        {
-          key: "guides",
-          icon: <OrderedListOutlined />,
-          label: t("guides.list"),
-          href: "/guides",
-        },
-        {
-          key: "guidesCategories",
-          icon: <ApartmentOutlined />,
-          label: t("guides.categories"),
-          href: "/guides/categories",
-        },
-        {
-          key: "authors",
-          icon: <TeamOutlined />,
-          label: t("guides.authors"),
-          href: "/guides/authors",
-        },
-      ],
-    },
-  ];
+  const menuItems: TMenuItems[] = useMemo(
+    () => [
+      {
+        key: "dashboard",
+        icon: <HomeOutlined />,
+        label: t("common.dashboard"),
+        href: "/",
+      },
+      {
+        key: "stores",
+        icon: <ShopOutlined />,
+        label: t("stores.stores"),
+        href: "/stores",
+      },
+      {
+        key: "productsparent",
+        icon: <ProductOutlined />,
+        label: t("products.products"),
+        children: [
+          {
+            key: "products",
+            icon: <OrderedListOutlined />,
+            label: t("products.list"),
+            href: "/products",
+          },
+          {
+            key: "productCategories",
+            icon: <ApartmentOutlined />,
+            label: t("products.categories"),
+            href: "/products/categories",
+          },
+        ],
+      },
+      {
+        key: "guidesparent",
+        icon: <ReadOutlined />,
+        label: t("guides.guides"),
+        children: [
+          {
+            key: "guides",
+            icon: <OrderedListOutlined />,
+            label: t("guides.list"),
+            href: "/guides",
+          },
+          {
+            key: "guidesCategories",
+            icon: <ApartmentOutlined />,
+            label: t("guides.categories"),
+            href: "/guides/categories",
+          },
+          {
+            key: "authors",
+            icon: <TeamOutlined />,
+            label: t("guides.authors"),
+            href: "/guides/authors",
+          },
+        ],
+      },
+    ],
+    [t],
+  );
   const { selectedKeys, openKeys: initialOpenKeys } = getKeys(
     menuItems,
     pathname,
@@ -195,7 +198,7 @@ function Sidebar() {
     },
   ];
 
-  const onClick: MenuProps["onClick"] = (e: TMenuItems) => {
+  const onClick: MenuProps["onClick"] = (e) => {
     const href = findHrefByKey(menuItems, e.key);
     if (href) router.replace(href);
   };
