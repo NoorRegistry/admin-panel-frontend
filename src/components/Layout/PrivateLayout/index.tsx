@@ -1,3 +1,4 @@
+import { useZohoChat } from "@/hooks/useZohoChat";
 import { Layout, theme } from "antd";
 import React from "react";
 import PrivateHeader from "./Header";
@@ -12,6 +13,10 @@ function PrivateLayoutContainer({
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  // Initialize Zoho chat (hook handles internal admin logic)
+  useZohoChat();
+
   return (
     <Layout hasSider>
       <Sidebar />
