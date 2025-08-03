@@ -9,7 +9,7 @@ export interface IShowCategoryInfoDrawerConfig {
 }
 
 export interface IShowRelatedProductsDrawerConfig {
-  productId: string;
-  productName: string;
+  productId?: string;
+  productName?: string;
   open: boolean;
 }

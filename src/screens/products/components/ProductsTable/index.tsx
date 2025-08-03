@@ -39,8 +39,13 @@ import {
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebounce } from "use-debounce";
-import { IShowProductInfoDrawerConfig } from "../../products.types";
+import {
+  IShowProductInfoDrawerConfig,
+  IShowRelatedProductsDrawerConfig,
+} from "../../products.types";
 import ProductsInfo from "../ProductsInfo";
+import RelatedProductsInfo from "../RelatedProducts";
+import RelatedProductsIcon from "/public/icons/common/related-products.svg";
 
 const storeImageSize = 50;
 
@@ -50,6 +55,10 @@ function ProductsTable() {
   const [modal, modalContextHolder] = Modal.useModal();
   const [openProductInfo, setOpenProductInfo] =
     useState<IShowProductInfoDrawerConfig>({
+      open: false,
+    });
+  const [openRelatedProductInfo, setOpenRelatedProductInfo] =
+    useState<IShowRelatedProductsDrawerConfig>({
       open: false,
     });
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
@@ -325,6 +334,32 @@ function ProductsTable() {
       key: "category",
     },
     {
+      title: "Related",
+      key: "relatedProducts",
+      width: 80,
+      fixed: "right",
+      align: "center",
+      hidden: !isInternalAdmin,
+      render: (_, record) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Button
+            type="text"
+            size="small"
+            icon={<RelatedProductsIcon style={{ width: 16, height: 16 }} />}
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpenRelatedProductInfo({
+                open: true,
+                productId: record.id,
+                productName: record.nameEn,
+              });
+            }}
+            title="Manage related products"
+          />
+        </div>
+      ),
+    },
+    {
       title: t("common.status"),
       dataIndex: "status",
       key: "status",
@@ -430,6 +465,11 @@ function ProductsTable() {
         config={openProductInfo}
         onClose={() => setOpenProductInfo({ open: false })}
         queryState={queryState}
+      />
+      <RelatedProductsInfo
+        config={openRelatedProductInfo}
+        onClose={() => setOpenRelatedProductInfo({ open: false })}
+        // queryState={queryState}
       />
       {modalContextHolder}
       {contextHolder}

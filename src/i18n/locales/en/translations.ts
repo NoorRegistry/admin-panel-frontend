@@ -6,7 +6,7 @@ const translations = {
     confirmationCode: "Verification code",
     emailSentTo:
       "Enter the verification code we sent to <Important>{{email}}</Important>",
-    didNotGetCode: "Didn’t receive the code?",
+    didNotGetCode: "Didn't receive the code?",
     resend: "Resend",
     loginSuccessfull: "Logged in successfully",
     resendCodeSuccessfull: "Verification code sent successfully",
@@ -81,6 +81,8 @@ const translations = {
     published: "Published",
     draft: "Draft",
     submitted: "Submitted",
+    searching: "Searching...",
+    close: "Close",
   },
   products: {
     products: "Products",
@@ -104,6 +106,10 @@ const translations = {
     productStatusChange: "Product {{status}} successfully",
     confirmProductStatusUpdate:
       "Are you sure to mark the product as {{status}}?",
+    productAddedToRelated: 'Added "{{productName}}" to related products',
+    productRemovedFromRelated:
+      'Removed "{{productName}}" from related products',
+    noProductsFound: "No products found",
   },
   guides: {
     guides: "Guides",

@@ -73,6 +73,8 @@ const translations = {
     published: "تم النشر",
     draft: "مسودة",
     submitted: "مُقدّم",
+    searching: "جارِ البحث...",
+    close: "إغلاق",
   },
   products: {
     products: "المنتجات",
@@ -93,6 +95,10 @@ const translations = {
     uploadProductImages: "تحميل صور المنتج",
     confirmProductStatusUpdate:
       "هل أنت متأكد من أنك تريد تحديد المنتج كـ {{status}}؟",
+    productAddedToRelated: 'تم إضافة "{{productName}}" إلى المنتجات ذات الصلة',
+    productRemovedFromRelated:
+      'تم إزالة "{{productName}}" من المنتجات ذات الصلة',
+    noProductsFound: "لم يتم العثور على منتجات",
   },
   guides: {
     guides: "الأدلة",
