@@ -13,6 +13,7 @@ import {
 } from "@/types";
 import { updatePaginatedData } from "@/utils/helper";
 import {
+  ExportOutlined,
   PlusOutlined,
   SearchOutlined,
   UserAddOutlined,
@@ -247,6 +248,28 @@ function StoresTable() {
                 });
               }}
               icon={<UserAddOutlined />}
+            />
+          </Tooltip>
+        </Flex>
+      ),
+    },
+    {
+      title: "",
+      dataIndex: "slug",
+      key: "store-link",
+      align: "end",
+      fixed: "right",
+      render: (value) => (
+        <Flex gap="small">
+          <Tooltip title={t("stores.visitStorePage")}>
+            <Button
+              href={`${process.env.NEXT_PUBLIC_DEPLOYED_STORES_URL}/stores/${value}`}
+              size="small"
+              target="_blank"
+              icon={<ExportOutlined />}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
             />
           </Tooltip>
         </Flex>

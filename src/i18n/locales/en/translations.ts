@@ -44,6 +44,7 @@ const translations = {
     markInActuve: "Are you sure to mark the store as inactive?",
     markedActive: "{{storename}} is marked as active",
     markedInActive: "{{storename}} is marked as inactive",
+    visitStorePage: "Visit Store Page",
   },
   common: {
     login: "Log in",

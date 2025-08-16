@@ -26,6 +26,7 @@ export interface IStore {
   nameAr: string;
   storeLogo: string;
   isActive: boolean;
+  slug: string;
 }
 
 export type TEditorStore = Omit<IStore, "email" | "isActive">;

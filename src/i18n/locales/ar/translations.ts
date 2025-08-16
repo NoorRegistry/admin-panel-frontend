@@ -40,6 +40,7 @@ const translations = {
     descriptionAr: "الوصف بالعربية",
     uploadStoreLogo: "تحميل شعار المتجر",
     storeInfo: "معلومات المتجر الخاص بك",
+    visitStorePage: "زيارة صفحة المتجر",
   },
   common: {
     login: "تسجيل الدخول",
