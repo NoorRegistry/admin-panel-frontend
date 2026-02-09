@@ -129,6 +129,19 @@ const translations = {
     contentEn: "المحتوى باللغة الإنجليزية",
     contentAr: "المحتوى باللغة العربية",
   },
+  registries: {
+    registries: "السجلات",
+    categories: "الفئات",
+    image: "الصورة",
+    createCategory: "إنشاء فئة",
+    categoryCreated: "تم إنشاء الفئة {{name}} بنجاح",
+    categoryEdited: "تم تعديل الفئة {{name}} بنجاح",
+    categoryDeleted: "تم حذف الفئة {{name}} بنجاح",
+    categoryActivated: "تم تفعيل الفئة {{name}}",
+    categoryDeactivated: "تم تعطيل الفئة {{name}}",
+    confirmDeleteCategory: "هل أنت متأكد من حذف {{name}}؟",
+    uploadCategoryImage: "رفع صورة الفئة",
+  },
 } as const;
 
 export default translations;

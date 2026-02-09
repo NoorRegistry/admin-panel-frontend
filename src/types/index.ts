@@ -141,6 +141,19 @@ export interface IGuideCategory {
   children: IGuideCategory[];
 }
 
+export interface IRegistryCategory {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+  descriptionEn: string;
+  descriptionAr: string;
+  registryBackground: string | null;
+  registryPlaceHolder: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface IProductCategoryDetails extends IProductCategory {
   descriptionEn: string;
   descriptionAr: string;
@@ -159,6 +172,16 @@ export interface IGuideCategoryDetails extends IGuideCategory {
 export type TCreateGuideCategory = Omit<
   IGuideCategoryDetails,
   "id" | "_count" | "children"
+>;
+
+export type TCreateRegistryCategory = Pick<
+  IRegistryCategory,
+  | "nameEn"
+  | "nameAr"
+  | "descriptionEn"
+  | "descriptionAr"
+  | "registryBackground"
+  | "registryPlaceHolder"
 >;
 
 export type TTokenInfo =
@@ -207,6 +230,8 @@ export type TCreateStoreAdmin = Omit<IStoreAdmin, "id" | "storeName" | "role">;
 export type TUploadType =
   | "store"
   | "product"
+  | "registry"
+  | "registryCategory"
   | "author"
   | "guide"
   | "guideContent";
@@ -270,4 +295,5 @@ export enum EQueryKeys {
   AUTHORS = "authors",
   STATISTICS = "statistics",
   GUIDE_CATEGORIES = "guide_categories",
+  REGISTRY_CATEGORIES = "registry_categories",
 }

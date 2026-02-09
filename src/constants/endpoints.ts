@@ -19,6 +19,9 @@ const endpoints = {
   guides: {
     index: "/v1/api/admin/guides",
   },
+  registries: {
+    index: "/v1/api/users/registries",
+  },
 };
 
 export default endpoints;

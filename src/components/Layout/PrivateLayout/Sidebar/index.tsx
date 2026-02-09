@@ -3,6 +3,7 @@ import { EAdminRole } from "@/types";
 import { clearSessionData, getAdminRole, getUserName } from "@/utils/helper";
 import {
   ApartmentOutlined,
+  GiftOutlined,
   HomeOutlined,
   OrderedListOutlined,
   ProductOutlined,
@@ -141,6 +142,19 @@ function Sidebar() {
           },
         ],
       },
+      {
+        key: "registriesparent",
+        icon: <GiftOutlined />,
+        label: t("registries.registries"),
+        children: [
+          {
+            key: "registryCategories",
+            icon: <ApartmentOutlined />,
+            label: t("registries.categories"),
+            href: "/registries/categories",
+          },
+        ],
+      },
     ],
     [t],
   );
@@ -173,6 +187,12 @@ function Sidebar() {
       return items.filter((item) => {
         if (userType === EAdminRole.STORE_ADMIN && item.key === "stores") {
           return false; // Exclude "stores" for store admins
+        }
+        if (
+          userType === EAdminRole.STORE_ADMIN &&
+          item.key === "registriesparent"
+        ) {
+          return false; // Exclude registry categories for store admins
         }
         return true;
       });

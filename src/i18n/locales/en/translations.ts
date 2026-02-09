@@ -138,6 +138,19 @@ const translations = {
     contentEn: "Content in English",
     contentAr: "Content in Arabic",
   },
+  registries: {
+    registries: "Registries",
+    categories: "Categories",
+    image: "Image",
+    createCategory: "Create Category",
+    categoryCreated: "Category {{name}} created successfully",
+    categoryEdited: "Category {{name}} edited successfully",
+    categoryDeleted: "Category {{name}} deleted successfully",
+    categoryActivated: "Category {{name}} is marked as active",
+    categoryDeactivated: "Category {{name}} is marked as inactive",
+    confirmDeleteCategory: "Are you sure to delete {{name}}?",
+    uploadCategoryImage: "Upload Category Image",
+  },
 } as const;
 
 export default translations;

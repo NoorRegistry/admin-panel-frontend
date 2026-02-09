@@ -32,12 +32,16 @@ const UploadComponent = ({
   fileList: files = [],
   onChange,
   onUploadStatusChange,
+  onUploadComplete,
+  allowReplaceWithoutRemove = false,
 }: {
   type: TUploadType;
   dbId?: string;
   fileList?: any[]; // To integrate with Form.Item's `value` and `onChange`
-  onChange?: (files: File[]) => void;
+  onChange?: (files: CustomUploadFile[]) => void;
   onUploadStatusChange?: (uploading: boolean) => void;
+  onUploadComplete?: (file: CustomUploadFile) => void;
+  allowReplaceWithoutRemove?: boolean;
 }) => {
   const { t } = useTranslation();
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -47,22 +51,37 @@ const UploadComponent = ({
 
   const allowedProductImages =
     process.env.NEXT_PUBLIC_ALLOWED_PRODUCT_IMAGES ?? 1;
+  const singleImageUploadTypes: TUploadType[] = [
+    "store",
+    "author",
+    "guide",
+    "registry",
+    "registryCategory",
+  ];
 
   useEffect(() => {
-    // Skip transformation if `files` is empty and `imagesList` already contains files
-    if (!files?.length && imagesList.length) {
-      return;
-    }
-    const transformedFiles = files.map((file) => ({
-      id: file.id,
-      uid: file.id ?? file.uid,
-      name: file.path ?? file.name,
-      status: file.status ?? "done",
-      url: `${process.env.NEXT_PUBLIC_ASSET_URL}${file.path ?? file.name}`, // For preview
-    }));
-    if (JSON.stringify(transformedFiles) !== JSON.stringify(imagesList)) {
-      setImagesList(transformedFiles);
-    }
+    setImagesList((previousImagesList) => {
+      // Skip transformation if `files` is empty and existing file previews are already shown
+      if (!files?.length && previousImagesList.length) {
+        return previousImagesList;
+      }
+
+      const transformedFiles = files.map((file) => ({
+        id: file.id,
+        uid: file.id ?? file.uid,
+        name: file.path ?? file.name,
+        status: file.status ?? "done",
+        url: `${process.env.NEXT_PUBLIC_ASSET_URL}${file.path ?? file.name}`, // For preview
+      }));
+
+      if (
+        JSON.stringify(transformedFiles) === JSON.stringify(previousImagesList)
+      ) {
+        return previousImagesList;
+      }
+
+      return transformedFiles;
+    });
   }, [files]);
 
   const handlePreview = async (file: UploadFile) => {
@@ -74,35 +93,62 @@ const UploadComponent = ({
     setPreviewOpen(true);
   };
 
-  const handleChange: UploadProps["onChange"] = ({
-    fileList: updatedFileList,
-    file,
-  }) => {
+  const handleChange: UploadProps["onChange"] = ({ fileList, file }) => {
+    const isSingleUploadType = singleImageUploadTypes.includes(type);
+    const updatedFileList = fileList;
     const isUploading = updatedFileList.some(
       (file: any) => file.status === "uploading",
     );
+
     onUploadStatusChange?.(isUploading);
-    setImagesList(updatedFileList);
+
     if (file.status !== "uploading") {
-      const finalList: any = updatedFileList.map((item) => {
+      let finalList: CustomUploadFile[] = updatedFileList.map((item) => {
         if (item.originFileObj) {
           return {
             ...item,
-            uid: file.uid,
-            name: file.response.path,
-            id: file.response.id,
+            uid: item.response?.id ?? item.uid,
+            name: item.response?.path ?? item.name,
+            id: item.response?.id,
             status: "done",
-            url: `${process.env.NEXT_PUBLIC_ASSET_URL}${file.response.path}`, // For preview
+            url: `${process.env.NEXT_PUBLIC_ASSET_URL}${item.response?.path ?? item.name}`, // For preview
           };
         } else {
           return item;
         }
       });
+
+      if (
+        file.status === "done" &&
+        isSingleUploadType &&
+        allowReplaceWithoutRemove &&
+        finalList.length > 1
+      ) {
+        const latestUploaded =
+          finalList.find((item) => item.uid === file.uid) ||
+          finalList[finalList.length - 1];
+        finalList = latestUploaded ? [latestUploaded] : finalList;
+      }
+
+      setImagesList(finalList);
       onChange?.(finalList);
-      if (file.status === "done")
+
+      if (file.status === "done") {
+        onUploadComplete?.({
+          uid: file.response?.id ?? file.uid,
+          id: file.response?.id,
+          name: file.response?.path ?? file.name,
+          status: "done",
+          url: `${process.env.NEXT_PUBLIC_ASSET_URL}${file.response?.path ?? file.name}`,
+        });
         messageApi.success({ content: t("common.imageUploaded") });
+      }
+
       handleInvalidateCache();
+      return;
     }
+
+    setImagesList(updatedFileList);
   };
 
   const handleRemove = async (file: CustomUploadFile<{ success: number }>) => {
@@ -124,6 +170,10 @@ const UploadComponent = ({
     } else if (type === "product") {
       queryClient.invalidateQueries({ queryKey: [EQueryKeys.PRODUCTS] });
       queryClient.invalidateQueries({ queryKey: [EQueryKeys.PRODUCT] });
+    } else if (type === "registry" || type === "registryCategory") {
+      queryClient.invalidateQueries({
+        queryKey: [EQueryKeys.REGISTRY_CATEGORIES],
+      });
     }
   };
 
@@ -142,6 +192,11 @@ const UploadComponent = ({
     return param;
   };
 
+  const isSingleUploadType = singleImageUploadTypes.includes(type);
+  const canUploadMore = isSingleUploadType
+    ? allowReplaceWithoutRemove || imagesList.length < 1
+    : imagesList.length < Number(allowedProductImages);
+
   return (
     <>
       {contextHolder}
@@ -158,9 +213,7 @@ const UploadComponent = ({
         onRemove={handleRemove}
         accept="image/*"
       >
-        {imagesList.length >= (type === "store" ? 1 : allowedProductImages)
-          ? null
-          : uploadButton}
+        {canUploadMore ? uploadButton : null}
       </Upload>
       {previewImage && (
         <Image.PreviewGroup
