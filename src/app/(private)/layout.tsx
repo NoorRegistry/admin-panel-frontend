@@ -2,6 +2,7 @@
 
 import PrivateLayoutContainer from "@/components/Layout/PrivateLayout";
 import { useGlobalStore } from "@/store";
+import { handleRefreshToken } from "@/utils/auth-helper";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Flex, Spin } from "antd";
 import { useRouter } from "next/navigation";
@@ -12,18 +13,37 @@ function PrivateLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [loading, setloading] = useState(true);
-  const router = useRouter();
   const isAuthenticated = useGlobalStore.use.isAuthenticated();
+  const [loading, setLoading] = useState(() => !isAuthenticated);
+  const router = useRouter();
+  const signIn = useGlobalStore.use.signIn();
 
-  // TODO: Handle token refresh
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.replace("/login");
-    } else {
-      setloading(false);
+    if (isAuthenticated) {
+      setLoading(false);
+      return;
     }
-  }, [isAuthenticated, router]);
+
+    let isCancelled = false;
+
+    const handleAuthentication = async () => {
+      const refreshSucceeded = await handleRefreshToken();
+      if (isCancelled) return;
+
+      if (refreshSucceeded) {
+        signIn();
+        return;
+      }
+
+      router.replace("/login");
+    };
+
+    handleAuthentication();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [isAuthenticated, router, signIn]);
 
   return (
     <>

@@ -11,7 +11,7 @@ import constants from "@/constants";
 import { IAccessToken } from "@/types";
 import { handleRefreshToken } from "@/utils/auth-helper";
 import { isTokenExpired } from "@/utils/helper";
-import { getStorageItem } from "@/utils/storage";
+import { getStorageItem, setStorageItem } from "@/utils/storage";
 import i18next from "i18next";
 
 enum StatusCode {
@@ -39,15 +39,28 @@ const injectToken = async (
     let token = getStorageItem(constants.ACCESS_TOKEN);
 
     if (token) {
-      let parsedToken = JSON.parse(token) as IAccessToken;
-      if (isTokenExpired(parsedToken.accessToken)) {
-        await handleRefreshToken();
-        token = getStorageItem(constants.ACCESS_TOKEN);
-        if (token) {
-          parsedToken = JSON.parse(token) as IAccessToken;
+      let parsedToken: IAccessToken | null = null;
+
+      try {
+        parsedToken = JSON.parse(token) as IAccessToken;
+      } catch (error) {
+        console.error("Failed to parse stored token:", error);
+        setStorageItem(constants.ACCESS_TOKEN, null);
+      }
+
+      if (parsedToken) {
+        if (isTokenExpired(parsedToken.accessToken)) {
+          const refreshSucceeded = await handleRefreshToken();
+          token = refreshSucceeded
+            ? getStorageItem(constants.ACCESS_TOKEN)
+            : null;
+          parsedToken = token ? (JSON.parse(token) as IAccessToken) : null;
+        }
+
+        if (parsedToken?.accessToken) {
+          config.headers.Authorization = `Bearer ${parsedToken.accessToken}`;
         }
       }
-      config.headers.Authorization = `Bearer ${parsedToken.accessToken}`;
     }
     config.headers["Accept-Language"] = i18next.language ?? "en";
     return config;

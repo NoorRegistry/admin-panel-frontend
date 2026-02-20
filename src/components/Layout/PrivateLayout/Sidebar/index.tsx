@@ -83,7 +83,7 @@ function Sidebar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const logout = useGlobalStore.use.signOut();
   const pathname = usePathname();
-  console.log("pathname: " + pathname);
+
   const menuItems: TMenuItems[] = useMemo(
     () => [
       {

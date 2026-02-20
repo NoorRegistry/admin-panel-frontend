@@ -5,45 +5,60 @@ import axios from "axios";
 import { isTokenExpired } from "./helper";
 import { getStorageItem, setStorageItem } from "./storage";
 
-export const handleRefreshToken = async () => {
-  try {
-    const token = getStorageItem(constants.ACCESS_TOKEN);
-    if (token) {
-      const parsedToken = JSON.parse(token) as IAccessToken;
+const clearStoredTokens = () => {
+  setStorageItem(constants.ACCESS_TOKEN, null);
+};
 
-      if (
-        isTokenExpired(parsedToken.accessToken) &&
-        !isTokenExpired(parsedToken.refreshToken)
-      ) {
-        const response = await axios.post<IAccessToken>(
-          `${process.env.NEXT_PUBLIC_API_URL}${endpoints.authentication.refreshToken}`,
-          parsedToken,
-          {
-            headers: {
-              Authorization: "Bearer " + parsedToken.accessToken,
-              Accept: "application/json",
-              "Content-Type": "application/json; charset=utf-8",
-            },
-          },
-        );
-        console.log("token refreshed");
-        setStorageItem(constants.ACCESS_TOKEN, JSON.stringify(response.data));
-      } else {
-        // If refresh token is expired, remove token from storage
-        console.log("refresh token expired- deleting token completely");
-        setStorageItem(constants.ACCESS_TOKEN, null);
-      }
-    }
+const getStoredTokens = (): IAccessToken | null => {
+  const token = getStorageItem(constants.ACCESS_TOKEN);
+  if (!token) return null;
+
+  try {
+    return JSON.parse(token) as IAccessToken;
   } catch (error) {
-    console.error("error", error);
-    throw new Error("Problem retrieving refresh token");
+    console.error("Failed to parse stored token:", error);
+    clearStoredTokens();
+    return null;
+  }
+};
+
+export const handleRefreshToken = async (): Promise<boolean> => {
+  const parsedToken = getStoredTokens();
+  if (!parsedToken) return false;
+
+  if (isTokenExpired(parsedToken.refreshToken)) {
+    clearStoredTokens();
+    return false;
+  }
+
+  if (!isTokenExpired(parsedToken.accessToken)) {
+    return true;
+  }
+
+  try {
+    const response = await axios.post<IAccessToken>(
+      `${process.env.NEXT_PUBLIC_API_URL}${endpoints.authentication.refreshToken}`,
+      parsedToken,
+      {
+        headers: {
+          Authorization: "Bearer " + parsedToken.accessToken,
+          Accept: "application/json",
+          "Content-Type": "application/json; charset=utf-8",
+        },
+      },
+    );
+    setStorageItem(constants.ACCESS_TOKEN, JSON.stringify(response.data));
+    return true;
+  } catch (error) {
+    console.error("Problem retrieving refresh token:", error);
+    clearStoredTokens();
+    return false;
   }
 };
 
 export const getAuthorizationHeaders = () => {
-  const token = getStorageItem(constants.ACCESS_TOKEN);
-  if (token) {
-    const parsedToken = JSON.parse(token) as IAccessToken;
+  const parsedToken = getStoredTokens();
+  if (parsedToken) {
     return { Authorization: `Bearer ${parsedToken.accessToken}` };
   }
 };
