@@ -65,12 +65,19 @@ export interface IProduct {
   qty: number;
   images: any[];
   storeId: string;
-  categoryId: string;
+  categoryIds?: string[];
   status: EProductStatus;
   isActive: boolean;
-  category: {
+  category?: {
     name: string;
   };
+  categories?: {
+    id: string;
+    name: string;
+    nameEn: string;
+    nameAr: string;
+    parentId: string | null;
+  }[];
   store: {
     name: string;
   };
@@ -79,7 +86,7 @@ export interface IProduct {
 
 export type TEditorProduct = Omit<
   IProduct,
-  "storeId" | "categoryId" | "status" | "isActive" | "category" | "store"
+  "storeId" | "status" | "isActive" | "category" | "store"
 >;
 export interface IGuide {
   id: string;

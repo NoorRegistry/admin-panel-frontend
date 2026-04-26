@@ -33,10 +33,11 @@ import {
   Input,
   InputNumber,
   Select,
+  Tag,
   message,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IShowProductInfoDrawerConfig } from "../../products.types";
 
@@ -53,6 +54,9 @@ function ProductsInfo({
   const [messageApi, contextHolder] = message.useMessage();
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const selectedCategoryPaths = Form.useWatch("categoryIds", form) as
+    | string[][]
+    | undefined;
 
   const isInternalAdmin = getAdminRole() === EAdminRole.INTERNAL_ADMIN;
 
@@ -72,6 +76,57 @@ function ProductsInfo({
     queryKey: [EQueryKeys.CATEGORIES],
     queryFn: fetchProductCategories,
   });
+
+  const categoryOptions = useMemo(() => {
+    const mapOptions = (items: any[] = [], depth = 0): any[] =>
+      items.map((item) => ({
+        ...item,
+        disabled:
+          depth === 0 &&
+          (!Array.isArray(item.children) || item.children.length === 0),
+        children: Array.isArray(item.children)
+          ? mapOptions(item.children, depth + 1)
+          : undefined,
+      }));
+
+    return mapOptions(categories?.data ?? []);
+  }, [categories]);
+
+  const selectedCategoryLabels = useMemo(() => {
+    if (!Array.isArray(selectedCategoryPaths) || !categories?.data) return [];
+
+    const resolvePathLabel = (path: string[]) => {
+      const labels: string[] = [];
+      let level: any[] = categories.data;
+
+      for (const id of path) {
+        const node = level.find((item) => item.id === id);
+        if (!node) break;
+        labels.push(node.nameEn);
+        level = Array.isArray(node.children) ? node.children : [];
+      }
+
+      return labels.join(" > ");
+    };
+
+    const normalizedPaths = selectedCategoryPaths
+      .filter(
+        (path): path is string[] => Array.isArray(path) && path.length > 0,
+      )
+      .map((path, index) => ({
+        path,
+        index,
+        label: resolvePathLabel(path),
+        categoryId: path[path.length - 1],
+      }));
+
+    if (!normalizedPaths.length) return [];
+
+    return normalizedPaths.map((item) => ({
+      ...item,
+      isPrimary: item.index === 0,
+    }));
+  }, [selectedCategoryPaths, categories]);
 
   const createProductMutation = useMutation({
     mutationFn: (data: TCreateProduct) => {
@@ -115,21 +170,34 @@ function ProductsInfo({
   const handleCreateProduct = (product: TCreateProduct) => {
     if (product.images && Array.isArray(product.images))
       product.images = product.images.map((image) => image.name ?? image.path);
-    if (Array.isArray(product.categoryId)) {
-      product.categoryId = product.categoryId[product.categoryId.length - 1];
-    }
+    const selectedCategoryIds = Array.isArray((product as any).categoryIds)
+      ? (product as any).categoryIds
+          .map((path: string[] | string) =>
+            Array.isArray(path) ? path[path.length - 1] : path,
+          )
+          .filter(Boolean)
+      : [];
+    product.categoryIds = Array.from(new Set(selectedCategoryIds as string[]));
     createProductMutation.mutate(product);
   };
 
   useEffect(() => {
     if (data && categories) {
       setTimeout(() => {
-        // Use the saved last ID to reconstruct the full path
-        const fullPath = findCategoryPath(categories.data, data.categoryId);
-        form.setFieldsValue({ ...data, categoryId: fullPath });
+        const selectedCategoryIds =
+          data.categoryIds && data.categoryIds.length ? data.categoryIds : [];
+
+        const fullPaths = selectedCategoryIds
+          .map((categoryId) => findCategoryPath(categories.data, categoryId))
+          .filter((path) => path.length > 1);
+
+        form.setFieldsValue({
+          ...data,
+          categoryIds: fullPaths,
+        });
       });
     }
-  }, [data, categories]);
+  }, [data, categories, form]);
 
   return (
     <div>
@@ -252,8 +320,8 @@ function ProductsInfo({
             </Form.Item>
 
             <Form.Item<TCreateProduct>
-              label={t("products.category")}
-              name="categoryId"
+              label={t("products.categories")}
+              name="categoryIds"
               rules={[{ required: true, message: t("common.required") }]}
               className="col-span-2"
             >
@@ -261,8 +329,8 @@ function ProductsInfo({
                 className="w-full"
                 placement="bottomRight"
                 fieldNames={{ label: "nameEn", value: "id" }}
-                options={categories?.data}
-                changeOnSelect
+                options={categoryOptions}
+                multiple
                 showSearch={{
                   // Custom filter to match any part of the label
                   filter: (inputValue, path) => {
@@ -286,6 +354,16 @@ function ProductsInfo({
                 placeholder={t("products.selectCategory")}
               />
             </Form.Item>
+            {selectedCategoryLabels.length > 0 && (
+              <div className="col-span-2 -mt-2 mb-2 flex flex-wrap gap-2">
+                {selectedCategoryLabels.map((item) => (
+                  <div key={`${item.path.join("-")}-${item.index}`}>
+                    <Tag>{item.label}</Tag>
+                    {item.isPrimary && <Tag color="blue">Primary</Tag>}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <Form.Item<TCreateProduct>
             label={t("products.uploadProductImages")}

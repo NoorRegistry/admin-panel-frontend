@@ -188,7 +188,11 @@ function RelatedProductsInfo({
               </div>
               <div className="text-xs text-gray-400">
                 {product.price} {product.currencyCode} •{" "}
-                {product.category?.name}
+                {product.categories?.length
+                  ? product.categories
+                      .map((category) => category.name)
+                      .join(", ")
+                  : "-"}
               </div>
             </div>
           </div>
@@ -293,7 +297,12 @@ function RelatedProductsInfo({
                   </div>
                 </div>
                 <div className="">
-                  {t("products.category")}: {product.category?.name}
+                  {t("products.category")}:{" "}
+                  {product.categories?.length
+                    ? product.categories
+                        .map((category) => category.name)
+                        .join(", ")
+                    : "-"}
                 </div>
                 <div className="">
                   {t("stores.store")}: {product.store?.name}

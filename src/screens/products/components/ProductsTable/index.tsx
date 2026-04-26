@@ -330,8 +330,11 @@ function ProductsTable() {
     },
     {
       title: t("products.category"),
-      dataIndex: ["category", "name"],
       key: "category",
+      render: (_, record) =>
+        record.categories?.length
+          ? record.categories.map((category) => category.name).join(", ")
+          : "-",
     },
     {
       title: "Related",
