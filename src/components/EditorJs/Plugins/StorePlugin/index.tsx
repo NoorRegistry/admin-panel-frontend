@@ -115,7 +115,7 @@ export class StorePlugin implements BlockTool {
     storeCard.innerHTML = `
 <div class="store-card flex items-center gap-4 p-4 border rounded-lg bg-white shadow mt-4">
   <img 
-    src="https://assets.shiftgiftme.com${store.storeLogo}" 
+    src="https://assets.shopsimplist.com${store.storeLogo}" 
     alt="${this.config.editorlang == "en" ? store.nameEn : store.nameAr}" 
     class="w-24 h-24 rounded-md object-cover" 
   />

@@ -34,7 +34,7 @@ function PrivateLayoutContainer({
           </div>
         </Content>
         <Footer className="text-center">
-          ShiftGiftMe © {new Date().getFullYear()}
+          Shop Simplist © {new Date().getFullYear()}
         </Footer>
       </Layout>
     </Layout>

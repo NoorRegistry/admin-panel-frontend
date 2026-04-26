@@ -1,9 +1,9 @@
 import { fetchProducts } from "@/services/product.service";
 import { IPaginatedResponse, TEditorProduct } from "@/types";
-import { ShoppingCartOutlined } from "@ant-design/icons";
-import ReactDOMServer from "react-dom/server";
-import { BlockToolConstructorOptions, BlockTool } from "@editorjs/editorjs";
 import { formatPrice } from "@/utils/helper";
+import { ShoppingCartOutlined } from "@ant-design/icons";
+import { BlockTool, BlockToolConstructorOptions } from "@editorjs/editorjs";
+import ReactDOMServer from "react-dom/server";
 
 export class ProductPlugin implements BlockTool {
   api: any;
@@ -141,7 +141,7 @@ export class ProductPlugin implements BlockTool {
     );
 
     productCard.innerHTML = `
-    <img src="https://assets.shiftgiftme.com${
+    <img src="https://assets.shopsimplist.com${
       product.images[0]?.path || ""
     }" alt="${
       this.config.editorlang == "en" ? product.nameEn : product.nameAr
