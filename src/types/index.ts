@@ -99,6 +99,8 @@ export interface IGuide {
   categoryId: string;
   status: EGuideStatus;
   isActive: boolean;
+  isFavourite: boolean;
+  favoritedAt: string | null;
   contentEn?: string;
   contentAr?: string;
   category: {
@@ -124,7 +126,10 @@ export interface IGuideDetails extends IGuide {
 }
 
 export type TCreateProduct = Omit<IProductDetails, "id" | "store" | "category">;
-export type TCreateGuide = Omit<IGuideDetails, "id" | "author" | "category">;
+export type TCreateGuide = Omit<
+  IGuideDetails,
+  "id" | "author" | "category" | "favoritedAt"
+>;
 
 export interface IProductCategory {
   id: string;

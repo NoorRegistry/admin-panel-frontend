@@ -30,6 +30,7 @@ import {
   Form,
   Input,
   Select,
+  Switch,
   message,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
@@ -181,6 +182,7 @@ function GuidesInfo({
           id="createGuide"
           name="createGuide"
           clearOnDestroy
+          initialValues={{ isFavourite: false }}
           onFinish={handleCreateGuide}
           onFinishFailed={(error) => {
             console.log("errors", error, form.getFieldsValue());
@@ -289,6 +291,14 @@ function GuidesInfo({
               />
             </Form.Item>
           </div>
+          <Form.Item<TCreateGuide>
+            label={t("guides.favourite")}
+            name="isFavourite"
+            valuePropName="checked"
+          >
+            <Switch />
+          </Form.Item>
+
           <Form.Item<TCreateGuide>
             label={t("guides.uploadGuideLogo")}
             name="bannerImage"

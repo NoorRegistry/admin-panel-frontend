@@ -132,6 +132,7 @@ const translations = {
     categoryEdited: "Category {{name}} created successfully",
     createGuide: "Create Guide",
     author: "Author",
+    favourite: "Favourite",
     confirmGuideStatusUpdate: "Are you sure to mark the guide as {{status}}?",
     selectAuthor: "Select Author",
     uploadGuideLogo: "Upload Guide Image",

@@ -12,7 +12,13 @@ import {
   TCreateGuide,
 } from "@/types";
 import { updatePaginatedData } from "@/utils/helper";
-import { DownOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  DownOutlined,
+  PlusOutlined,
+  SearchOutlined,
+  StarFilled,
+  StarOutlined,
+} from "@ant-design/icons";
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import type { MenuProps, TablePaginationConfig } from "antd";
 import {
@@ -68,14 +74,18 @@ function GuidesTable() {
     mutationFn: (value: {
       status?: Partial<TCreateGuide>["status"];
       isActive?: Partial<TCreateGuide>["isActive"];
+      isFavourite?: Partial<TCreateGuide>["isFavourite"];
       id: string;
     }) => {
       const changes: Partial<TCreateGuide> = {};
-      if (value.isActive !== null || value.isActive !== undefined) {
+      if (value.isActive !== null && value.isActive !== undefined) {
         changes.isActive = value.isActive;
       }
-      if (value.status !== null || value.status !== undefined) {
+      if (value.status !== null && value.status !== undefined) {
         changes.status = value.status;
+      }
+      if (value.isFavourite !== null && value.isFavourite !== undefined) {
+        changes.isFavourite = value.isFavourite;
       }
       return patchGuide(value.id, changes);
     },
@@ -259,6 +269,30 @@ function GuidesTable() {
       title: t("guides.category"),
       dataIndex: ["category", "name"],
       key: "category",
+    },
+    {
+      title: t("guides.favourite"),
+      dataIndex: "isFavourite",
+      key: "isFavourite",
+      width: 96,
+      render: (value, record) => {
+        return (
+          <div onClick={(event) => event.stopPropagation()}>
+            <Button
+              loading={updateGuideStatusMutation.isPending}
+              type={value ? "primary" : "default"}
+              shape="circle"
+              icon={value ? <StarFilled /> : <StarOutlined />}
+              onClick={() => {
+                updateGuideStatusMutation.mutate({
+                  id: record.id,
+                  isFavourite: !value,
+                });
+              }}
+            />
+          </div>
+        );
+      },
     },
     {
       title: t("common.status"),

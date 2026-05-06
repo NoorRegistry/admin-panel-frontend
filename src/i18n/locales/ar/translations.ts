@@ -121,6 +121,7 @@ const translations = {
     guideCreated: "تم إنشاء الدليل بنجاح",
     createGuide: "إنشاء دليل",
     author: "المؤلف",
+    favourite: "مفضل",
     guideUpdated: "تم تحديث الدليل بنجاح",
     confirmGuideStatusUpdate:
       "هل أنت متأكد من أنك تريد تحديد الدليل كـ {{status}}؟",
