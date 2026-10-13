@@ -106,7 +106,7 @@ function CategoriesInfo({
         placement="right"
         loading={isFetching || isFetchingCategories}
         size="large"
-        destroyOnClose
+        destroyOnHidden
         onClose={onClose}
         open={config.open}
         footer={

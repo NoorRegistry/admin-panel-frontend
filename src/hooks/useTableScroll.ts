@@ -4,7 +4,7 @@ import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 type UseTableScroll = {
-  tableRef: RefObject<TableRef>;
+  tableRef: RefObject<TableRef | null>;
   scroll: TableProps["scroll"];
 };
 
@@ -91,7 +91,7 @@ export const useTableScroll = (
     if (!tableBody) return;
 
     tableBody.style.height = `${scrollY}px`;
-  }, [scrollY]);
+  }, [scrollY, stretchByPage]);
 
   return { tableRef, scroll: { x: scrollX, y: scrollY } };
 };

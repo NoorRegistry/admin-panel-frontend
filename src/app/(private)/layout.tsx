@@ -6,7 +6,9 @@ import { handleRefreshToken } from "@/utils/auth-helper";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Flex, Spin } from "antd";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useSyncExternalStore } from "react";
+
+const subscribeToHydration = () => () => {};
 
 function PrivateLayout({
   children,
@@ -14,13 +16,16 @@ function PrivateLayout({
   children: React.ReactNode;
 }>) {
   const isAuthenticated = useGlobalStore.use.isAuthenticated();
-  const [loading, setLoading] = useState(() => !isAuthenticated);
+  const hasHydrated = useSyncExternalStore(
+    subscribeToHydration,
+    () => true,
+    () => false,
+  );
   const router = useRouter();
   const signIn = useGlobalStore.use.signIn();
 
   useEffect(() => {
     if (isAuthenticated) {
-      setLoading(false);
       return;
     }
 
@@ -47,7 +52,7 @@ function PrivateLayout({
 
   return (
     <>
-      {loading ? (
+      {!hasHydrated || !isAuthenticated ? (
         <Flex align="center" justify="center" gap="middle" className="h-screen">
           <Spin indicator={<LoadingOutlined spin />} size="large" />
         </Flex>

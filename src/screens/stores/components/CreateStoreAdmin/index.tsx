@@ -43,7 +43,7 @@ function CreateStoreAdmin({
       <Modal
         centered
         onCancel={onClose}
-        title={t("stores.createAdmin", { name: config.storeName })}
+        title={t("stores.createAdmin", { name: config.storeName ?? "" })}
         open={config.open}
         footer={
           <Flex align="end" justify="end" gap={16}>
@@ -58,7 +58,7 @@ function CreateStoreAdmin({
             </Button>
           </Flex>
         }
-        destroyOnClose
+        destroyOnHidden
       >
         <Form<TCreateStoreAdmin>
           form={form}

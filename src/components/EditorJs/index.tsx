@@ -6,7 +6,7 @@ import { uploadGuideImage } from "@/services/upload.service";
 
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useEffectEvent, useRef } from "react";
 
 const GuideEditor = ({
   value,
@@ -22,12 +22,14 @@ const GuideEditor = ({
   editorlang: string;
 }) => {
   const editorRef = useRef<EditorJS | null>(null);
+  const getInitialData = useEffectEvent(() => (value ? JSON.parse(value) : {}));
+  const notifyChange = useEffectEvent((content: string) => onChange?.(content));
 
   useEffect(() => {
     if (!editorRef.current) {
       editorRef.current = new EditorJS({
         holder: editorId,
-        data: value ? JSON.parse(value) : {},
+        data: getInitialData(),
         tools: {
           ...EDITOR_TOOLS,
           image: {
@@ -89,7 +91,7 @@ const GuideEditor = ({
         onChange: async () => {
           if (editorRef.current) {
             const content = await editorRef.current.save();
-            onChange?.(JSON.stringify(content));
+            notifyChange(JSON.stringify(content));
           }
         },
       });
@@ -104,7 +106,7 @@ const GuideEditor = ({
         editorRef.current = null;
       }
     };
-  }, [editorId]);
+  }, [editorId, editorlang, guideId]);
 
   return (
     <div

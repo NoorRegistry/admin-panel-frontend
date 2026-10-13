@@ -8,7 +8,14 @@ export interface ILoginPayload {
 }
 
 export const login = async (payload: ILoginPayload): Promise<IAccessToken> => {
-  return await http.post<IAccessToken>(endpoints.authentication.login, payload);
+  const response = await http.post<IAccessToken>(
+    endpoints.authentication.login,
+    payload,
+  );
+  if (!response.accessToken || !response.refreshToken) {
+    throw { detail: "" };
+  }
+  return response;
 };
 
 export const refreshToken = async (): Promise<IAccessToken> => {

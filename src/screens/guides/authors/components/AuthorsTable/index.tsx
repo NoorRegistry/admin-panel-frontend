@@ -5,7 +5,7 @@ import { ColumnsType, IAuthor, IShowAuthorInfoDrawerConfig } from "@/types";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Button, Image, Input, PaginationProps, Table, Typography } from "antd";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebounce } from "use-debounce";
 import AuthorsInfo from "../AuthorsInfo";
@@ -19,15 +19,14 @@ function AuthorsTable() {
       open: false,
     });
   const [debouncedSearchText] = useDebounce(searchText, 300);
-  const [filteredData, setFilteredData] = useState<IAuthor[]>([]);
   const [pagination, setPagination] = useState<PaginationProps>({
     current: 1,
     pageSize: 10,
-    total: 0,
   });
 
   const handleSearch = (value: string) => {
     setSearchText(value);
+    setPagination((prev) => ({ ...prev, current: 1 }));
   };
 
   const { data, isFetching } = useQuery({
@@ -36,9 +35,9 @@ function AuthorsTable() {
     placeholderData: keepPreviousData,
   });
 
-  useEffect(() => {
-    if (data?.data) {
-      const filtered = data.data.filter(
+  const filteredData = useMemo(
+    () =>
+      (data?.data ?? []).filter(
         (author) =>
           author.nameEn
             ?.toLowerCase()
@@ -46,15 +45,9 @@ function AuthorsTable() {
           author.nameAr
             ?.toLowerCase()
             .includes(debouncedSearchText.toLowerCase()),
-      );
-      setFilteredData(filtered);
-      setPagination((prev) => ({
-        ...prev,
-        current: 1,
-        total: filtered.length,
-      }));
-    }
-  }, [data, debouncedSearchText]);
+      ),
+    [data, debouncedSearchText],
+  );
 
   const paginatedData = filteredData.slice(
     (pagination.current! - 1) * pagination.pageSize!,
@@ -162,7 +155,7 @@ function AuthorsTable() {
           pagination={{
             current: pagination.current,
             pageSize: pagination.pageSize,
-            total: pagination.total,
+            total: filteredData.length,
             showTotal: (total, range) =>
               t("common.showTotal", {
                 total: total,

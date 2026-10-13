@@ -55,8 +55,7 @@ function ProductsInfo({
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const selectedCategoryPaths = Form.useWatch("categoryIds", form) as
-    | string[][]
-    | undefined;
+    string[][] | undefined;
 
   const isInternalAdmin = getAdminRole() === EAdminRole.INTERNAL_ADMIN;
 
@@ -207,7 +206,7 @@ function ProductsInfo({
         placement="right"
         loading={isFetching || isFetchingCategories}
         size="large"
-        destroyOnClose
+        destroyOnHidden
         onClose={onClose}
         open={config.open}
         footer={

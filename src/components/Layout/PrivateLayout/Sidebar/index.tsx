@@ -9,13 +9,14 @@ import {
   ProductOutlined,
   ReadOutlined,
   ShopOutlined,
+  ShoppingOutlined,
   TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout, Menu } from "antd";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import LogoutIcon from "/public/icons/common/logout.svg";
 
@@ -93,6 +94,12 @@ function Sidebar() {
         href: "/",
       },
       {
+        key: "orders",
+        icon: <ShoppingOutlined />,
+        label: t("orders.title"),
+        href: "/orders",
+      },
+      {
         key: "stores",
         icon: <ShopOutlined />,
         label: t("stores.stores"),
@@ -163,19 +170,16 @@ function Sidebar() {
     pathname,
   );
 
-  // State for openKeys to allow user interaction
-  const [openKeys, setOpenKeys] = useState<MenuKey[]>(initialOpenKeys);
-
-  // Update openKeys if pathname changes
-  useEffect(() => {
-    const { openKeys: newOpenKeys } = getKeys(menuItems, pathname);
-    setOpenKeys(newOpenKeys);
-  }, [pathname]);
+  const [menuState, setMenuState] = useState({
+    pathname,
+    openKeys: initialOpenKeys,
+  });
+  const openKeys =
+    menuState.pathname === pathname ? menuState.openKeys : initialOpenKeys;
 
   // Handler for submenu toggling
   const onOpenChange = (keys: MenuKey[]) => {
-    console.log("onOpenChange", keys);
-    setOpenKeys(keys); // Update openKeys based on user interaction
+    setMenuState({ pathname, openKeys: keys });
   };
 
   // Get the user type
@@ -185,7 +189,10 @@ function Sidebar() {
   const filterMenuItems = useCallback(
     (items: TMenuItems[]) => {
       return items.filter((item) => {
-        if (userType === EAdminRole.STORE_ADMIN && item.key === "stores") {
+        if (
+          userType === EAdminRole.STORE_ADMIN &&
+          ["stores", "orders"].includes(item.key)
+        ) {
           return false; // Exclude "stores" for store admins
         }
         if (

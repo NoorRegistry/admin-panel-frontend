@@ -1,7 +1,6 @@
 import { ThemeConfig } from "antd";
 
 const antdTheme: ThemeConfig = {
-  cssVar: true,
   hashed: false,
   // algorithm: theme.darkAlgorithm,
   token: {

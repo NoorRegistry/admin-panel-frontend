@@ -19,11 +19,10 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IShowRegistryCategoryInfoDrawerConfig } from "../../../registries.types";
 
-interface TCreateRegistryCategoryFormValues
-  extends Omit<
-    TCreateRegistryCategory,
-    "registryBackground" | "registryPlaceHolder"
-  > {
+interface TCreateRegistryCategoryFormValues extends Omit<
+  TCreateRegistryCategory,
+  "registryBackground" | "registryPlaceHolder"
+> {
   registryBackground?: any[];
 }
 
@@ -178,7 +177,7 @@ function CategoriesInfo({
         }
         placement="right"
         size="large"
-        destroyOnClose
+        destroyOnHidden
         loading={isFetching}
         onClose={onClose}
         open={config.open}

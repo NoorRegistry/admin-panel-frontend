@@ -36,9 +36,9 @@ import {
   Typography,
   message,
 } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDebounce } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 import {
   IShowProductInfoDrawerConfig,
   IShowRelatedProductsDrawerConfig,
@@ -62,7 +62,6 @@ function ProductsTable() {
       open: false,
     });
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
   // Combine search query and pagination into one state
   const [queryState, setQueryState] = useState<IQueryState>({
@@ -225,13 +224,9 @@ function ProductsTable() {
   });
 
   // Sync debounced search query with query state
-  useEffect(() => {
-    setQueryState((prev) => ({
-      ...prev,
-      current: 1, // Reset to first page
-      search: debouncedSearchQuery,
-    }));
-  }, [debouncedSearchQuery]);
+  const updateSearch = useDebouncedCallback((search: string) => {
+    setQueryState((prev) => ({ ...prev, current: 1, search }));
+  }, 500);
 
   // Handle pagination change
   const handleTableChange = (pagination: TablePaginationConfig) => {
@@ -427,7 +422,10 @@ function ProductsTable() {
           placeholder={t("common.searchByName")}
           prefix={<SearchOutlined />}
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            updateSearch(e.target.value);
+          }}
           className="max-w-80"
           allowClear
         />

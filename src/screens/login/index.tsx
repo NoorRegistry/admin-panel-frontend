@@ -1,9 +1,10 @@
 import constants from "@/constants";
+import { IApiError } from "@/api/http";
 import { ILoginPayload, login } from "@/services/login.service";
 import { useGlobalStore } from "@/store";
 import { setStorageItem } from "@/utils/storage";
 import { useMutation } from "@tanstack/react-query";
-import { Button, Card, Col, Form, Input, Row } from "antd";
+import { Alert, Button, Card, Col, Form, Input, Row } from "antd";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -20,15 +21,12 @@ const LoginScreen: React.FC = () => {
       signin();
       router.replace("/");
     },
-    onError: () => {},
   });
+
+  const loginError = handleLoginMutation.error as IApiError | null;
 
   const onFinish = (values: ILoginPayload) => {
     handleLoginMutation.mutate(values);
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
   };
 
   return (
@@ -42,10 +40,25 @@ const LoginScreen: React.FC = () => {
           title={t("login.loginToAccount")}
           style={{ width: 300, borderRadius: 8 }}
         >
+          {handleLoginMutation.isError && (
+            <Alert
+              role="alert"
+              type="error"
+              showIcon
+              title={
+                loginError?.status === 401
+                  ? t("login.invalidCredentials")
+                  : loginError?.detail || t("login.loginFailed")
+              }
+              style={{ marginBottom: 16 }}
+            />
+          )}
           <Form
             name="login"
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            onValuesChange={() => {
+              if (handleLoginMutation.isError) handleLoginMutation.reset();
+            }}
             layout="vertical"
             size="large"
             clearOnDestroy

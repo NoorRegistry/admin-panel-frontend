@@ -22,7 +22,7 @@ type StatisticsData = {
 };
 
 type IconsMap = {
-  [key: string]: JSX.Element;
+  [key: string]: React.JSX.Element;
 };
 
 const icons: IconsMap = {

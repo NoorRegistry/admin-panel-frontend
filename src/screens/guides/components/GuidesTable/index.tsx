@@ -33,9 +33,9 @@ import {
   Typography,
   message,
 } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDebounce } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 import { IShowGuideInfoDrawerConfig } from "../../guides.types";
 import GuidesInfo from "../GuidesInfo";
 
@@ -48,7 +48,6 @@ function GuidesTable() {
       open: false,
     });
   const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
   const [queryState, setQueryState] = useState<IQueryState>({
     current: 1,
@@ -194,13 +193,9 @@ function GuidesTable() {
     placeholderData: keepPreviousData,
   });
 
-  useEffect(() => {
-    setQueryState((prev) => ({
-      ...prev,
-      current: 1,
-      search: debouncedSearchQuery,
-    }));
-  }, [debouncedSearchQuery]);
+  const updateSearch = useDebouncedCallback((search: string) => {
+    setQueryState((prev) => ({ ...prev, current: 1, search }));
+  }, 500);
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
     setQueryState((prev) => ({
@@ -353,7 +348,10 @@ function GuidesTable() {
           placeholder={t("common.searchByName")}
           prefix={<SearchOutlined />}
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            updateSearch(e.target.value);
+          }}
           className="max-w-80"
           allowClear
         />

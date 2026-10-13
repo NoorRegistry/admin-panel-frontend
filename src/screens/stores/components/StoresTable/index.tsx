@@ -32,7 +32,7 @@ import {
   Typography,
   message,
 } from "antd";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebounce } from "use-debounce";
 import { ICreateStoreAdminConfig } from "../../stores.types";
@@ -53,11 +53,9 @@ function StoresTable() {
     });
   const [searchText, setSearchText] = useState("");
   const [debouncedSearchText] = useDebounce(searchText, 300); // Debounce the search input by 300ms
-  const [filteredData, setFilteredData] = useState<IStore[]>([]);
   const [pagination, setPagination] = useState<PaginationProps>({
     current: 1,
     pageSize: 10,
-    total: 0,
   });
 
   const { data, isFetching } = useQuery({
@@ -278,9 +276,9 @@ function StoresTable() {
   ];
 
   // Update filtered data whenever the original data or debounced search text changes
-  useEffect(() => {
-    if (data?.data) {
-      const filtered = data.data.filter(
+  const filteredData = useMemo(
+    () =>
+      (data?.data ?? []).filter(
         (store) =>
           store.nameEn
             ?.toLowerCase()
@@ -288,18 +286,13 @@ function StoresTable() {
           store.nameAr
             ?.toLowerCase()
             .includes(debouncedSearchText.toLowerCase()),
-      );
-      setFilteredData(filtered);
-      setPagination((prev) => ({
-        ...prev,
-        current: 1, // Reset to the first page
-        total: filtered.length,
-      }));
-    }
-  }, [data, debouncedSearchText]);
+      ),
+    [data, debouncedSearchText],
+  );
 
   const handleSearch = (value: string) => {
     setSearchText(value);
+    setPagination((prev) => ({ ...prev, current: 1 }));
   };
 
   const handleTableChange = (pagination: PaginationProps) => {
@@ -352,7 +345,7 @@ function StoresTable() {
           pagination={{
             current: pagination.current,
             pageSize: pagination.pageSize,
-            total: pagination.total,
+            total: filteredData.length,
             showTotal: (total, range) =>
               t("common.showTotal", {
                 total: total,

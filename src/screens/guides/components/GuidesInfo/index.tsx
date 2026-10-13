@@ -39,6 +39,10 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IShowGuideInfoDrawerConfig } from "../../guides.types";
 
+const GuideEditor = dynamic(() => import("@/components/EditorJs"), {
+  ssr: false,
+});
+
 function GuidesInfo({
   config,
   onClose,
@@ -48,10 +52,6 @@ function GuidesInfo({
   onClose: () => void;
   queryState: IQueryState;
 }) {
-  const GuideEditor = dynamic(() => import("@/components/EditorJs"), {
-    ssr: false,
-  });
-
   const [uploading, setUploading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const { t } = useTranslation();
@@ -150,7 +150,7 @@ function GuidesInfo({
         form.setFieldsValue(transformedData);
       });
     }
-  }, [data, guideCategories]);
+  }, [data, guideCategories, form]);
 
   return (
     <div>
@@ -160,7 +160,7 @@ function GuidesInfo({
         placement="right"
         loading={isFetching || isFetchingGuideCategories}
         size="large"
-        destroyOnClose
+        destroyOnHidden
         onClose={onClose}
         open={config.open}
         footer={
@@ -333,7 +333,7 @@ function GuidesInfo({
           >
             <GuideEditor
               value={form.getFieldValue("contentAr")}
-              onChange={(value) => form.setFieldsValue({ contentEn: value })}
+              onChange={(value) => form.setFieldsValue({ contentAr: value })}
               guideId={config.guideId ?? ""}
               editorId="editor2"
               editorlang="ar"

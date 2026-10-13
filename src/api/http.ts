@@ -23,6 +23,7 @@ enum StatusCode {
 
 export interface IApiError {
   detail: string;
+  status?: number;
 }
 
 const headers: Readonly<Record<string, string | boolean>> = {
@@ -146,7 +147,6 @@ class Http {
     let apiError: IApiError;
     // console.error('error data', error);
     if (axios.isAxiosError(error)) {
-      console.error("error data", JSON.stringify(error));
       switch (error.status) {
         case StatusCode.InternalServerError: {
           // Handle InternalServerError
@@ -157,7 +157,6 @@ class Http {
           break;
         }
         case StatusCode.Unauthorized: {
-          console.log("unauthorized", JSON.stringify(error.response));
           // Handle Unauthorized
           break;
         }
@@ -167,7 +166,13 @@ class Http {
         }
       }
       apiError = {
-        detail: error.response?.data?.detail || error?.message,
+        detail:
+          error.response?.data?.detail ||
+          (Array.isArray(error.response?.data?.message)
+            ? error.response.data.message.join(", ")
+            : error.response?.data?.message) ||
+          error.message,
+        status: error.response?.status,
       };
     } else {
       apiError = {

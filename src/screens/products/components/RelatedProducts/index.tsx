@@ -207,7 +207,7 @@ function RelatedProductsInfo({
         placement="right"
         loading={isFetching}
         size="large"
-        destroyOnClose
+        destroyOnHidden
         onClose={onClose}
         open={config.open}
         footer={

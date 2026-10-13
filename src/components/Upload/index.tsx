@@ -10,13 +10,15 @@ import { PlusOutlined } from "@ant-design/icons";
 import type { GetProp, UploadFile, UploadProps } from "antd";
 import { Image, Upload, message } from "antd";
 import i18next from "i18next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 interface CustomUploadFile<T = any> extends UploadFile<T> {
   id?: string;
 }
+
+const EMPTY_FILES: any[] = [];
 
 const getBase64 = (file: FileType): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -29,7 +31,7 @@ const getBase64 = (file: FileType): Promise<string> =>
 const UploadComponent = ({
   type,
   dbId,
-  fileList: files = [],
+  fileList: files = EMPTY_FILES,
   onChange,
   onUploadStatusChange,
   onUploadComplete,
@@ -47,6 +49,7 @@ const UploadComponent = ({
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [imagesList, setImagesList] = useState<UploadFile[]>([]);
+  const [previousFiles, setPreviousFiles] = useState<any[] | null>(null);
   const [messageApi, contextHolder] = message.useMessage();
 
   const allowedProductImages =
@@ -59,7 +62,8 @@ const UploadComponent = ({
     "registryCategory",
   ];
 
-  useEffect(() => {
+  if (files !== previousFiles) {
+    setPreviousFiles(files);
     setImagesList((previousImagesList) => {
       // Skip transformation if `files` is empty and existing file previews are already shown
       if (!files?.length && previousImagesList.length) {
@@ -82,7 +86,7 @@ const UploadComponent = ({
 
       return transformedFiles;
     });
-  }, [files]);
+  }
 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
@@ -218,16 +222,16 @@ const UploadComponent = ({
       {previewImage && (
         <Image.PreviewGroup
           preview={{
-            visible: previewOpen,
-            onVisibleChange: (visible) => setPreviewOpen(visible),
+            open: previewOpen,
+            onOpenChange: (open) => setPreviewOpen(open),
             afterOpenChange: (visible) => !visible && setPreviewImage(""),
           }}
           items={imagesList.map((image) => image.url!) ?? []}
         >
           <Image
-            wrapperStyle={{ display: "none" }}
+            styles={{ root: { display: "none" } }}
             preview={{
-              visible: previewOpen,
+              open: previewOpen,
             }}
             src={previewImage}
             alt=""
