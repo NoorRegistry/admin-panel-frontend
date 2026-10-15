@@ -6,6 +6,10 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ConfigProvider } from "antd";
 import i18next from "i18next";
+import { useSyncExternalStore } from "react";
+import arEG from "antd/locale/ar_EG";
+import enUS from "antd/locale/en_US";
+import "dayjs/locale/ar";
 import { Poppins, Tajawal } from "next/font/google";
 import "../theme/globals.css";
 
@@ -34,12 +38,21 @@ const fontVariables = {
   "--font-secondary": secondaryFont.style.fontFamily.split(",")[0],
 } as React.CSSProperties;
 
+const subscribeToLanguage = (listener: () => void) => {
+  i18next.on("languageChanged", listener);
+  return () => i18next.off("languageChanged", listener);
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = i18next.language;
+  const locale = useSyncExternalStore(
+    subscribeToLanguage,
+    () => i18next.language || "en",
+    () => "en",
+  );
   const direction = locale === "en" ? "ltr" : "rtl";
   return (
     <html
@@ -50,7 +63,11 @@ export default function RootLayout({
     >
       <body className="antialiased font-sans">
         <AntdRegistry>
-          <ConfigProvider direction={direction} theme={antdTheme}>
+          <ConfigProvider
+            direction={direction}
+            locale={locale.startsWith("ar") ? arEG : enUS}
+            theme={antdTheme}
+          >
             <QueryClientProvider client={queryClient}>
               {children}
             </QueryClientProvider>

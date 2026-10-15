@@ -19,8 +19,8 @@ export const fetchProducts = async (
     `${
       endpoints.products.index
     }?page=${page}&limit=${limit}&nameEn=${encodeURIComponent(search)}${
-      filters?.isActive ? `&isActive=${filters.isActive}` : ""
-    }${filters?.status ? `&status=${filters.status}` : ""}`,
+      filters?.isActive !== undefined ? `&isActive=${filters.isActive}` : ""
+    }${filters?.status ? `&status=${filters.status}` : ""}${filters?.inventory ? `&inventory=${filters.inventory}` : ""}`,
   );
   return response;
 };

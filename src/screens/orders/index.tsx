@@ -50,6 +50,16 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDebouncedCallback } from "use-debounce";
 import styles from "./orders.module.css";
+import StoreOrdersScreen from "./store-orders";
+
+export default function OrdersScreen() {
+  return getAdminRole() === EAdminRole.STORE_ADMIN ? (
+    <StoreOrdersScreen />
+  ) : (
+    <InternalOrdersScreen />
+  );
+}
+
 const statuses: OrderStatus[] = [
   "PENDING",
   "CONFIRMED",
@@ -110,7 +120,7 @@ function OrderNotes({ id }: { id: string }) {
     </div>
   );
 }
-export default function OrdersScreen() {
+function InternalOrdersScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
@@ -225,6 +235,7 @@ export default function OrdersScreen() {
       await Promise.all([
         client.invalidateQueries({ queryKey: ["orders"] }),
         client.invalidateQueries({ queryKey: ["order"] }),
+        client.invalidateQueries({ queryKey: ["dashboard"] }),
       ]);
     },
     onError: async (error: IApiError) => {
@@ -232,6 +243,7 @@ export default function OrdersScreen() {
       await Promise.all([
         client.invalidateQueries({ queryKey: ["orders"] }),
         client.invalidateQueries({ queryKey: ["order"] }),
+        client.invalidateQueries({ queryKey: ["dashboard"] }),
       ]);
     },
   });
@@ -286,7 +298,10 @@ export default function OrdersScreen() {
     }) => updateOrder(id, type, note),
     onSuccess: async (data) => {
       client.setQueryData(["order", data.id], data);
-      await client.invalidateQueries({ queryKey: ["orders"] });
+      await Promise.all([
+        client.invalidateQueries({ queryKey: ["orders"] }),
+        client.invalidateQueries({ queryKey: ["dashboard"] }),
+      ]);
       messageApi.success(text("updated"));
     },
     onError: (error: IApiError) => {
@@ -798,6 +813,35 @@ export default function OrdersScreen() {
                       </div>
                     ))}
                   </section>
+                  {!!data.fulfilments?.length && (
+                    <section className={styles.section}>
+                      <h3>{t("overview.fulfilment")}</h3>
+                      {data.fulfilments.map((row) => (
+                        <div key={row.storeId} className={styles.amount}>
+                          <span>
+                            {data.items.find(
+                              (item) => item.storeId === row.storeId,
+                            )?.[
+                              i18n.language.startsWith("ar")
+                                ? "storeNameAr"
+                                : "storeNameEn"
+                            ] || t("overview.store")}
+                          </span>
+                          <Tag
+                            color={
+                              row.status === "READY"
+                                ? "green"
+                                : row.status === "PACKING"
+                                  ? "blue"
+                                  : "gold"
+                            }
+                          >
+                            {t(`overview.queue.${row.status}`)}
+                          </Tag>
+                        </div>
+                      ))}
+                    </section>
+                  )}
                   <section className={styles.section}>
                     <h3>{text("payment")}</h3>
                     <div className={styles.amount}>

@@ -1,3 +1,4 @@
+import { useRouter, useSearchParams } from "next/navigation";
 import { IApiError } from "@/api/http";
 import { queryClient } from "@/api/queryClient";
 import { useTableScroll } from "@/hooks/useTableScroll";
@@ -30,6 +31,7 @@ import {
   Input,
   Modal,
   Space,
+  Select,
   Switch,
   Table,
   Tag,
@@ -51,6 +53,29 @@ const storeImageSize = 50;
 
 function ProductsTable() {
   const { t } = useTranslation();
+  const params = useSearchParams();
+  const router = useRouter();
+  const inventory = ["low", "out"].includes(params.get("inventory") || "")
+    ? params.get("inventory")!
+    : undefined;
+  const approval = ["Approved", "Pending", "Rejected"].includes(
+    params.get("status") || "",
+  )
+    ? params.get("status")!
+    : undefined;
+  const productId = params.get("product") || undefined;
+  const urlFilters = {
+    inventory,
+    status: approval,
+    ...(inventory ? { isActive: "1", status: "Approved" } : {}),
+  };
+  const patchFilter = (key: string, value?: string) => {
+    const next = new URLSearchParams(params.toString());
+    if (value) next.set(key, value);
+    else next.delete(key);
+    router.replace(`/products?${next}`, { scroll: false });
+    setQueryState((prev) => ({ ...prev, current: 1 }));
+  };
   const [messageApi, contextHolder] = message.useMessage();
   const [modal, modalContextHolder] = Modal.useModal();
   const [openProductInfo, setOpenProductInfo] =
@@ -115,10 +140,12 @@ function ProductsTable() {
       if (value.status !== null || value.status !== undefined) {
         changes.status = value.status;
       }
-      console.log("changes", changes);
+
       return patchProduct(value.productId, changes);
     },
     onSuccess: (data) => {
+      void queryClient.invalidateQueries({ queryKey: [EQueryKeys.PRODUCTS] });
+      void queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       messageApi.success({
         content: t("products.productUpdated"),
       });
@@ -217,9 +244,14 @@ function ProductsTable() {
   };
 
   const { data, isFetching } = useQuery({
-    queryKey: [EQueryKeys.PRODUCTS, queryState],
+    queryKey: [EQueryKeys.PRODUCTS, queryState, urlFilters],
     queryFn: () =>
-      fetchProducts(queryState.current, queryState.pageSize, queryState.search),
+      fetchProducts(
+        queryState.current,
+        queryState.pageSize,
+        queryState.search,
+        urlFilters,
+      ),
     placeholderData: keepPreviousData,
   });
 
@@ -417,7 +449,7 @@ function ProductsTable() {
         </div>
       </div>
       {/* Search Input */}
-      <div className="my-4 text-start">
+      <div className="my-4 text-start flex flex-wrap gap-3">
         <Input
           placeholder={t("common.searchByName")}
           prefix={<SearchOutlined />}
@@ -428,6 +460,34 @@ function ProductsTable() {
           }}
           className="max-w-80"
           allowClear
+        />
+        <Select
+          aria-label={t("overview.stockFilter")}
+          style={{ minWidth: 180 }}
+          value={inventory || "all"}
+          onChange={(value) =>
+            patchFilter("inventory", value === "all" ? undefined : value)
+          }
+          options={[
+            { value: "all", label: t("overview.allProducts") },
+            { value: "low", label: t("overview.lowStockFilter") },
+            { value: "out", label: t("overview.outStockFilter") },
+          ]}
+        />
+        <Select
+          aria-label={t("overview.statusFilter")}
+          disabled={!!inventory}
+          style={{ minWidth: 170 }}
+          value={inventory ? "Approved" : approval || "all"}
+          onChange={(value) =>
+            patchFilter("status", value === "all" ? undefined : value)
+          }
+          options={[
+            { value: "all", label: t("overview.allStatuses") },
+            { value: "Approved", label: t("common.approved") },
+            { value: "Pending", label: t("common.pending") },
+            { value: "Rejected", label: t("common.rejected") },
+          ]}
         />
       </div>
       <div className="my-6">
@@ -463,8 +523,11 @@ function ProductsTable() {
         />
       </div>
       <ProductsInfo
-        config={openProductInfo}
-        onClose={() => setOpenProductInfo({ open: false })}
+        config={productId ? { open: true, productId } : openProductInfo}
+        onClose={() => {
+          setOpenProductInfo({ open: false });
+          if (productId) patchFilter("product");
+        }}
         queryState={queryState}
       />
       <RelatedProductsInfo

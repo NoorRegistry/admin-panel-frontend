@@ -1,82 +1,45 @@
-import { useGlobalStore } from "@/store";
-import { clearSessionData, getUserNameInitials } from "@/utils/helper";
-import type { MenuProps } from "antd";
-import { Avatar, Dropdown, Layout, theme } from "antd";
-import clsx from "clsx";
+import LanguageMenu from "@/components/LanguageMenu";
+import { HomeOutlined } from "@ant-design/icons";
+import { Breadcrumb, Layout } from "antd";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import styles from "./header.module.css";
-import LogoutIcon from "/public/icons/common/logout.svg";
-
-const { Header } = Layout;
-
-function PrivateHeader() {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-
+export default function PrivateHeader() {
+  const { t } = useTranslation();
+  const path = usePathname();
+  const label = path.startsWith("/support")
+    ? t("support.title")
+    : path.startsWith("/orders")
+      ? t("orders.title")
+      : path.startsWith("/products")
+        ? t("products.products")
+        : path.startsWith("/stores")
+          ? t("stores.stores")
+          : path.startsWith("/guides")
+            ? t("guides.guides")
+            : path.startsWith("/registries")
+              ? t("registries.registries")
+              : path.startsWith("/store-profile")
+                ? t("overview.storeProfile")
+                : t("common.dashboard");
   return (
-    <Header
-      style={{
-        padding: 0,
-        background: colorBgContainer,
-      }}
-      className={clsx(styles.header, "z-10 hidden")}
-    >
-      <div className="px-4 flex justify-between">
-        <div></div>
-        <div>
-          <Usermenu />
-        </div>
+    <Layout.Header className={styles.header}>
+      <Breadcrumb
+        items={[
+          {
+            title: (
+              <Link href="/" aria-label={t("common.dashboard")}>
+                <HomeOutlined />
+              </Link>
+            ),
+          },
+          { title: label },
+        ]}
+      />
+      <div className={styles.tools}>
+        <LanguageMenu />
       </div>
-    </Header>
+    </Layout.Header>
   );
 }
-
-const Usermenu = () => {
-  const { t } = useTranslation();
-  const logout = useGlobalStore.use.signOut();
-  const items: MenuProps["items"] = [
-    {
-      label: <a href="https://www.antgroup.com">1st menu item</a>,
-      key: "0",
-    },
-    {
-      label: <a href="https://www.aliyun.com">2nd menu item</a>,
-      key: "1",
-      icon: (
-        <span className="text-error">
-          <LogoutIcon />
-        </span>
-      ),
-    },
-    {
-      type: "divider",
-    },
-    {
-      label: t("common.logout"),
-      key: "3",
-      icon: (
-        <span className="text-error">
-          <LogoutIcon />
-        </span>
-      ),
-      onClick: () => {
-        clearSessionData();
-        logout();
-      },
-    },
-  ];
-
-  return (
-    <Dropdown menu={{ items }} trigger={["click", "hover"]}>
-      <Avatar
-        size="large"
-        className="cursor-pointer !bg-secondary-50 uppercase !text-secondary-600 outline hover:outline-2 transition-all duration-150 ease-out"
-      >
-        {getUserNameInitials()}
-      </Avatar>
-    </Dropdown>
-  );
-};
-
-export default PrivateHeader;

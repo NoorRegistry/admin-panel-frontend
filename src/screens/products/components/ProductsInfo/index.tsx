@@ -157,6 +157,8 @@ function ProductsInfo({
       queryClient.invalidateQueries({
         queryKey: [EQueryKeys.CATEGORIES, isInternalAdmin],
       });
+      void queryClient.invalidateQueries({ queryKey: [EQueryKeys.PRODUCTS] });
+      void queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       onClose();
     },
     onError: (err: IApiError) => {

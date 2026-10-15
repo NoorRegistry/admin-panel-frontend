@@ -1,0 +1,29 @@
+.layout {
+  min-height: 100vh;
+  background: #faf8f7;
+}
+.main {
+  background: #faf8f7 !important;
+  min-width: 0;
+}
+.content {
+  margin: 26px 28px 0;
+  text-align: start;
+}
+.footer {
+  text-align: center;
+  background: transparent !important;
+  color: #a49891;
+  font-size: 11px;
+  padding: 24px 16px !important;
+}
+@media (max-width: 800px) {
+  .content {
+    margin: 20px 16px 0;
+  }
+}
+@media (max-width: 480px) {
+  .content {
+    margin: 16px 10px 0;
+  }
+}

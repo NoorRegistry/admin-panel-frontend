@@ -2,6 +2,7 @@ import { useGlobalStore } from "@/store";
 import { EAdminRole } from "@/types";
 import { clearSessionData, getAdminRole, getUserName } from "@/utils/helper";
 import {
+  CustomerServiceOutlined,
   ApartmentOutlined,
   GiftOutlined,
   HomeOutlined,
@@ -13,6 +14,9 @@ import {
   TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
+import { fetchSupportRequests } from "@/services/support.service";
+import { Badge } from "antd";
 import type { MenuProps } from "antd";
 import { Layout, Menu } from "antd";
 import { usePathname, useRouter } from "next/navigation";
@@ -28,6 +32,8 @@ const siderStyle: React.CSSProperties = {
   insetInlineStart: 0,
   top: 0,
   bottom: 0,
+  background: "#fff",
+  borderInlineEnd: "1px solid #f0ebe8",
   display: "flex",
   flexDirection: "column",
   scrollbarWidth: "thin",
@@ -80,6 +86,11 @@ const getKeys = (
 function Sidebar() {
   const { t } = useTranslation();
   const router = useRouter();
+  const support = useQuery({
+    queryKey: ["support-unread"],
+    queryFn: () => fetchSupportRequests({ filter: "unread", limit: 1 }),
+    refetchInterval: 30000,
+  });
   const [collapsed, setCollapsed] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const logout = useGlobalStore.use.signOut();
@@ -98,6 +109,21 @@ function Sidebar() {
         icon: <ShoppingOutlined />,
         label: t("orders.title"),
         href: "/orders",
+      },
+      {
+        key: "support",
+        icon: <CustomerServiceOutlined />,
+        label: (
+          <span>
+            {t("support.title")}{" "}
+            <Badge
+              count={support.data?.total || 0}
+              size="small"
+              color="#CF8169"
+            />
+          </span>
+        ),
+        href: "/support",
       },
       {
         key: "stores",
@@ -150,6 +176,12 @@ function Sidebar() {
         ],
       },
       {
+        key: "storeProfile",
+        icon: <ShopOutlined />,
+        label: t("overview.storeProfile"),
+        href: "/store-profile",
+      },
+      {
         key: "registriesparent",
         icon: <GiftOutlined />,
         label: t("registries.registries"),
@@ -163,7 +195,7 @@ function Sidebar() {
         ],
       },
     ],
-    [t],
+    [t, support.data?.total],
   );
   const { selectedKeys, openKeys: initialOpenKeys } = getKeys(
     menuItems,
@@ -190,8 +222,13 @@ function Sidebar() {
     (items: TMenuItems[]) => {
       return items.filter((item) => {
         if (
+          userType === EAdminRole.INTERNAL_ADMIN &&
+          item.key === "storeProfile"
+        )
+          return false;
+        if (
           userType === EAdminRole.STORE_ADMIN &&
-          ["stores", "orders"].includes(item.key)
+          ["stores"].includes(item.key)
         ) {
           return false; // Exclude "stores" for store admins
         }
@@ -233,6 +270,8 @@ function Sidebar() {
   return (
     <Sider
       style={siderStyle}
+      width={220}
+      breakpoint="lg"
       collapsible
       collapsed={collapsed}
       onCollapse={(value) => setCollapsed(value)}
@@ -240,10 +279,37 @@ function Sidebar() {
     >
       <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         {/* Main Menu */}
-        <div className="py-6" style={{ flex: 1, overflow: "auto" }}>
+        <div
+          style={{
+            padding: collapsed ? "22px 12px" : "22px 24px",
+            borderBottom: "1px solid #f0ebe8",
+            minHeight: 90,
+          }}
+        >
+          <div
+            style={{
+              fontSize: collapsed ? 18 : 19,
+              fontWeight: 600,
+              color: "#935c4b",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {collapsed ? "SS" : "Shop Simplist"}
+          </div>
+          {!collapsed && (
+            <div style={{ fontSize: 11, color: "#81736d", marginTop: 3 }}>
+              {t(
+                userType === EAdminRole.INTERNAL_ADMIN
+                  ? "overview.internalWorkspace"
+                  : "overview.storeWorkspace",
+              )}
+            </div>
+          )}
+        </div>
+        <div className="py-4" style={{ flex: 1, overflow: "auto" }}>
           <Menu
             onClick={onClick}
-            theme="dark"
+            theme="light"
             mode="inline"
             selectedKeys={selectedKeys}
             openKeys={openKeys}
@@ -255,7 +321,7 @@ function Sidebar() {
         {/* User Dropdown */}
         <div>
           <Menu
-            theme="dark"
+            theme="light"
             mode="inline"
             selectedKeys={userMenuOpen ? ["user-menu"] : []}
             onClick={() => setUserMenuOpen((prev) => !prev)}

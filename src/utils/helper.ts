@@ -51,8 +51,10 @@ export const getUserName = () => {
   let name = "";
   const token = getStorageItem(constants.ACCESS_TOKEN);
   if (token) {
-    const jwtPayload = jwtDecode<TTokenInfo>(token);
-    name = jwtPayload.user.firstName + " " + jwtPayload.user.lastName;
+    const jwtPayload = jwtDecode<TTokenInfo>(getAccessToken());
+    name = [jwtPayload.user.firstName, jwtPayload.user.lastName]
+      .filter(Boolean)
+      .join(" ");
   }
   return name;
 };
@@ -121,7 +123,7 @@ export const normalizeFile = (e: any) => {
 export const getAdminRole = () => {
   const token = getStorageItem(constants.ACCESS_TOKEN);
   if (token) {
-    const jwtPayload = jwtDecode<TTokenInfo>(token);
+    const jwtPayload = jwtDecode<TTokenInfo>(getAccessToken());
     return jwtPayload.role;
   }
 };
@@ -129,7 +131,7 @@ export const getAdminRole = () => {
 export const getAdminStoreId = () => {
   const token = getStorageItem(constants.ACCESS_TOKEN);
   if (token) {
-    const jwtPayload = jwtDecode<TTokenInfo>(token);
+    const jwtPayload = jwtDecode<TTokenInfo>(getAccessToken());
     return jwtPayload.role === EAdminRole.STORE_ADMIN ? jwtPayload.storeId : "";
   }
 };

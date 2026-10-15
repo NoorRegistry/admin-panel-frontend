@@ -1,26 +1,32 @@
 .header {
-  --shadow: hsla(0 0% 0% / 0.1) 0 0.5rem 1rem;
   position: sticky;
   top: 0;
-  /* Fall back to persistent shadow */
-  box-shadow: var(--shadow);
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-bottom: 1px solid #f0ebe8;
+  height: 62px !important;
+  padding: 0 28px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  line-height: normal !important;
+  backdrop-filter: blur(12px);
 }
-
-/* Fade in shadow on scroll when supported */
-@supports (animation-timeline: scroll()) {
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+@media (max-width: 700px) {
   .header {
-    animation: scroll-shadow linear both;
-    animation-timeline: scroll();
-    animation-range: 0ex 5ex;
+    padding: 0 16px !important;
+    gap: 8px;
   }
-
-  @keyframes scroll-shadow {
-    from {
-      box-shadow: none;
-    }
-
-    to {
-      box-shadow: var(--shadow);
-    }
+  .tools {
+    gap: 5px;
+  }
+  .header :global(.ant-breadcrumb) {
+    font-size: 11px;
   }
 }

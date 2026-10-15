@@ -34,7 +34,9 @@ export type Order = {
   total: number;
   customerNote?: string;
   shippingAddress: OrderAddress;
+  fulfilments?: { storeId: string; status: "NEW" | "PACKING" | "READY" }[];
   items: {
+    storeId: string;
     id: string;
     nameEn: string;
     nameAr: string;
