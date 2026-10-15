@@ -14,6 +14,7 @@ const secondaryFont = Tajawal({
   style: ["normal"],
   subsets: ["arabic"],
   display: "swap",
+  adjustFontFallback: false,
   variable: "--font-secondary",
 });
 
@@ -26,6 +27,13 @@ const primaryFont = Poppins({
   variable: "--font-primary",
 });
 
+// Keep generated system fallbacks after both loaded fonts so they cannot
+// intercept Arabic glyphs before the browser reaches Tajawal.
+const fontVariables = {
+  "--font-primary": primaryFont.style.fontFamily.split(",")[0],
+  "--font-secondary": secondaryFont.style.fontFamily.split(",")[0],
+} as React.CSSProperties;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -34,10 +42,13 @@ export default function RootLayout({
   const locale = i18next.language;
   const direction = locale === "en" ? "ltr" : "rtl";
   return (
-    <html lang={locale} dir={direction}>
-      <body
-        className={`${primaryFont.variable} ${secondaryFont.variable} antialiased font-sans`}
-      >
+    <html
+      lang={locale}
+      dir={direction}
+      className={`${primaryFont.variable} ${secondaryFont.variable}`}
+      style={fontVariables}
+    >
+      <body className="antialiased font-sans">
         <AntdRegistry>
           <ConfigProvider direction={direction} theme={antdTheme}>
             <QueryClientProvider client={queryClient}>

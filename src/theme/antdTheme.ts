@@ -4,7 +4,7 @@ const antdTheme: ThemeConfig = {
   hashed: false,
   // algorithm: theme.darkAlgorithm,
   token: {
-    fontFamily: "var(--font-primary), var(--font-secondary)",
+    fontFamily: "var(--font-sans)",
     colorBorder: "var(--color-neutral-300)",
     colorBorderSecondary: "var(--color-neutral-200)",
     colorSplit: "var(--color-neutral-200)",
@@ -159,7 +159,7 @@ const antdTheme: ThemeConfig = {
     Modal: {
       titleFontSize: 18,
       titleColor: "var(--color-neutral-700)",
-      fontFamily: "var(--font-primary), var(--font-secondary)",
+      fontFamily: "var(--font-sans)",
       colorWarning: "var(--color-warning-500)",
       colorError: "var(--color-danger-500)",
     },

@@ -2,7 +2,7 @@
 
 @theme {
   --font-*: initial;
-  --font-sans: var(--font-primary), var(--font-secondary);
+  --font-sans: var(--font-primary), var(--font-secondary), Arial, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-error: #e11d48;
@@ -113,5 +113,5 @@
 body {
   /* color: var(--foreground);
   background: var(--background); */
-  font-family: var(--font-primary), var(--font-secondary);
+  font-family: var(--font-sans);
 }
