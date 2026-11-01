@@ -22,7 +22,7 @@ import { Layout, Menu } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import LogoutIcon from "/public/icons/common/logout.svg";
+import LogoutIcon from "@/components/icons/LogoutIcon";
 
 const { Sider } = Layout;
 

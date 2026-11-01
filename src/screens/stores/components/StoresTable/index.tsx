@@ -1,3 +1,6 @@
+import { EAdminRole } from "@/types";
+import { getAdminRole } from "@/utils/helper";
+import FeaturedControl from "@/components/FeaturedControl";
 import { IApiError } from "@/api/http";
 import { queryClient } from "@/api/queryClient";
 import StoreInfo, { IShowStoreInfoDrawerConfig } from "@/components/StoreInfo";
@@ -119,6 +122,21 @@ function StoresTable() {
   };
 
   const columns: ColumnsType<IStore> = [
+    {
+      title: t("featured.label"),
+      key: "featured",
+      width: 185,
+      hidden: getAdminRole() !== EAdminRole.INTERNAL_ADMIN,
+      render: (_, record) => (
+        <FeaturedControl
+          kind="stores"
+          id={record.id}
+          isFeatured={record.isFeatured}
+          featuredOrder={record.featuredOrder}
+          eligible={record.isActive}
+        />
+      ),
+    },
     {
       title: "",
       dataIndex: "storeLogo",

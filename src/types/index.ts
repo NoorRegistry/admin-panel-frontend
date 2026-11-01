@@ -26,6 +26,8 @@ export interface IStore {
   nameAr: string;
   storeLogo: string;
   isActive: boolean;
+  isFeatured?: boolean;
+  featuredOrder?: number;
   slug: string;
 }
 
@@ -68,6 +70,8 @@ export interface IProduct {
   categoryIds?: string[];
   status: EProductStatus;
   isActive: boolean;
+  isFeatured?: boolean;
+  featuredOrder?: number;
   category?: {
     name: string;
   };
@@ -79,6 +83,7 @@ export interface IProduct {
     parentId: string | null;
   }[];
   store: {
+    isActive?: boolean;
     name: string;
   };
   currencyCode: string;

@@ -1,3 +1,4 @@
+import FeaturedControl from "@/components/FeaturedControl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IApiError } from "@/api/http";
 import { queryClient } from "@/api/queryClient";
@@ -47,7 +48,7 @@ import {
 } from "../../products.types";
 import ProductsInfo from "../ProductsInfo";
 import RelatedProductsInfo from "../RelatedProducts";
-import RelatedProductsIcon from "/public/icons/common/related-products.svg";
+import RelatedProductsIcon from "@/components/icons/RelatedProductsIcon";
 
 const storeImageSize = 50;
 
@@ -270,6 +271,26 @@ function ProductsTable() {
   };
 
   const columns: ColumnsType<IProduct> = [
+    {
+      title: t("featured.label"),
+      key: "featured",
+      width: 185,
+      hidden: !isInternalAdmin,
+      render: (_, record) => (
+        <FeaturedControl
+          kind="products"
+          id={record.id}
+          isFeatured={record.isFeatured}
+          featuredOrder={record.featuredOrder}
+          eligible={
+            record.isActive &&
+            record.status === EProductStatus.APPROVED &&
+            record.qty > 0 &&
+            record.store.isActive !== false
+          }
+        />
+      ),
+    },
     {
       title: "",
       dataIndex: "images",

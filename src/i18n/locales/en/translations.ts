@@ -1,4 +1,12 @@
 const translations = {
+  featured: {
+    label: "Featured",
+    order: "Display order",
+    orderHint: "Lower numbers appear first",
+    saved: "Saved",
+    saveError: "Could not save",
+    unavailable: "Only available products and active stores can be featured",
+  },
   support: {
     title: "Support",
     contact: "Contact support",

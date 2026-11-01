@@ -1,4 +1,12 @@
 const translations = {
+  featured: {
+    label: "مميز",
+    order: "ترتيب العرض",
+    orderHint: "الأرقام الأقل تظهر أولاً",
+    saved: "تم الحفظ",
+    saveError: "تعذر الحفظ",
+    unavailable: "يمكن تمييز المنتجات المتاحة والمتاجر النشطة فقط",
+  },
   support: {
     title: "\u0627\u0644\u062f\u0639\u0645",
     contact:
